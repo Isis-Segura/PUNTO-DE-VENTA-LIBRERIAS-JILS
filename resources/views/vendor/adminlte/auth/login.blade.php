@@ -23,6 +23,16 @@
 @section('auth_header', __('adminlte::adminlte.login_message'))
 
 @section('auth_body')
+    {{-- Selector de idioma --}}
+    <div class="text-right mb-2">
+        @foreach (config('idiomas.disponibles', []) as $codigo => $nombre)
+            <a href="{{ url('/lang/'.$codigo) }}"
+               class="badge {{ app()->getLocale() === $codigo ? 'badge-primary' : 'badge-secondary' }}">
+                {{ strtoupper($codigo) }}
+            </a>
+        @endforeach
+    </div>
+
     <form action="{{ $loginUrl }}" method="post">
         @csrf
 
