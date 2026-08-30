@@ -21,13 +21,6 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
      * Create a new controller instance.
      *
      * @return void
@@ -36,5 +29,21 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+
+    /**
+     * A dónde mandar al usuario según su rol una vez que inicia sesión.
+     * El Administrador General va a su panel; Gerentes y Cajeros van a /home
+     * (sus paneles propios se agregarán cuando se desarrollen esos módulos).
+     */
+    protected function redirectTo(): string
+    {
+        $user = auth()->user();
+
+        if ($user && $user->isAdmin()) {
+            return '/admin';
+        }
+
+        return '/home';
     }
 }

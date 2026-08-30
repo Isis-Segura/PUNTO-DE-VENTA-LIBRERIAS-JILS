@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'logo' => '<b>SIS</b>Punto de venta',
+    'logo' => '<b>POS: </b>JILS',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -263,7 +263,7 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
+    'register_url' => null,
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => false,
@@ -315,6 +315,19 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
+        [
+            'text' => 'Idioma',
+            'icon' => 'fas fa-globe',
+            'topnav_right' => true,
+            // NOTA: estos valores están fijos aquí (y no se leen de config/idiomas.php)
+            // porque Laravel carga los archivos de config/ en orden alfabético y
+            // "adminlte.php" se carga antes que "idiomas.php". Si agregan un nuevo
+            // idioma, recuerden añadirlo también aquí para que aparezca en el menú.
+            'submenu' => [
+                ['text' => 'Español', 'url' => 'lang/es'],
+                ['text' => 'English', 'url' => 'lang/en'],
+            ],
+        ],
 
         // Sidebar items:
         [
@@ -332,6 +345,12 @@ return [
             'url' => 'admin/categorias',
             'icon' => 'fas fa-fw fa-list',
             'classes' => 'bg-blue text-white',
+        ],
+        [
+            'text' => 'Usuarios',
+            'url' => 'admin/usuarios',
+            'icon' => 'fas fa-fw fa-users',
+            'classes' => 'bg-green text-white',
         ],
 
     ],
