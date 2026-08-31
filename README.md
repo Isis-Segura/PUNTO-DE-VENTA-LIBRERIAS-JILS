@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="imagenes/logodorado.png" width="220" alt="logo dorado">
+     <img src="vendor/adminlte/dist/img/J_logo.jpeg">
 </p>
 
 <h1 align="center">L I B R E R I A S - J I L S</h1>
