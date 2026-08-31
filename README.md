@@ -1,5 +1,5 @@
 <p align="center">
-     <img src="vendor/adminlte/dist/img/J_logo.jpeg">
+     <img src="public/vendor/adminlte/dist/img/J_logo.jpeg">
 </p>
 
 <h1 align="center">L I B R E R I A S - J I L S</h1>
