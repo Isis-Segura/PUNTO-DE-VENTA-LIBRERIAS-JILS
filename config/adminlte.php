@@ -62,9 +62,9 @@ return [
     | For detailed instructions you can look the logo section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
-    */
+    *
 
-    'logo' => '<b>POS: </b>JILS',
+    'logo' => '<b>PDS: </b>JILS',
     'logo_img' => 'vendor/adminlte/dist/img/J_logo.jpeg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
