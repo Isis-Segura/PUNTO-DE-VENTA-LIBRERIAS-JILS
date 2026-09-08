@@ -1,58 +1,365 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+     <img src="public/vendor/adminlte/dist/img/J_logo.jpeg">
 </p>
 
-## About Laravel
+<div align="center">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# 📚 Librería JILS
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Sistema POS e Inventario Multi-Sede
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Aplicación web para la gestión centralizada de ventas, inventario y sucursales.
 
-## Learning Laravel
+<br>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<br>
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+**Proyecto Integrador — Facultad de Ingeniería Electromecánica**  
+**Universidad de Colima**
 
-## Agentic Development
+**Semestre:** Agosto 2026 – Enero 2027  
+**Grupo:** 3ºE — Ingeniería de Software
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+</div>
+
+---
+
+## 📌 Descripción
+
+**Librería JILS** es una aplicación web diseñada para administrar las operaciones de una librería con múltiples sucursales.
+
+El sistema permite centralizar la información de productos, controlar el inventario de cada sede, registrar ventas mediante un **Punto de Venta (POS)** y administrar los diferentes usuarios según sus responsabilidades.
+
+El objetivo principal es reducir la gestión manual y proporcionar información actualizada sobre las existencias y ventas de cada sucursal.
+
+---
+
+## ✨ Características
+
+### 🏢 Gestión Multi-Sede
+
+- Administración centralizada de sucursales.
+- Inventario independiente por sede.
+- Control de productos y existencias.
+- Gestión de cajas y cajeros.
+
+### 🛒 Punto de Venta (POS)
+
+- Registro de ventas.
+- Cálculo automático de importes.
+- Gestión de métodos de pago.
+- Generación de tickets.
+- Descuento automático del inventario.
+
+### 📦 Inventario
+
+- Consulta de existencias.
+- Control de stock por sucursal.
+- Alertas de bajo inventario.
+- Catálogo centralizado de productos y libros.
+
+### 🔐 Roles y Permisos
+
+| Rol | Funciones principales |
+|---|---|
+| 👑 **Administrador General** | Control total del sistema, sucursales, usuarios y reportes |
+| 🏢 **Gerente de Sede** | Administración de productos, inventario y cajas de su sucursal |
+| 💰 **Cajero** | Registro de ventas y cobros en caja |
+
+### 🌐 Soporte Multilingüe
+
+La aplicación cuenta con soporte para:
+
+- 🇲🇽 Español
+- 🇺🇸 Inglés
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+```text
+                    ┌─────────────────────────┐
+                    │ Administrador General   │
+                    └────────────┬────────────┘
+                                 │
+                 ┌───────────────┴───────────────┐
+                 │                               │
+                 ▼                               ▼
+        ┌─────────────────┐             ┌─────────────────┐
+        │   Sucursal A    │             │   Sucursal B    │
+        │    Gerente      │             │    Gerente      │
+        └────────┬────────┘             └────────┬────────┘
+                 │                               │
+                 ▼                               ▼
+        ┌─────────────────┐             ┌─────────────────┐
+        │   Inventario A  │             │   Inventario B  │
+        └────────┬────────┘             └────────┬────────┘
+                 │                               │
+                 ▼                               ▼
+        ┌─────────────────┐             ┌─────────────────┐
+        │ Cajas / Cajeros │             │ Cajas / Cajeros │
+        └────────┬────────┘             └────────┬────────┘
+                 │                               │
+                 └───────────────┬───────────────┘
+                                 ▼
+                           🛒 Ventas
+```
+
+---
+
+## 🗄️ Entidades de la Base de Datos
+
+Las principales entidades contempladas para el sistema son:
+
+```text
+Usuarios
+Roles
+Sucursales
+Productos
+Categorías
+Inventario
+Ventas
+Detalles_Venta
+Métodos_Pago
+```
+
+Relación simplificada:
+
+```text
+Usuarios ──────► Roles
+   │
+   ▼
+Sucursal ──────► Inventario
+   │                 │
+   │                 ▼
+   └────────────► Productos
+                     │
+                     ▼
+                   Ventas
+                     │
+                     ▼
+              Detalles_Venta
+                     │
+                     ▼
+               Métodos_Pago
+```
+
+---
+
+# 🚀 Instalación
+
+## 📋 Requisitos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- **PHP 8.2 o superior**
+- **Composer 2.0 o superior**
+- **MySQL 8.0 o superior**
+- **Node.js y NPM**
+- **Git**
+
+---
+
+## 1️⃣ Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/libreria-jils.git
+cd libreria-jils
+```
+
+---
+
+## 2️⃣ Instalar dependencias
+
+Instala las dependencias de PHP:
+
+```bash
+composer install
+```
+
+Después instala las dependencias de JavaScript:
+
+```bash
+npm install
+```
+
+Compila los assets:
+
+```bash
+npm run build
+```
+
+---
+
+## 3️⃣ Configurar el entorno
+
+Copia el archivo `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Genera la clave de la aplicación:
+
+```bash
+php artisan key:generate
+```
+
+> **Nota:** En Windows también puedes copiar `.env.example` manualmente y renombrarlo como `.env`.
+
+---
+
+## 4️⃣ Configurar la base de datos
+
+Abre el archivo `.env` y configura los datos de conexión:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=jils_pos
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Asegúrate de que la base de datos `jils_pos` exista en MySQL.
+
+---
+
+## 5️⃣ Ejecutar migraciones
+
+Ejecuta las migraciones y los seeders:
+
+```bash
+php artisan migrate --seed
+```
+
+---
+
+## 6️⃣ Iniciar el servidor
+
+Ejecuta:
+
+```bash
+php artisan serve
+```
+
+Después abre en tu navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# 🤖 Desarrollo con IA
+
+El proyecto puede complementarse con herramientas de desarrollo asistido por inteligencia artificial, como:
+
+- Claude Code
+- Cursor
+- GitHub Copilot
+- Laravel Boost
+
+### Laravel Boost
+
+Para instalar Laravel Boost:
 
 ```bash
 composer require laravel/boost --dev
+```
 
+Después:
+
+```bash
 php artisan boost:install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+# 🛠️ Tecnologías Utilizadas
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Tecnología | Uso |
+|---|---|
+| 🟥 **Laravel** | Framework backend |
+| 🐘 **PHP** | Lenguaje principal |
+| 🗄️ **MySQL** | Base de datos |
+| 🟢 **Node.js** | Entorno para herramientas frontend |
+| 📦 **NPM** | Gestión de paquetes |
+| 🎨 **Blade** | Motor de plantillas |
+| 🔐 **RBAC** | Control de acceso por roles |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 👥 Equipo de Desarrollo
 
-## Security Vulnerabilities
+## 🎓 Grupo 3E — Ingeniería de Software
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Integrante |
+|---|
+| **Díaz Maluenga Joshua Gabriel** |
+| **Figueroa Huerta Isai Shalom** |
+| **Segura Paulino Isis Alejandra** |
+| **Virgen Ambriz Lucia Lorena** |
 
-## License
+### 👨‍🏫 Tutor de Grupo
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Mtro. Emilio Ballinas Arteaga**
+
+---
+
+# 👨‍🏫 Comité Docente
+
+| Asignatura | Docente |
+|---|---|
+| **Estructura de Datos** | Ernesto Navarro Álvarez |
+| **Base de Datos** | Enrique C. Rosales Busquets |
+| **Metodologías Ágiles** | Emilio Ballinas Arteaga |
+| **Legislación y Derecho Informático** | Fernando Tomás Díaz García |
+| **Matemáticas Discretas** | Juan Pablo Martínez Vargas |
+| **Estructuras de Computadoras** | Daniel Alfonso Verde Romero |
+| **Inglés III** | Ilse Abarca Torres |
+
+---
+
+# 📚 Recursos
+
+- 📖 [Documentación oficial de Laravel](https://laravel.com/docs)
+- 🎓 [Laracasts](https://laracasts.com/)
+- 🚀 [Laravel Learn](https://laravel.com/learn)
+
+---
+
+# 🔒 Seguridad
+
+Si encuentras una vulnerabilidad de seguridad en este proyecto, evita publicar los detalles públicamente.
+
+Para vulnerabilidades relacionadas con Laravel, consulta los canales oficiales de seguridad de Laravel.
+
+---
+
+# 📄 Licencia
+
+Este proyecto está disponible bajo la licencia **MIT**.
+
+Consulta el archivo `LICENSE` para obtener más información.
+
+---
+
+<div align="center">
+
+### 📚 Librería JILS
+
+**Sistema POS e Inventario Multi-Sede**
+
+Hecho con ❤️ por el **Grupo 3E — Ingeniería de Software**
+
+**Universidad de Colima · 2026**
+
+</div>
