@@ -51,6 +51,29 @@ class User extends Authenticatable
     }
 
     /**
+     * Sucursal a la que pertenece el usuario (Gerente o Cajero).
+     * El Administrador General normalmente no tiene sucursal asignada.
+     */
+    public function sucursal(): BelongsTo
+    {
+        return $this->belongsTo(Sucursal::class);
+    }
+
+    /**
+     * IDs de sucursales que el usuario puede consultar/administrar.
+     * - Administrador General: null significa "todas" (sin filtro).
+     * - Gerente / Cajero: solo su propia sucursal.
+     */
+    public function sucursalIdsPermitidas(): ?array
+    {
+        if ($this->isAdmin()) {
+            return null;
+        }
+
+        return $this->sucursal_id ? [$this->sucursal_id] : [];
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

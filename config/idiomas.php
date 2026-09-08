@@ -24,8 +24,4 @@ return [
         'en' => 'English',
     ],
 
-    #Johiel puntos
-    #agregar tradución
-    #php artisan optimize:clear
-    #php artisan translations:generate en
 ];

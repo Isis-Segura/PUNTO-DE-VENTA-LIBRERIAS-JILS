@@ -19,8 +19,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             AdminUserSeeder::class,
+            MetodoPagoSeeder::class,
+            SucursalSeeder::class,
         ]);
 
         Categoria::factory(100)->create();
+
+        $this->call([
+            DemoDataSeeder::class,
+        ]);
     }
 }
