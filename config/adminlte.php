@@ -62,7 +62,17 @@ return [
     | For detailed instructions you can look the logo section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
+    */
+    #Johiel puntos
+    #Aqui podemos cambiar el logo de la aplicacion y el nombre
+    'logo' => '<b>PDV</b> JILS',
+    'logo_img' => 'vendor/adminlte/dist/img/J_logo.jpeg',
+    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo_img_xl' => null,
+    'logo_img_xl_class' => 'brand-image-xs',
+    'logo_img_alt' => 'Admin Logo',
 
+    /*
     |--------------------------------------------------------------------------
     | Authentication Logo
     |--------------------------------------------------------------------------
@@ -74,13 +84,6 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-
-    'logo' => '<b>PDS: </b>JILS',
-    'logo_img' => 'vendor/adminlte/dist/img/J_logo.jpeg',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
-    'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
 
     'auth_logo' => [
         'enabled' => false,
@@ -338,17 +341,48 @@ return [
             'can' => 'manage-blog',
         ],
         ['header' => 'Menu'],
+
         [
-            'text' => 'Categorias',
-            'url' => 'admin/categorias',
-            'icon' => 'fas fa-fw fa-list',
-            'classes' => 'bg-blue text-white',
+            'text' => 'Punto de venta',
+            'url' => 'ventas/pos',
+            'icon' => 'fas fa-fw fa-cash-register',
+            'classes' => 'bg-lime text-white',
+            'can' => 'puede-vender',
+        ],
+        [
+            'text' => 'Sucursales',
+            'url' => 'sucursales',
+            'icon' => 'fas fa-fw fa-store',
+            'classes' => 'bg-indigo text-white',
+            'can' => 'es-admin',
+        ],
+        [
+            'text' => 'Productos',
+            'url' => 'productos',
+            'icon' => 'fas fa-fw fa-box',
+            'classes' => 'bg-teal text-white',
+            'can' => 'es-admin-o-gerente',
+        ],
+        [
+            'text' => 'Inventario',
+            'url' => 'inventario',
+            'icon' => 'fas fa-fw fa-warehouse',
+            'classes' => 'bg-orange text-white',
+            'can' => 'es-admin-o-gerente',
+        ],
+        [
+            'text' => 'Historial de ventas',
+            'url' => 'ventas',
+            'icon' => 'fas fa-fw fa-receipt',
+            'classes' => 'bg-purple text-white',
+            'can' => 'puede-vender',
         ],
         [
             'text' => 'Usuarios',
             'url' => 'admin/usuarios',
             'icon' => 'fas fa-fw fa-users',
             'classes' => 'bg-green text-white',
+            'can' => 'es-admin',
         ],
 
     ],

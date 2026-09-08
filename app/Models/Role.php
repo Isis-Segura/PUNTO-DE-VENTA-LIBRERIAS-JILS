@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
+    protected $table = 'roles';
+
     protected $fillable = ['slug', 'nombre'];
 
     // Slugs válidos según el protocolo del proyecto
