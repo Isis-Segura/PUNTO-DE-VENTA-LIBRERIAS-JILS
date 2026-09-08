@@ -358,8 +358,4 @@ Consulta el archivo `LICENSE` para obtener más información.
 
 **Sistema POS e Inventario Multi-Sede**
 
-Hecho con ❤️ por el **Grupo 3E — Ingeniería de Software**
-
-**Universidad de Colima · 2026**
-
 </div>
