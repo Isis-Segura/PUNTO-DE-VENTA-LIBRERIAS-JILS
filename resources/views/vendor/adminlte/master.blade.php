@@ -138,6 +138,9 @@
         @endif
     @endif
 
+    {{-- Persistencia de UI: menú colapsado + preferencia de pantalla completa --}}
+    <script src="{{ asset('js/pos-ui-state.js') }}"></script>
+
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
 
