@@ -356,20 +356,13 @@ return [
             'url' => 'sucursales',
             'icon' => 'fas fa-fw fa-store',
             'classes' => 'pos-nav-item pos-nav-sucursales text-white',
-            'can' => 'es-admin',
+            'can' => 'es-admin-o-gerente',
         ],
         [
             'text' => 'Productos',
             'url' => 'productos',
             'icon' => 'fas fa-fw fa-box',
             'classes' => 'pos-nav-item pos-nav-productos text-white',
-            'can' => 'es-admin-o-gerente',
-        ],
-        [
-            'text' => 'Inventario',
-            'url' => 'inventario',
-            'icon' => 'fas fa-fw fa-warehouse',
-            'classes' => 'pos-nav-item pos-nav-inventario text-white',
             'can' => 'es-admin-o-gerente',
         ],
         [

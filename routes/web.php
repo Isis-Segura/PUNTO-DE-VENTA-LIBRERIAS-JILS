@@ -30,16 +30,29 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('usuarios', UsuarioController::class);
 });
 
-// Sucursales: solo el Administrador General las crea/edita/elimina
+// Sucursales: el Administrador General las crea/edita/elimina.
+// OJO: forzamos el nombre del parámetro de ruta a "sucursal" porque Laravel,
+// al intentar convertir "sucursales" a singular automáticamente, lo hacía mal
+// (generaba "sucursale" en vez de "sucursal"), lo que rompía el botón Editar.
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('sucursales', SucursalController::class)->except(['show']);
+    Route::resource('sucursales', SucursalController::class)
+        ->except(['show', 'index'])
+        ->parameters(['sucursales' => 'sucursal']);
 });
 
-// Productos e Inventario: Admin (todas las sucursales) y Gerente (solo la suya)
+// Ver el listado de sucursales y el detalle de cada una (con su inventario):
+// lo puede hacer el Administrador (todas) y el Gerente (solo la suya).
+Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
+    Route::get('sucursales', [SucursalController::class, 'index'])->name('sucursales.index');
+    Route::get('sucursales/{sucursal}', [SucursalController::class, 'show'])->name('sucursales.show');
+});
+
+// Productos: Admin (todas las sucursales) y Gerente (solo la suya).
+// El listado de inventario ahora vive dentro del detalle de cada sucursal
+// (SucursalController@show); aquí solo dejamos el ajuste de cantidades.
 Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
     Route::resource('productos', ProductoController::class)->except(['show']);
 
-    Route::get('inventario', [InventarioController::class, 'index'])->name('inventario.index');
     Route::put('inventario/{inventario}', [InventarioController::class, 'update'])->name('inventario.update');
 });
 

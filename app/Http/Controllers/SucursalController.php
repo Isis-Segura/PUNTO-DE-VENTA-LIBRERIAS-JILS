@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventario;
 use App\Models\Role;
 use App\Models\Sucursal;
 use App\Models\User;
@@ -11,9 +12,53 @@ class SucursalController extends Controller
 {
     public function index()
     {
-        $sucursales = Sucursal::with('gerente')->orderBy('nombre')->paginate(10);
+        $query = Sucursal::with('gerente')
+            ->withCount([
+                'productos',
+                'productos as bajo_stock_count' => function ($q) {
+                    $q->whereHas('inventario', fn ($i) => $i->whereColumn('cantidad', '<=', 'stock_minimo'));
+                },
+            ])
+            ->orderBy('nombre');
 
-        return view('sucursales.index', compact('sucursales'));
+        // El Gerente solo debe ver su propia sucursal en el listado.
+        $ids = auth()->user()->sucursalIdsPermitidas();
+        if ($ids !== null) {
+            $query->whereIn('id', $ids);
+        }
+
+        // Contadores para las tarjetas de resumen (sobre el total, no solo la página actual).
+        $totalSucursales = (clone $query)->count();
+        $activas = (clone $query)->where('activa', true)->count();
+        $inactivas = $totalSucursales - $activas;
+
+        $sucursales = $query->paginate(9);
+
+        return view('sucursales.index', compact('sucursales', 'totalSucursales', 'activas', 'inactivas'));
+    }
+
+    /**
+     * Detalle de una sucursal: sus datos y el inventario de sus productos.
+     * Sustituye al antiguo módulo independiente de "Inventario".
+     */
+    public function show(Request $request, Sucursal $sucursal)
+    {
+        $ids = auth()->user()->sucursalIdsPermitidas();
+
+        if ($ids !== null && ! in_array($sucursal->id, $ids, true)) {
+            abort(403, 'No tienes permiso para ver esta sucursal.');
+        }
+
+        $query = Inventario::with(['producto.categoria'])
+            ->whereHas('producto', fn ($q) => $q->where('sucursal_id', $sucursal->id));
+
+        if ($request->boolean('bajo_stock')) {
+            $query->whereColumn('cantidad', '<=', 'stock_minimo');
+        }
+
+        $inventarios = $query->orderBy('cantidad')->paginate(15)->withQueryString();
+
+        return view('sucursales.show', compact('sucursal', 'inventarios'));
     }
 
     public function create()
