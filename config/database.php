@@ -49,9 +49,9 @@ return [
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'sisgestiondeinventario_test'), #nombre del host
+            'database' => env('DB_DATABASE', 'sisgestiondeinventario'), #nombre del host
             'username' => env('DB_USERNAME', 'root'), #usuario de host
-            'password' => env('DB_PASSWORD', ''), #contraseña de host
+            'password' => env('DB_PASSWORD', 'root1234'), #contraseña de host
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
