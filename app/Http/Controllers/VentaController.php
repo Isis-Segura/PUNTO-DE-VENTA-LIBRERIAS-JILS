@@ -242,7 +242,7 @@ class VentaController extends Controller
      */
     public function reciboDigital(Venta $venta)
     {
-        $ids = auth()->user()->sucursalIdsPermitidas();
+             $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null && ! in_array($venta->sucursal_id, $ids, true)) {
             abort(403);
         }
@@ -250,12 +250,31 @@ class VentaController extends Controller
         $venta->load(['detalles.producto', 'sucursal', 'cajero', 'metodoPago']);
 
         $html = view('ventas.recibo-digital', compact('venta'))->render();
+        $nombreArchivo = 'recibo-'.$venta->folio.'.pdf';
 
-        $nombreArchivo = 'recibo-'.$venta->folio.'.html';
+        if (class_exists(\Dompdf\Dompdf::class)) {
+            $options = new \Dompdf\Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', false);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html, 'UTF-8');
+
+            // A5 (más legible, sin cortar columnas). ~14.8 x 21 cm
+            $dompdf->setPaper('A5', 'portrait');
+
+            $dompdf->render();
+
+            return response($dompdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="'.$nombreArchivo.'"',
+            ]);
+        }
 
         return response($html, 200, [
             'Content-Type' => 'text/html; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="'.$nombreArchivo.'"',
+            'Content-Disposition' => 'inline; filename="recibo-'.$venta->folio.'.html"',
         ]);
     }
 

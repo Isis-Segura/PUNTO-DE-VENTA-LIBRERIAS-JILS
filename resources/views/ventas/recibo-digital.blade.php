@@ -4,52 +4,122 @@
     <meta charset="UTF-8">
     <title>{{ __('Recibo') }} {{ $venta->folio }}</title>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @page { margin: 18px; }
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background: #f2f2f2;
-            margin: 0;
-            padding: 24px;
-            color: #222;
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            color: #1a1a1a;
         }
         .recibo {
-            max-width: 380px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 24px;
-            border: 1px dashed #999;
+            width: 100%;
+            border: 1.5px dashed #555;
+            padding: 16px 14px;
         }
         .centro { text-align: center; }
-        .titulo { font-size: 18px; font-weight: bold; margin: 0 0 4px; }
-        .muted { color: #666; font-size: 12px; margin: 2px 0; }
-        hr { border: none; border-top: 1px dashed #999; margin: 14px 0; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { text-align: left; border-bottom: 1px solid #999; padding-bottom: 4px; }
-        td { padding: 4px 0; vertical-align: top; }
-        .num { text-align: right; }
-        .fila-total { display: flex; justify-content: space-between; font-size: 14px; margin: 4px 0; }
-        .fila-total.grande { font-size: 16px; font-weight: bold; }
-        .pie { text-align: center; margin-top: 18px; font-size: 12px; color: #666; }
-        @media print {
-            body { background: #fff; padding: 0; }
-            .recibo { border: none; }
+        .marca {
+            font-size: 17px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+        .sucursal {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .muted {
+            color: #444;
+            font-size: 11px;
+            margin: 2px 0;
+            line-height: 1.3;
+        }
+        .sep {
+            border: none;
+            border-top: 1.5px dashed #777;
+            margin: 12px 0;
+        }
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 11.5px;
+        }
+        table.items th {
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-bottom: 1.5px solid #333;
+            padding: 0 2px 5px 0;
+        }
+        table.items th.num,
+        table.items td.num {
+            text-align: right;
+        }
+        table.items col.c-prod { width: 52%; }
+        table.items col.c-cant { width: 16%; }
+        table.items col.c-imp  { width: 32%; }
+        table.items td {
+            padding: 6px 2px 6px 0;
+            vertical-align: top;
+            border-bottom: 1px dotted #bbb;
+            word-wrap: break-word;
+        }
+        table.items tr:last-child td { border-bottom: none; }
+        table.totales {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table.totales td {
+            padding: 4px 0;
+            font-size: 12px;
+        }
+        table.totales .label { text-align: left; }
+        table.totales .value { text-align: right; }
+        table.totales tr.total td {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 7px 0;
+            border-top: 1.5px solid #333;
+            border-bottom: 1.5px solid #333;
+        }
+        .pie {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 11px;
+            color: #555;
+            font-style: italic;
+        }
+        .pie .brand {
+            font-style: normal;
+            font-weight: bold;
+            display: block;
+            margin-top: 3px;
+            color: #222;
+            font-size: 10px;
         }
     </style>
 </head>
 <body>
     <div class="recibo">
         <div class="centro">
-            <p class="titulo">{{__("Libreria JILS") }}</p>
-            <p class="titulo2">{{ $venta->sucursal->nombre }}</p>
+            <div class="marca">{{ __('Librería JILS') }}</div>
+            <div class="sucursal">{{ $venta->sucursal->nombre }}</div>
             <p class="muted">{{ __('Recibo digital de venta') }}</p>
             <p class="muted">{{ __('Folio') }}: <strong>{{ $venta->folio }}</strong></p>
             <p class="muted">{{ $venta->created_at->format('d/m/Y H:i') }}</p>
             <p class="muted">{{ __('Atendió') }}: {{ $venta->cajero->name ?? '-' }}</p>
         </div>
 
-        <hr>
+        <hr class="sep">
 
-        <table>
+        <table class="items">
+            <colgroup>
+                <col class="c-prod">
+                <col class="c-cant">
+                <col class="c-imp">
+            </colgroup>
             <thead>
                 <tr>
                     <th>{{ __('Producto') }}</th>
@@ -68,34 +138,36 @@
             </tbody>
         </table>
 
-        <hr>
+        <hr class="sep">
 
-        <div class="fila-total">
-            <span>{{ __('Subtotal') }}</span>
-            <span>${{ number_format($venta->subtotal, 2) }}</span>
-        </div>
-        <div class="fila-total grande">
-            <span>{{ __('Total') }}</span>
-            <span>${{ number_format($venta->total, 2) }}</span>
-        </div>
-        <div class="fila-total">
-            <span>{{ __('Método de pago') }}</span>
-            <span>{{ $venta->metodoPago->nombre ?? '-' }}</span>
-        </div>
-
-        @if ($venta->metodoPago && $venta->metodoPago->nombre === 'Efectivo' && ! is_null($venta->monto_recibido))
-            <div class="fila-total">
-                <span>{{ __('Monto recibido') }}</span>
-                <span>${{ number_format($venta->monto_recibido, 2) }}</span>
-            </div>
-            <div class="fila-total">
-                <span>{{ __('Vuelto') }}</span>
-                <span>${{ number_format($venta->cambio, 2) }}</span>
-            </div>
-        @endif
+        <table class="totales">
+            <tr>
+                <td class="label">{{ __('Subtotal') }}</td>
+                <td class="value">${{ number_format($venta->subtotal, 2) }}</td>
+            </tr>
+            <tr class="total">
+                <td class="label">{{ __('Total') }}</td>
+                <td class="value">${{ number_format($venta->total, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="label">{{ __('Método de pago') }}</td>
+                <td class="value">{{ $venta->metodoPago->nombre ?? '-' }}</td>
+            </tr>
+            @if ($venta->metodoPago && $venta->metodoPago->nombre === 'Efectivo' && ! is_null($venta->monto_recibido))
+                <tr>
+                    <td class="label">{{ __('Monto recibido') }}</td>
+                    <td class="value">${{ number_format($venta->monto_recibido, 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">{{ __('Vuelto') }}</td>
+                    <td class="value">${{ number_format($venta->cambio, 2) }}</td>
+                </tr>
+            @endif
+        </table>
 
         <div class="pie">
-            <p>{{ __('¡Gracias por su compra!') }}</p>
+            {{ __('¡Gracias por su compra!') }}
+            <span class="brand">PDV JILS</span>
         </div>
     </div>
 </body>
