@@ -176,9 +176,6 @@ Abre tu navegador en: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
 
-## Desarrollo asistido por IA
-
-El proyecto puede complementarse con herramientas de desarrollo asistido por inteligencia artificial, como Claude Code, Cursor, GitHub Copilot y Laravel Boost.
 
 Para instalar Laravel Boost:
 
@@ -203,28 +200,16 @@ php artisan boost:install
 
 ---
 
-## Equipo de desarrollo
 
-- Díaz Maluenga Joshua Gabriel
-- Figueroa Huerta Isai Shalom
-- Segura Paulino Isis Alejandra
-- Virgen Ambriz Lucia Lorena
+## **Equipo de Desarrollo**
 
-**Tutor de grupo:** Mtro. Emilio Ballinas Arteaga
+| Nombre             | GitHub       |
+| ------------------ | ------------ |
+| **ISIS SEGURA**    | @Isis-Segura |
+| **JOSGUA MALUENGA** | @JGDM84      |
+| **ISAI FIGUEROA** | @FigueroaShalom  |
+| **LUCIA VIRGEN** | @luciv |
 
-### Comité docente
-
-| Asignatura | Docente |
-|---|---|
-| Estructura de Datos | Ernesto Navarro Álvarez |
-| Base de Datos | Enrique C. Rosales Busquets |
-| Metodologías Ágiles | Emilio Ballinas Arteaga |
-| Legislación y Derecho Informático | Fernando Tomás Díaz García |
-| Matemáticas Discretas | Juan Pablo Martínez Vargas |
-| Estructuras de Computadoras | Daniel Alfonso Verde Romero |
-| Inglés III | Ilse Abarca Torres |
-
----
 
 ## Recursos
 
