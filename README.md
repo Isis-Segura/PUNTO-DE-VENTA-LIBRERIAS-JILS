@@ -1,5 +1,5 @@
 <p align="center">
-     <img src="public/vendor/adminlte/dist/img/J_logo.jpeg">
+    <img src="public\vendor\adminlte\dist\img\J_logo.jpeg" alt="Logo Librería JILS" width="180"/>
 </p>
 
 <div align="center">
