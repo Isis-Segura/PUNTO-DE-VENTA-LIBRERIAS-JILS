@@ -1,0 +1,52 @@
+/* =====================================================================
+   LAYOUT FIJO — menú y navbar no se estiran; solo el contenido hace scroll
+   ===================================================================== */
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body.layout-fixed .wrapper {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar siempre a la altura de la ventana */
+body.layout-fixed .main-sidebar {
+    height: 100vh !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Navbar fija arriba */
+body.layout-fixed .main-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+/* Área de contenido: ocupa el resto y hace scroll */
+body.layout-fixed .content-wrapper {
+    margin-top: 57px; /* altura típica del navbar AdminLTE */
+    height: calc(100vh - 57px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
+/* El pie del sidebar (marca de agua) no empuja el layout */
+body.layout-fixed .main-footer {
+    display: none; /* opcional: si quieres el footer, comenta esta línea */
+}
+
+/* Sidebar mini / colapsado sigue bien */
+body.sidebar-mini.sidebar-collapse.layout-fixed .content-wrapper,
+body.sidebar-mini.sidebar-collapse.layout-fixed .main-header {
+    margin-left: 4.6rem;
+}

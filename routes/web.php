@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ProductoController;
@@ -24,9 +25,16 @@ Route::get('/lang/{locale}', [App\Http\Controllers\LocaleController::class, 'swi
 #Rutas para el panel de administración y gerention
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
-// Todo lo del módulo de administración solo lo puede usar el Administrador General
+// El dashboard general (con datos de TODAS las sucursales) es exclusivo del
+// Administrador General.
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
+});
+
+// Módulo de Usuarios: el Administrador General administra a todos; el
+// Gerente puede dar de alta/editar/eliminar cajeros de su propia sucursal
+// (el propio controlador limita el alcance del Gerente).
+Route::middleware(['auth', 'role:admin,gerente'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('usuarios', UsuarioController::class);
 });
 
@@ -42,6 +50,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
     Route::get('sucursales', [SucursalController::class, 'index'])->name('sucursales.index');
     Route::get('sucursales/{sucursal}', [SucursalController::class, 'show'])->name('sucursales.show');
+});
+
+// Categorías de productos: Admin y Gerente (compartidas entre sucursales).
+// Antes CategoriaController estaba vacío y no tenía ninguna ruta registrada.
+Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
+    Route::resource('categorias', CategoriaController::class);
 });
 
 // Productos: Admin (todas las sucursales) y Gerente (solo la suya).

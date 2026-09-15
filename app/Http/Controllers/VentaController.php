@@ -52,17 +52,19 @@ class VentaController extends Controller
      */
     public function create(Request $request)
     {
+        $user = auth()->user();
         $sucursal = $this->resolverSucursalActiva($request);
+        $sucursales = $this->sucursalesVisibles();
+        $metodosPago = MetodoPago::orderBy('nombre')->get();
 
-        if (! $sucursal) {
+        // Gerente/Cajero sin sucursal: no pueden vender
+        if (! $user->isAdmin() && ! $sucursal) {
             return redirect()
                 ->route('ventas.index')
                 ->with('error', 'No tienes una sucursal asignada. Pide al Administrador General que te asigne una.');
         }
 
-        $metodosPago = MetodoPago::orderBy('nombre')->get();
-        $sucursales = $this->sucursalesVisibles();
-
+        // Admin puede entrar sin sucursal elegida (debe escogerla en pantalla)
         return view('ventas.pos', compact('sucursal', 'metodosPago', 'sucursales'));
     }
 
@@ -89,7 +91,7 @@ class VentaController extends Controller
                 });
             })
             ->orderBy('nombre')
-            ->limit(30)
+            ->limit(100)
             ->get()
             ->map(fn ($p) => [
                 'id' => $p->id,
@@ -309,11 +311,12 @@ class VentaController extends Controller
             return $user->sucursal;
         }
 
+        // Admin: solo si eligió sucursal explícitamente (sin default)
         if ($request->filled('sucursal_id')) {
-            return Sucursal::find($request->sucursal_id);
+            return Sucursal::where('activa', true)->find($request->sucursal_id);
         }
 
-        return Sucursal::where('activa', true)->orderBy('nombre')->first();
+        return null;
     }
 
     private function sucursalesVisibles()

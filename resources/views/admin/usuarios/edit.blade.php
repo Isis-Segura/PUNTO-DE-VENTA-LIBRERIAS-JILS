@@ -33,14 +33,31 @@
 
                 <div class="form-group">
                     <label>{{ __('Rol') }}</label>
-                    <select name="role_id" class="form-control @error('role_id') is-invalid @enderror">
+                    <select name="role_id" id="role_id" class="form-control @error('role_id') is-invalid @enderror">
                         @foreach ($roles as $role)
-                            <option value="{{ $role->id }}" {{ old('role_id', $usuario->role_id) == $role->id ? 'selected' : '' }}>
+                            <option value="{{ $role->id }}" data-slug="{{ $role->slug }}"
+                                {{ old('role_id', $usuario->role_id) == $role->id ? 'selected' : '' }}>
                                 {{ $role->nombre }}
                             </option>
                         @endforeach
                     </select>
                     @error('role_id')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group" id="grupo-sucursal">
+                    <label>{{ __('Sucursal') }}</label>
+                    <select name="sucursal_id" id="sucursal_id" class="form-control @error('sucursal_id') is-invalid @enderror">
+                        <option value="">{{ __('Selecciona una sucursal') }}</option>
+                        @foreach ($sucursales as $s)
+                            <option value="{{ $s->id }}" {{ old('sucursal_id', $usuario->sucursal_id) == $s->id ? 'selected' : '' }}>
+                                {{ $s->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <small class="form-text text-muted">{{ __('Requerida para Gerente y Cajero; el Administrador General normalmente no necesita una.') }}</small>
+                    @error('sucursal_id')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
@@ -72,4 +89,23 @@
             </form>
         </div>
     </div>
+@stop
+
+@section('js')
+<script>
+(function () {
+    var roleSelect = document.getElementById('role_id');
+    var grupoSucursal = document.getElementById('grupo-sucursal');
+
+    function actualizar() {
+        var opcion = roleSelect.options[roleSelect.selectedIndex];
+        var slug = opcion ? opcion.dataset.slug : null;
+
+        grupoSucursal.style.display = (slug === 'admin') ? 'none' : '';
+    }
+
+    roleSelect.addEventListener('change', actualizar);
+    actualizar();
+})();
+</script>
 @stop

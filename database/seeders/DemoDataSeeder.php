@@ -29,29 +29,25 @@ class DemoDataSeeder extends Seeder
         $rolGerente = Role::where('slug', Role::GERENTE)->first();
         $rolCajero = Role::where('slug', Role::CAJERO)->first();
 
-        $gerente = User::updateOrCreate(
-            ['email' => 'gerente@pi.com'],
-            [
-                'name' => 'Gerente Sucursal Centro',
-                'password' => Hash::make('password'),
-                'role_id' => $rolGerente?->id,
-                'sucursal_id' => $sucursal->id,
-                'email_verified_at' => now(),
-                'activo' => true,
-            ]
-        );
+        // Igual que en AdminUserSeeder: la contraseña ("password", solo para
+        // esta sucursal de demostración) se establece únicamente al crear la
+        // cuenta por primera vez, para que volver a correr los seeders no la
+        // resetee sola en cada corrida.
+        $gerente = $this->crearOActualizarSinTocarPassword('gerente@pi.com', [
+            'name' => 'Gerente Sucursal Centro',
+            'role_id' => $rolGerente?->id,
+            'sucursal_id' => $sucursal->id,
+            'email_verified_at' => now(),
+            'activo' => true,
+        ]);
 
-        User::updateOrCreate(
-            ['email' => 'cajero@pi.com'],
-            [
-                'name' => 'Cajero Sucursal Centro',
-                'password' => Hash::make('password'),
-                'role_id' => $rolCajero?->id,
-                'sucursal_id' => $sucursal->id,
-                'email_verified_at' => now(),
-                'activo' => true,
-            ]
-        );
+        $this->crearOActualizarSinTocarPassword('cajero@pi.com', [
+            'name' => 'Cajero Sucursal Centro',
+            'role_id' => $rolCajero?->id,
+            'sucursal_id' => $sucursal->id,
+            'email_verified_at' => now(),
+            'activo' => true,
+        ]);
 
         $sucursal->update(['gerente_id' => $gerente->id]);
 
@@ -80,5 +76,26 @@ class DemoDataSeeder extends Seeder
                 ['cantidad' => $item['cantidad'], 'stock_minimo' => 5]
             );
         }
+    }
+
+    /**
+     * Crea el usuario demo si no existe (con contraseña "password"); si ya
+     * existe, actualiza todo excepto la contraseña, para no resetearla en
+     * cada corrida del seeder.
+     */
+    private function crearOActualizarSinTocarPassword(string $email, array $datos): User
+    {
+        $usuario = User::where('email', $email)->first();
+
+        if ($usuario) {
+            $usuario->forceFill($datos)->save();
+
+            return $usuario;
+        }
+
+        return User::create($datos + [
+            'email' => $email,
+            'password' => Hash::make('password'),
+        ]);
     }
 }

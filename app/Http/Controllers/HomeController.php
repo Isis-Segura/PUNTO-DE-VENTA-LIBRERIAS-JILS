@@ -10,26 +10,28 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
     /**
-     * Dashboard de Gerente / Cajero: solo información de SU sucursal,
-     * nunca de las demás.
+     * Punto de entrada del logo / "dashboard_url".
+     * - Administrador → panel global /admin
+     * - Gerente / Cajero → dashboard de su sucursal
      */
     public function index()
     {
         $user = auth()->user();
+
+        // El logo de AdminLTE siempre va a /home; el admin debe ver su panel.
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.index');
+        }
+
         $sucursal = $user->sucursal;
 
-        // Si todavía no tiene una sucursal asignada, no hay nada que mostrarle.
+        // Gerente/Cajero sin sucursal asignada.
         if (! $sucursal) {
             return view('home', ['sucursal' => null]);
         }

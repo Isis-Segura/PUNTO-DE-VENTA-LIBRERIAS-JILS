@@ -158,8 +158,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
@@ -377,7 +377,17 @@ return [
             'url' => 'admin/usuarios',
             'icon' => 'fas fa-fw fa-users',
             'classes' => 'pos-nav-item pos-nav-usuarios text-white',
-            'can' => 'es-admin',
+            // El Administrador General ve/administra a todos; el Gerente ve
+            // este mismo enlace pero solo puede administrar a los Cajeros
+            // de su propia sucursal (el controlador limita el alcance).
+            'can' => 'es-admin-o-gerente',
+        ],
+        [
+            'text' => 'Categorías',
+            'url' => 'categorias',
+            'icon' => 'fas fa-fw fa-tags',
+            'classes' => 'pos-nav-item pos-nav-categorias text-white',
+            'can' => 'es-admin-o-gerente',
         ],
 
     ],

@@ -19,9 +19,18 @@ class InventarioController extends Controller
             abort(403, 'No tienes permiso sobre esa sucursal.');
         }
 
+        // Antes no había tope máximo, así que un número extremadamente
+        // grande (ej. la columna es unsignedInteger, tope real ~4,294,967,295)
+        // rompía la base de datos con un error SQL crudo mostrado en
+        // pantalla. Ponemos un máximo razonable y lo validamos aquí para
+        // que el error se muestre de forma amigable en vez de que truene la
+        // consulta SQL.
         $data = $request->validate([
-            'cantidad' => ['required', 'integer', 'min:0'],
-            'stock_minimo' => ['required', 'integer', 'min:0'],
+            'cantidad' => ['required', 'integer', 'min:0', 'max:999999999'],
+            'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
+        ], [
+            'cantidad.max' => 'La cantidad no puede ser mayor a 999,999,999.',
+            'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
         ]);
 
         $inventario->update($data);
