@@ -145,47 +145,6 @@ php artisan key:generate
 
 > En Windows, si el comando `cp` no funciona, copia manualmente `.env.example` y renómbralo como `.env`.
 
-### 4. Configurar la base de datos
-
-Edita el archivo `.env` con tus datos de conexión:
-
-```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=jils_pos
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Asegúrate de que la base de datos `jils_pos` exista en MySQL antes de continuar.
-
-### 5. Ejecutar migraciones
-
-```bash
-php artisan migrate --seed
-```
-
-### 6. Iniciar el servidor
-
-```bash
-php artisan serve
-```
-
-Abre tu navegador en: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
----
-
-
-Para instalar Laravel Boost:
-
-```bash
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
----
-
 ## Tecnologías utilizadas
 
 | Tecnología | Uso |
