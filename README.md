@@ -1,14 +1,14 @@
 <p align="center">
-     <img src="public/vendor/adminlte/dist/img/J_logo.jpeg">
+    <img src="public/vendor/adminlte/dist/img/J_logo.jpeg" alt="Logo Librería JILS">
 </p>
 
 <div align="center">
 
-# 📚 Librería JILS
+# Librería JILS
 
 ### Sistema POS e Inventario Multi-Sede
 
-Aplicación web para la gestión centralizada de ventas, inventario y sucursales.
+Aplicación web integral para la gestión centralizada de ventas, control de inventario y administración de sucursales.
 
 <br>
 
@@ -30,58 +30,58 @@ Aplicación web para la gestión centralizada de ventas, inventario y sucursales
 
 ---
 
-## 📌 Descripción
+## Descripción del Proyecto
 
-**Librería JILS** es una aplicación web diseñada para administrar las operaciones de una librería con múltiples sucursales.
+Librería JILS es una plataforma web diseñada para optimizar y administrar las operaciones de una red de librerías con múltiples sucursales.
 
-El sistema permite centralizar la información de productos, controlar el inventario de cada sede, registrar ventas mediante un **Punto de Venta (POS)** y administrar los diferentes usuarios según sus responsabilidades.
+El sistema permite centralizar la información del catálogo de productos, controlar el inventario de cada sede de forma independiente, procesar transacciones mediante un Punto de Venta (POS) y gestionar los accesos de usuario mediante un sistema basado en roles.
 
-El objetivo principal es reducir la gestión manual y proporcionar información actualizada sobre las existencias y ventas de cada sucursal.
+El objetivo principal es automatizar los procesos operativos, reducir la carga de gestión manual y proporcionar métricas precisas y actualizadas sobre las existencias y el flujo de ventas corporativo.
 
 ---
 
-## ✨ Características
+## Características Principales
 
-### 🏢 Gestión Multi-Sede
+### Gestión Multi-Sede
 
-- Administración centralizada de sucursales.
-- Inventario independiente por sede.
-- Control de productos y existencias.
-- Gestión de cajas y cajeros.
+- Administración centralizada del esquema de sucursales.
+- Segmentación de inventario independiente por cada sede.
+- Control detallado de productos y trazabilidad de existencias.
+- Gestión de cajas registradoras y asignación de personal.
 
-### 🛒 Punto de Venta (POS)
+### Punto de Venta (POS)
 
-- Registro de ventas.
-- Cálculo automático de importes.
-- Gestión de métodos de pago.
-- Generación de tickets.
-- Descuento automático del inventario.
+- Interfaz optimizada para el registro ágil de ventas.
+- Cálculo automatizado de importes, impuestos y subtotales.
+- Integración y gestión de múltiples métodos de pago.
+- Emisión de comprobantes y tickets de compra.
+- Conciliación y descuento automático en el inventario.
 
-### 📦 Inventario
+### Control de Inventario
 
-- Consulta de existencias.
-- Control de stock por sucursal.
-- Alertas de bajo inventario.
-- Catálogo centralizado de productos y libros.
+- Panel de consulta de existencias en tiempo real.
+- Supervisión del nivel de stock segmentado por sucursal.
+- Sistema de alertas automatizadas para bajo inventario.
+- Catálogo maestro unificado para productos y fondo editorial.
 
-### 🔐 Roles y Permisos
+### Roles y Permisos (RBAC)
 
-| Rol | Funciones principales |
+| Rol | Funciones Principales |
 |---|---|
-| 👑 **Administrador General** | Control total del sistema, sucursales, usuarios y reportes |
-| 🏢 **Gerente de Sede** | Administración de productos, inventario y cajas de su sucursal |
-| 💰 **Cajero** | Registro de ventas y cobros en caja |
+| **Administrador General** | Acceso global y control total del sistema, gestión de sucursales, administración de usuarios y visualización de métricas generales. |
+| **Gerente de Sede** | Administración del catálogo local, supervisión del inventario específico de su sucursal y gestión de aperturas/cierres de caja. |
+| **Cajero** | Operación directa del Punto de Venta, procesamiento de transacciones y cobros al cliente. |
 
-### 🌐 Soporte Multilingüe
+### Soporte Multilingüe
 
-La aplicación cuenta con soporte para:
+La arquitectura de la aplicación incluye soporte de internacionalización para los siguientes idiomas:
 
-- 🇲🇽 Español
-- 🇺🇸 Inglés
+- Español
+- Inglés
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del Sistema
 
 ```text
                     ┌─────────────────────────┐
@@ -108,254 +108,4 @@ La aplicación cuenta con soporte para:
                  │                               │
                  └───────────────┬───────────────┘
                                  ▼
-                           🛒 Ventas
-```
-
----
-
-## 🗄️ Entidades de la Base de Datos
-
-Las principales entidades contempladas para el sistema son:
-
-```text
-Usuarios
-Roles
-Sucursales
-Productos
-Categorías
-Inventario
-Ventas
-Detalles_Venta
-Métodos_Pago
-```
-
-Relación simplificada:
-
-```text
-Usuarios ──────► Roles
-   │
-   ▼
-Sucursal ──────► Inventario
-   │                 │
-   │                 ▼
-   └────────────► Productos
-                     │
-                     ▼
-                   Ventas
-                     │
-                     ▼
-              Detalles_Venta
-                     │
-                     ▼
-               Métodos_Pago
-```
-
----
-
-# 🚀 Instalación
-
-## 📋 Requisitos
-
-Antes de comenzar, asegúrate de tener instalado:
-
-- **PHP 8.2 o superior**
-- **Composer 2.0 o superior**
-- **MySQL 8.0 o superior**
-- **Node.js y NPM**
-- **Git**
-
----
-
-## 1️⃣ Clonar el repositorio
-
-```bash
-git clone https://github.com/tu-usuario/libreria-jils.git
-cd libreria-jils
-```
-
----
-
-## 2️⃣ Instalar dependencias
-
-Instala las dependencias de PHP:
-
-```bash
-composer install
-```
-
-Después instala las dependencias de JavaScript:
-
-```bash
-npm install
-```
-
-Compila los assets:
-
-```bash
-npm run build
-```
-
----
-
-## 3️⃣ Configurar el entorno
-
-Copia el archivo `.env.example`:
-
-```bash
-cp .env.example .env
-```
-
-Genera la clave de la aplicación:
-
-```bash
-php artisan key:generate
-```
-
-> **Nota:** En Windows también puedes copiar `.env.example` manualmente y renombrarlo como `.env`.
-
----
-
-## 4️⃣ Configurar la base de datos
-
-Abre el archivo `.env` y configura los datos de conexión:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=jils_pos
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Asegúrate de que la base de datos `jils_pos` exista en MySQL.
-
----
-
-## 5️⃣ Ejecutar migraciones
-
-Ejecuta las migraciones y los seeders:
-
-```bash
-php artisan migrate --seed
-```
-
----
-
-## 6️⃣ Iniciar el servidor
-
-Ejecuta:
-
-```bash
-php artisan serve
-```
-
-Después abre en tu navegador:
-
-```text
-http://127.0.0.1:8000
-```
-
----
-
-# 🤖 Desarrollo con IA
-
-El proyecto puede complementarse con herramientas de desarrollo asistido por inteligencia artificial, como:
-
-- Claude Code
-- Cursor
-- GitHub Copilot
-- Laravel Boost
-
-### Laravel Boost
-
-Para instalar Laravel Boost:
-
-```bash
-composer require laravel/boost --dev
-```
-
-Después:
-
-```bash
-php artisan boost:install
-```
-
----
-
-# 🛠️ Tecnologías Utilizadas
-
-| Tecnología | Uso |
-|---|---|
-| 🟥 **Laravel** | Framework backend |
-| 🐘 **PHP** | Lenguaje principal |
-| 🗄️ **MySQL** | Base de datos |
-| 🟢 **Node.js** | Entorno para herramientas frontend |
-| 📦 **NPM** | Gestión de paquetes |
-| 🎨 **Blade** | Motor de plantillas |
-| 🔐 **RBAC** | Control de acceso por roles |
-
----
-
-# 👥 Equipo de Desarrollo
-
-## 🎓 Grupo 3E — Ingeniería de Software
-
-| Integrante |
-|---|
-| **Díaz Maluenga Joshua Gabriel** |
-| **Figueroa Huerta Isai Shalom** |
-| **Segura Paulino Isis Alejandra** |
-| **Virgen Ambriz Lucia Lorena** |
-
-### 👨‍🏫 Tutor de Grupo
-
-**Mtro. Emilio Ballinas Arteaga**
-
----
-
-# 👨‍🏫 Comité Docente
-
-| Asignatura | Docente |
-|---|---|
-| **Estructura de Datos** | Ernesto Navarro Álvarez |
-| **Base de Datos** | Enrique C. Rosales Busquets |
-| **Metodologías Ágiles** | Emilio Ballinas Arteaga |
-| **Legislación y Derecho Informático** | Fernando Tomás Díaz García |
-| **Matemáticas Discretas** | Juan Pablo Martínez Vargas |
-| **Estructuras de Computadoras** | Daniel Alfonso Verde Romero |
-| **Inglés III** | Ilse Abarca Torres |
-
----
-
-# 📚 Recursos
-
-- 📖 [Documentación oficial de Laravel](https://laravel.com/docs)
-- 🎓 [Laracasts](https://laracasts.com/)
-- 🚀 [Laravel Learn](https://laravel.com/learn)
-
----
-
-# 🔒 Seguridad
-
-Si encuentras una vulnerabilidad de seguridad en este proyecto, evita publicar los detalles públicamente.
-
-Para vulnerabilidades relacionadas con Laravel, consulta los canales oficiales de seguridad de Laravel.
-
----
-
-# 📄 Licencia
-
-Este proyecto está disponible bajo la licencia **MIT**.
-
-Consulta el archivo `LICENSE` para obtener más información.
-
----
-
-<div align="center">
-
-### 📚 Librería JILS
-
-**Sistema POS e Inventario Multi-Sede**
-
-</div>
+                               Ventas
