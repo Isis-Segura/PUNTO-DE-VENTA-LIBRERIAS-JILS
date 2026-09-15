@@ -177,13 +177,6 @@ php artisan key:generate
 - [Laravel Learn](https://laravel.com/learn)
 
 ---
-
-## Seguridad
-
-Si encuentras una vulnerabilidad de seguridad en este proyecto, evita publicar los detalles públicamente. Para vulnerabilidades relacionadas con Laravel, consulta los canales oficiales de seguridad de Laravel.
-
----
-
 ## Licencia
 
 Este proyecto está disponible bajo la licencia MIT. Consulta el archivo `LICENSE` para más información.
