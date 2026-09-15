@@ -4,62 +4,99 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
+/**
+ * Antes, este controlador estaba completamente vacío y no tenía ninguna
+ * ruta registrada: la vista existía pero nadie podía llegar a ella y no se
+ * podían crear categorías reales desde la interfaz. Aquí implementamos el
+ * CRUD completo (disponible para Administrador y Gerente, según el
+ * protocolo del proyecto).
+ */
 class CategoriaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Listado de categorías.
      */
     public function index()
     {
-        //
+        $categorias = Categoria::withCount('productos')->orderBy('nombre')->paginate(15);
+
+        return view('admin.categorias.index', compact('categorias'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Formulario para registrar una nueva categoría.
      */
     public function create()
     {
-        //
+        return view('admin.categorias.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda la nueva categoría.
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'nombre' => ['required', 'string', 'max:150', 'unique:categorias,nombre'],
+            'descripcion' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        Categoria::create($data);
+
+        return redirect()
+            ->route('categorias.index')
+            ->with('success', 'Categoría creada correctamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Muestra el detalle de una categoría (no se usa por ahora; redirige al listado).
      */
     public function show(Categoria $categoria)
     {
-        //
+        return redirect()->route('categorias.index');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Formulario para editar una categoría existente.
      */
     public function edit(Categoria $categoria)
     {
-        //
+        return view('admin.categorias.edit', compact('categoria'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza los datos de una categoría.
      */
     public function update(Request $request, Categoria $categoria)
     {
-        //
+        $data = $request->validate([
+            'nombre' => ['required', 'string', 'max:150', Rule::unique('categorias', 'nombre')->ignore($categoria->id)],
+            'descripcion' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $categoria->update($data);
+
+        return redirect()
+            ->route('categorias.index')
+            ->with('success', 'Categoría actualizada correctamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina una categoría, siempre que no tenga productos asociados
+     * (para no dejar productos huérfanos ni romper referencias).
      */
     public function destroy(Categoria $categoria)
     {
-        //
+        if ($categoria->productos()->exists()) {
+            return back()->with('error', 'No puedes eliminar una categoría que ya tiene productos asignados.');
+        }
+
+        $categoria->delete();
+
+        return redirect()
+            ->route('categorias.index')
+            ->with('success', 'Categoría eliminada correctamente.');
     }
 }

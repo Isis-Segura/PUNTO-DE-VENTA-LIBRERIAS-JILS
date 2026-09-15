@@ -158,8 +158,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
@@ -221,7 +221,9 @@ return [
     'sidebar_mini' => 'lg',
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    // true = AdminLTE guarda en localStorage si el menú está colapsado
+    // y lo restaura al navegar entre páginas
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -346,43 +348,46 @@ return [
             'text' => 'Punto de venta',
             'url' => 'ventas/pos',
             'icon' => 'fas fa-fw fa-cash-register',
-            'classes' => 'bg-lime text-white',
+            'classes' => 'pos-nav-item pos-nav-pos text-white',
             'can' => 'puede-vender',
         ],
         [
             'text' => 'Sucursales',
             'url' => 'sucursales',
             'icon' => 'fas fa-fw fa-store',
-            'classes' => 'bg-indigo text-white',
-            'can' => 'es-admin',
+            'classes' => 'pos-nav-item pos-nav-sucursales text-white',
+            'can' => 'es-admin-o-gerente',
         ],
         [
             'text' => 'Productos',
             'url' => 'productos',
             'icon' => 'fas fa-fw fa-box',
-            'classes' => 'bg-teal text-white',
-            'can' => 'es-admin-o-gerente',
-        ],
-        [
-            'text' => 'Inventario',
-            'url' => 'inventario',
-            'icon' => 'fas fa-fw fa-warehouse',
-            'classes' => 'bg-orange text-white',
+            'classes' => 'pos-nav-item pos-nav-productos text-white',
             'can' => 'es-admin-o-gerente',
         ],
         [
             'text' => 'Historial de ventas',
             'url' => 'ventas',
             'icon' => 'fas fa-fw fa-receipt',
-            'classes' => 'bg-purple text-white',
+            'classes' => 'pos-nav-item pos-nav-ventas text-white',
             'can' => 'puede-vender',
         ],
         [
             'text' => 'Usuarios',
             'url' => 'admin/usuarios',
             'icon' => 'fas fa-fw fa-users',
-            'classes' => 'bg-green text-white',
-            'can' => 'es-admin',
+            'classes' => 'pos-nav-item pos-nav-usuarios text-white',
+            // El Administrador General ve/administra a todos; el Gerente ve
+            // este mismo enlace pero solo puede administrar a los Cajeros
+            // de su propia sucursal (el controlador limita el alcance).
+            'can' => 'es-admin-o-gerente',
+        ],
+        [
+            'text' => 'Categorías',
+            'url' => 'categorias',
+            'icon' => 'fas fa-fw fa-tags',
+            'classes' => 'pos-nav-item pos-nav-categorias text-white',
+            'can' => 'es-admin-o-gerente',
         ],
 
     ],

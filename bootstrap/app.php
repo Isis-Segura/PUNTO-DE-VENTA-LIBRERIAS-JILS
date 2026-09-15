@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\EnsureUserHasRole;
+use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\PreventBackHistoryCache;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,9 +21,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => EnsureUserHasRole::class,
         ]);
 
-        // Aplica el idioma guardado en sesión a todas las peticiones web
+        // Aplica el idioma guardado en sesión a todas las peticiones web.
+        // EnsureUserIsActive no hace nada si no hay usuario logeado, así que
+        // es seguro dejarlo en el grupo 'web' completo (invitados y logeados).
+        // PreventBackHistoryCache evita que el navegador sirva páginas ya
+        // autenticadas desde su caché después de cerrar sesión (botón "Atrás").
         $middleware->web(append: [
             SetLocale::class,
+            EnsureUserIsActive::class,
+            PreventBackHistoryCache::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

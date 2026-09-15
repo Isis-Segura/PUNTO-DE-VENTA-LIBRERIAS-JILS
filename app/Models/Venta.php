@@ -16,6 +16,8 @@ class Venta extends Model
         'metodo_pago_id',
         'folio',
         'subtotal',
+        'iva',
+        'tasa_iva',
         'total',
         'monto_recibido',
         'cambio',
@@ -23,6 +25,8 @@ class Venta extends Model
 
     protected $casts = [
         'subtotal' => 'decimal:2',
+        'iva' => 'decimal:2',
+        'tasa_iva' => 'decimal:2',
         'total' => 'decimal:2',
         'monto_recibido' => 'decimal:2',
         'cambio' => 'decimal:2',
@@ -33,9 +37,6 @@ class Venta extends Model
         return $this->belongsTo(Sucursal::class);
     }
 
-    /**
-     * El cajero (o usuario) que registró la venta.
-     */
     public function cajero(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

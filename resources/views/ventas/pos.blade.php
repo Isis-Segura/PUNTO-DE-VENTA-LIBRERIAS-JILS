@@ -3,7 +3,7 @@
 @section('title', __('Punto de venta'))
 
 @section('content_header')
-    <h1>{{ __('Punto de venta') }} — {{ $sucursal->nombre }}</h1>
+    <h1>{{ __('Punto de venta') }}@if($sucursal) — {{ $sucursal->nombre }}@endif</h1>
 @stop
 
 @section('content')
@@ -12,15 +12,24 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    @if ($sucursales->count() > 1)
-        <form method="GET" class="form-inline mb-3">
+    @if (auth()->user()->isAdmin())
+        <form method="GET" action="{{ route('ventas.create') }}" class="form-inline mb-3">
             <label class="mr-2">{{ __('Vendiendo en la sucursal') }}:</label>
             <select name="sucursal_id" class="form-control" onchange="this.form.submit()">
+                <option value="">{{ __('— Elige una sucursal —') }}</option>
                 @foreach ($sucursales as $s)
-                    <option value="{{ $s->id }}" {{ $s->id === $sucursal->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                    <option value="{{ $s->id }}" {{ $sucursal && $s->id === $sucursal->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
                 @endforeach
             </select>
         </form>
+        @unless ($sucursal)
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                {{ __('Selecciona una sucursal para ver sus productos y registrar la venta.') }}
+            </div>
+        @endunless
+    @elseif ($sucursal)
+        <p class="text-muted mb-3">{{ __('Vendiendo en') }}: <strong>{{ $sucursal->nombre }}</strong></p>
     @endif
 
     <div class="row">
@@ -42,7 +51,7 @@
                             </tr>
                         </thead>
                         <tbody id="resultados">
-                            <tr><td colspan="4" class="text-center text-muted py-3">{{ __('Escribe para buscar productos...') }}</td></tr>
+                            <tr><td colspan="4" class="text-center text-muted py-3">{{ $sucursal ? __('Cargando productos...') : __('Selecciona una sucursal para ver productos') }}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -76,13 +85,17 @@
                         <span id="subtotal-total">$0.00</span>
                     </div>
                     <div class="d-flex justify-content-between">
+                        <span>{{ __('IVA') }} (16%):</span>
+                        <span id="iva-total">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
                         <strong>{{ __('Total') }}:</strong>
                         <span id="gran-total"><strong>$0.00</strong></span>
                     </div>
 
                     <form id="form-venta" action="{{ route('ventas.store') }}" method="POST" class="mt-3">
                         @csrf
-                        <input type="hidden" name="sucursal_id" value="{{ $sucursal->id }}">
+                        @if($sucursal)<input type="hidden" name="sucursal_id" value="{{ $sucursal->id }}">@endif
                         <div id="items-container"></div>
 
                         <div class="form-group">
@@ -114,13 +127,15 @@
 @section('js')
 <script>
 (function () {
-    const urlBuscar = @json(route('ventas.buscar', ['sucursal_id' => $sucursal->id]));
+    const urlBuscar = @json($sucursal ? route('ventas.buscar', ['sucursal_id' => $sucursal->id]) : null);
     const buscador = document.getElementById('buscador');
     const resultados = document.getElementById('resultados');
     const carritoBody = document.getElementById('carrito-body');
     const itemsContainer = document.getElementById('items-container');
     const subtotalEl = document.getElementById('subtotal-total');
+    const ivaEl = document.getElementById('iva-total');
     const totalEl = document.getElementById('gran-total');
+    const TASA_IVA = 0.16;
     const btnConfirmar = document.getElementById('btn-confirmar');
     const formVenta = document.getElementById('form-venta');
     const selectMetodoPago = document.getElementById('metodo-pago');
@@ -167,6 +182,7 @@
     inputMontoRecibido.addEventListener('input', actualizarVuelto);
 
     buscador.addEventListener('input', function () {
+        if (!urlBuscar) return;
         clearTimeout(timeoutBusqueda);
         const texto = this.value.trim();
 
@@ -262,6 +278,7 @@
         if (!ids.length) {
             carritoBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">{{ __('El carrito está vacío') }}</td></tr>';
             subtotalEl.textContent = '$0.00';
+            if (ivaEl) ivaEl.textContent = '$0.00';
             totalEl.innerHTML = '<strong>$0.00</strong>';
             btnConfirmar.disabled = true;
             totalActual = 0;
@@ -307,11 +324,15 @@
             `);
         });
 
+        const iva = Math.round(subtotal * TASA_IVA * 100) / 100;
+        const total = Math.round((subtotal + iva) * 100) / 100;
+
         subtotalEl.textContent = '$' + subtotal.toFixed(2);
-        totalEl.innerHTML = '<strong>$' + subtotal.toFixed(2) + '</strong>';
+        if (ivaEl) ivaEl.textContent = '$' + iva.toFixed(2);
+        totalEl.innerHTML = '<strong>$' + total.toFixed(2) + '</strong>';
         btnConfirmar.disabled = false;
 
-        totalActual = subtotal;
+        totalActual = total;
         actualizarVuelto();
     }
 
@@ -321,7 +342,20 @@
         return div.innerHTML;
     }
 
-    formVenta.addEventListener('submit', function (e) {
+    
+    // Cargar listado de la sucursal al abrir (sin escribir en el buscador)
+    function cargarProductosInicial() {
+        if (!urlBuscar) return;
+        fetch(urlBuscar + '&q=')
+            .then(r => r.json())
+            .then(mostrarResultados)
+            .catch(() => {
+                resultados.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-3">{{ __('Error al cargar productos') }}</td></tr>';
+            });
+    }
+    cargarProductosInicial();
+
+formVenta.addEventListener('submit', function (e) {
         if (!Object.keys(carrito).length) {
             e.preventDefault();
             alert('{{ __('Agrega al menos un producto al carrito.') }}');

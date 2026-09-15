@@ -36,16 +36,25 @@ class ProductoController extends Controller
 
     public function store(Request $request)
     {
+        // "precio" vive en una columna decimal(10,2): el valor más grande que
+        // admite es 99,999,999.99. Sin este máximo, la validación dejaba
+        // pasar cualquier número y MySQL terminaba tronando con un error SQL
+        // crudo (mismo patrón que el bug del pago en efectivo). Igual para
+        // "cantidad_inicial" y "stock_minimo" (columnas unsignedInteger).
         $data = $request->validate([
             'sucursal_id' => ['required', 'exists:sucursales,id'],
             'categoria_id' => ['nullable', 'exists:categorias,id'],
             'nombre' => ['required', 'string', 'max:200'],
             'descripcion' => ['nullable', 'string'],
             'codigo' => ['nullable', 'string', 'max:60'],
-            'precio' => ['required', 'numeric', 'min:0'],
-            'cantidad_inicial' => ['required', 'integer', 'min:0'],
-            'stock_minimo' => ['required', 'integer', 'min:0'],
+            'precio' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'cantidad_inicial' => ['required', 'integer', 'min:0', 'max:999999999'],
+            'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
             'activo' => ['required', 'boolean'],
+        ], [
+            'precio.max' => 'El precio no puede ser mayor a $99,999,999.99.',
+            'cantidad_inicial.max' => 'La cantidad inicial no puede ser mayor a 999,999,999.',
+            'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
@@ -92,9 +101,12 @@ class ProductoController extends Controller
             'nombre' => ['required', 'string', 'max:200'],
             'descripcion' => ['nullable', 'string'],
             'codigo' => ['nullable', 'string', 'max:60'],
-            'precio' => ['required', 'numeric', 'min:0'],
-            'stock_minimo' => ['required', 'integer', 'min:0'],
+            'precio' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
             'activo' => ['required', 'boolean'],
+        ], [
+            'precio.max' => 'El precio no puede ser mayor a $99,999,999.99.',
+            'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);

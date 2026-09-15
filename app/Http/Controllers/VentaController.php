@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\DB;
 class VentaController extends Controller
 {
     /**
-     * Historial de ventas (lo que el protocolo llama "Consultar el historial
-     * de ventas" / "Supervisar las ventas realizadas en su sucursal").
+     * Historial de ventas.
      */
     public function index(Request $request)
     {
@@ -53,22 +52,24 @@ class VentaController extends Controller
      */
     public function create(Request $request)
     {
+        $user = auth()->user();
         $sucursal = $this->resolverSucursalActiva($request);
+        $sucursales = $this->sucursalesVisibles();
+        $metodosPago = MetodoPago::orderBy('nombre')->get();
 
-        if (! $sucursal) {
+        // Gerente/Cajero sin sucursal: no pueden vender
+        if (! $user->isAdmin() && ! $sucursal) {
             return redirect()
                 ->route('ventas.index')
                 ->with('error', 'No tienes una sucursal asignada. Pide al Administrador General que te asigne una.');
         }
 
-        $metodosPago = MetodoPago::orderBy('nombre')->get();
-        $sucursales = $this->sucursalesVisibles(); // solo se usa si es Admin, para el selector
-
+        // Admin puede entrar sin sucursal elegida (debe escogerla en pantalla)
         return view('ventas.pos', compact('sucursal', 'metodosPago', 'sucursales'));
     }
 
     /**
-     * Endpoint JSON usado por el buscador del POS (fetch/JS).
+     * Endpoint JSON usado por el buscador del POS.
      */
     public function buscarProductos(Request $request)
     {
@@ -90,7 +91,7 @@ class VentaController extends Controller
                 });
             })
             ->orderBy('nombre')
-            ->limit(30)
+            ->limit(100)
             ->get()
             ->map(fn ($p) => [
                 'id' => $p->id,
@@ -103,9 +104,7 @@ class VentaController extends Controller
     }
 
     /**
-     * Confirma la venta: valida stock, crea el ticket (venta + detalle) y
-     * descuenta el inventario automáticamente. Todo en una transacción para
-     * que, si algo falla, no se quede el inventario a medio actualizar.
+     * Confirma la venta: valida stock, crea el ticket y descuenta inventario.
      */
     public function store(Request $request)
     {
@@ -123,8 +122,6 @@ class VentaController extends Controller
             abort(403, 'No tienes permiso sobre esa sucursal.');
         }
 
-        // El pago en efectivo requiere el monto que entregó el cliente para
-        // poder calcular el vuelto.
         $esEfectivo = MetodoPago::whereKey($data['metodo_pago_id'])->value('nombre') === 'Efectivo';
 
         if ($esEfectivo && ! $request->filled('monto_recibido')) {
@@ -136,9 +133,6 @@ class VentaController extends Controller
                 $subtotal = 0;
                 $lineas = [];
 
-                // Se bloquean las filas de inventario (lockForUpdate) para
-                // evitar que dos ventas al mismo tiempo vendan el mismo
-                // producto por encima del stock disponible.
                 foreach ($data['items'] as $item) {
                     $producto = Producto::where('id', $item['producto_id'])
                         ->where('sucursal_id', $data['sucursal_id'])
@@ -165,7 +159,10 @@ class VentaController extends Controller
                     ];
                 }
 
-                $total = $subtotal; // aquí se podrían sumar impuestos/descuentos si el proyecto lo requiere
+                // Precios sin IVA; se aplica tasa del 16% (México)
+                $tasaIva = 16.0;
+                $iva = round($subtotal * ($tasaIva / 100), 2);
+                $total = round($subtotal + $iva, 2);
 
                 $montoRecibido = null;
                 $cambio = null;
@@ -184,8 +181,10 @@ class VentaController extends Controller
                     'sucursal_id' => $data['sucursal_id'],
                     'user_id' => auth()->id(),
                     'metodo_pago_id' => $data['metodo_pago_id'],
-                    'folio' => 'TEMP', // se reemplaza abajo una vez que ya existe el id
+                    'folio' => 'TEMP',
                     'subtotal' => $subtotal,
+                    'iva' => $iva,
+                    'tasa_iva' => $tasaIva,
                     'total' => $total,
                     'monto_recibido' => $montoRecibido,
                     'cambio' => $cambio,
@@ -201,7 +200,6 @@ class VentaController extends Controller
                         'subtotal' => $linea['subtotal'],
                     ]);
 
-                    // Actualiza el inventario automáticamente (ej. 20 - 3 = 17)
                     $linea['inventario']->decrement('cantidad', $linea['cantidad']);
                 }
 
@@ -210,7 +208,7 @@ class VentaController extends Controller
         } catch (\RuntimeException $e) {
             return back()->withInput()->with('error', $e->getMessage());
         } catch (\Throwable $e) {
-            report($e); // se registra en el log para poder revisarlo después
+            report($e);
 
             return back()->withInput()->with('error', __('Ocurrió un error al registrar la venta. Intenta de nuevo.'));
         }
@@ -221,7 +219,7 @@ class VentaController extends Controller
     }
 
     /**
-     * Muestra el ticket/comprobante de una venta ya confirmada.
+     * Muestra el ticket de una venta.
      */
     public function show(Venta $venta)
     {
@@ -236,9 +234,7 @@ class VentaController extends Controller
     }
 
     /**
-     * Genera y descarga el recibo digital de una venta ya confirmada
-     * (archivo .html con formato de recibo, listo para guardar, enviar o
-     * imprimir/guardar como PDF desde el navegador).
+     * Descarga el recibo (PDF si Dompdf está instalado, si no HTML).
      */
     public function reciboDigital(Venta $venta)
     {
@@ -250,19 +246,63 @@ class VentaController extends Controller
         $venta->load(['detalles.producto', 'sucursal', 'cajero', 'metodoPago']);
 
         $html = view('ventas.recibo-digital', compact('venta'))->render();
+        $nombreArchivo = 'recibo-'.$venta->folio.'.pdf';
 
-        $nombreArchivo = 'recibo-'.$venta->folio.'.html';
+        if (class_exists(\Dompdf\Dompdf::class)) {
+            $options = new \Dompdf\Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', false);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html, 'UTF-8');
+            $dompdf->setPaper('A5', 'portrait');
+            $dompdf->render();
+
+            return response($dompdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="'.$nombreArchivo.'"',
+            ]);
+        }
 
         return response($html, 200, [
             'Content-Type' => 'text/html; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="'.$nombreArchivo.'"',
+            'Content-Disposition' => 'inline; filename="recibo-'.$venta->folio.'.html"',
         ]);
     }
 
     /**
-     * Determina la sucursal activa para el POS: fija (la del usuario) si es
-     * Gerente/Cajero, o elegida por query string si es Admin.
+     * Elimina un ticket del historial (solo Administrador).
+     * Devuelve el stock al inventario.
      */
+    public function destroy(Venta $venta)
+    {
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Solo un administrador puede eliminar tickets del historial.'));
+        }
+
+        $venta->load('detalles');
+
+        DB::transaction(function () use ($venta) {
+            foreach ($venta->detalles as $detalle) {
+                $inventario = Inventario::where('producto_id', $detalle->producto_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($inventario) {
+                    $inventario->increment('cantidad', $detalle->cantidad);
+                }
+            }
+
+            $venta->detalles()->delete();
+            $venta->delete();
+        });
+
+        return redirect()
+            ->route('ventas.index')
+            ->with('success', __('Ticket eliminado. El inventario fue actualizado.'));
+    }
+
     private function resolverSucursalActiva(Request $request): ?Sucursal
     {
         $user = auth()->user();
@@ -271,11 +311,12 @@ class VentaController extends Controller
             return $user->sucursal;
         }
 
+        // Admin: solo si eligió sucursal explícitamente (sin default)
         if ($request->filled('sucursal_id')) {
-            return Sucursal::find($request->sucursal_id);
+            return Sucursal::where('activa', true)->find($request->sucursal_id);
         }
 
-        return Sucursal::where('activa', true)->orderBy('nombre')->first();
+        return null;
     }
 
     private function sucursalesVisibles()

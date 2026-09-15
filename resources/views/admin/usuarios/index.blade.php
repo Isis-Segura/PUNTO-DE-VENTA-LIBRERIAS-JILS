@@ -31,6 +31,7 @@
                         <th>{{ __('Nombre') }}</th>
                         <th>{{ __('Correo') }}</th>
                         <th>{{ __('Rol') }}</th>
+                        <th>{{ __('Sucursal') }}</th>
                         <th>{{ __('Estado') }}</th>
                         <th class="text-right">{{ __('Acciones') }}</th>
                     </tr>
@@ -41,6 +42,7 @@
                             <td>{{ $usuario->name }}</td>
                             <td>{{ $usuario->email }}</td>
                             <td>{{ $usuario->role->nombre ?? __('Sin rol') }}</td>
+                            <td>{{ $usuario->sucursal->nombre ?? __('—') }}</td>
                             <td>
                                 @if ($usuario->activo)
                                     <span class="badge badge-success">{{ __('Activo') }}</span>
@@ -64,7 +66,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-3">{{ __('No hay usuarios registrados.') }}</td>
+                            <td colspan="6" class="text-center py-3">{{ __('No hay usuarios registrados.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

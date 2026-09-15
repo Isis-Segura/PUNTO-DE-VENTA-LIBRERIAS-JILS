@@ -3,40 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventario;
-use App\Models\Sucursal;
 use Illuminate\Http\Request;
 
 class InventarioController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Inventario::with(['producto.sucursal', 'producto.categoria']);
-
-        $ids = auth()->user()->sucursalIdsPermitidas();
-
-        if ($ids !== null) {
-            $query->whereHas('producto', fn ($q) => $q->whereIn('sucursal_id', $ids));
-        }
-
-        if ($request->filled('sucursal_id')) {
-            $query->whereHas('producto', fn ($q) => $q->where('sucursal_id', $request->sucursal_id));
-        }
-
-        if ($request->boolean('bajo_stock')) {
-            $query->whereColumn('cantidad', '<=', 'stock_minimo');
-        }
-
-        $inventarios = $query->orderBy('cantidad')->paginate(15)->withQueryString();
-
-        $sucursalesQuery = Sucursal::orderBy('nombre');
-        if ($ids !== null) {
-            $sucursalesQuery->whereIn('id', $ids);
-        }
-        $sucursales = $sucursalesQuery->get();
-
-        return view('inventario.index', compact('inventarios', 'sucursales'));
-    }
-
     /**
      * Ajusta manualmente la cantidad disponible de un producto
      * (ej. tras un conteo físico, una merma, o una nueva compra).
@@ -49,9 +19,18 @@ class InventarioController extends Controller
             abort(403, 'No tienes permiso sobre esa sucursal.');
         }
 
+        // Antes no había tope máximo, así que un número extremadamente
+        // grande (ej. la columna es unsignedInteger, tope real ~4,294,967,295)
+        // rompía la base de datos con un error SQL crudo mostrado en
+        // pantalla. Ponemos un máximo razonable y lo validamos aquí para
+        // que el error se muestre de forma amigable en vez de que truene la
+        // consulta SQL.
         $data = $request->validate([
-            'cantidad' => ['required', 'integer', 'min:0'],
-            'stock_minimo' => ['required', 'integer', 'min:0'],
+            'cantidad' => ['required', 'integer', 'min:0', 'max:999999999'],
+            'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
+        ], [
+            'cantidad.max' => 'La cantidad no puede ser mayor a 999,999,999.',
+            'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
         ]);
 
         $inventario->update($data);
