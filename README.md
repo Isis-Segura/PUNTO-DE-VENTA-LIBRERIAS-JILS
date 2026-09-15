@@ -208,7 +208,7 @@ php artisan boost:install
 | **ISIS SEGURA**    | @Isis-Segura |
 | **JOSGUA MALUENGA** | @JGDM84      |
 | **ISAI FIGUEROA** | @FigueroaShalom  |
-| **LUCIA VIRGEN** | @luciv |
+| **LUCIA VIRGEN** | @Lucia-va |
 
 
 ## Recursos
