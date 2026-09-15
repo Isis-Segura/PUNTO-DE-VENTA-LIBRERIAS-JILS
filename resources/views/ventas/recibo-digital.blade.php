@@ -145,6 +145,10 @@
                 <td class="label">{{ __('Subtotal') }}</td>
                 <td class="value">${{ number_format($venta->subtotal, 2) }}</td>
             </tr>
+            <tr>
+                <td class="label">{{ __('IVA') }} ({{ number_format($venta->tasa_iva ?? 16, 0) }}%)</td>
+                <td class="value">${{ number_format($venta->iva ?? 0, 2) }}</td>
+            </tr>
             <tr class="total">
                 <td class="label">{{ __('Total') }}</td>
                 <td class="value">${{ number_format($venta->total, 2) }}</td>

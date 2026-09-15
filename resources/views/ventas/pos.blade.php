@@ -76,6 +76,10 @@
                         <span id="subtotal-total">$0.00</span>
                     </div>
                     <div class="d-flex justify-content-between">
+                        <span>{{ __('IVA') }} (16%):</span>
+                        <span id="iva-total">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
                         <strong>{{ __('Total') }}:</strong>
                         <span id="gran-total"><strong>$0.00</strong></span>
                     </div>
@@ -120,7 +124,9 @@
     const carritoBody = document.getElementById('carrito-body');
     const itemsContainer = document.getElementById('items-container');
     const subtotalEl = document.getElementById('subtotal-total');
+    const ivaEl = document.getElementById('iva-total');
     const totalEl = document.getElementById('gran-total');
+    const TASA_IVA = 0.16;
     const btnConfirmar = document.getElementById('btn-confirmar');
     const formVenta = document.getElementById('form-venta');
     const selectMetodoPago = document.getElementById('metodo-pago');
@@ -262,6 +268,7 @@
         if (!ids.length) {
             carritoBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">{{ __('El carrito está vacío') }}</td></tr>';
             subtotalEl.textContent = '$0.00';
+            if (ivaEl) ivaEl.textContent = '$0.00';
             totalEl.innerHTML = '<strong>$0.00</strong>';
             btnConfirmar.disabled = true;
             totalActual = 0;
@@ -307,11 +314,15 @@
             `);
         });
 
+        const iva = Math.round(subtotal * TASA_IVA * 100) / 100;
+        const total = Math.round((subtotal + iva) * 100) / 100;
+
         subtotalEl.textContent = '$' + subtotal.toFixed(2);
-        totalEl.innerHTML = '<strong>$' + subtotal.toFixed(2) + '</strong>';
+        if (ivaEl) ivaEl.textContent = '$' + iva.toFixed(2);
+        totalEl.innerHTML = '<strong>$' + total.toFixed(2) + '</strong>';
         btnConfirmar.disabled = false;
 
-        totalActual = subtotal;
+        totalActual = total;
         actualizarVuelto();
     }
 

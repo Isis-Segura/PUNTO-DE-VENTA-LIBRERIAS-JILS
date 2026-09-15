@@ -50,6 +50,10 @@
                 <span>{{ __('Subtotal') }}</span>
                 <span>${{ number_format($venta->subtotal, 2) }}</span>
             </div>
+            <div class="fila-total">
+                <span>{{ __('IVA') }} ({{ number_format($venta->tasa_iva ?? 16, 0) }}%)</span>
+                <span>${{ number_format($venta->iva ?? 0, 2) }}</span>
+            </div>
             <div class="fila-total grande">
                 <span>{{ __('Total') }}</span>
                 <span>${{ number_format($venta->total, 2) }}</span>

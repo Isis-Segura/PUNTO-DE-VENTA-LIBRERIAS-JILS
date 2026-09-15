@@ -72,10 +72,8 @@
                                     <i class="fas fa-receipt"></i> {{ __('Ver ticket') }}
                                 </a>
                                 @if (auth()->user()->isAdmin())
-                                    <form action="{{ route('ventas.destroy', $venta) }}"
-                                          method="POST"
-                                          class="d-inline"
-                                          onsubmit="return confirm('¿Eliminar el ticket {{ $venta->folio }}? Se devolverá el stock al inventario.');">
+                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirm(@json(__('¿Eliminar el ticket :folio? Se devolverá el stock al inventario.', ['folio' => $venta->folio])));">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">

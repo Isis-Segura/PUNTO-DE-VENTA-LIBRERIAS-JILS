@@ -31,9 +31,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // Sucursales: el Administrador General las crea/edita/elimina.
-// OJO: forzamos el nombre del parámetro de ruta a "sucursal" porque Laravel,
-// al intentar convertir "sucursales" a singular automáticamente, lo hacía mal
-// (generaba "sucursale" en vez de "sucursal"), lo que rompía el botón Editar.
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('sucursales', SucursalController::class)
         ->except(['show', 'index'])
@@ -48,15 +45,13 @@ Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
 });
 
 // Productos: Admin (todas las sucursales) y Gerente (solo la suya).
-// El listado de inventario ahora vive dentro del detalle de cada sucursal
-// (SucursalController@show); aquí solo dejamos el ajuste de cantidades.
 Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
     Route::resource('productos', ProductoController::class)->except(['show']);
 
     Route::put('inventario/{inventario}', [InventarioController::class, 'update'])->name('inventario.update');
 });
 
-// Ventas / Punto de venta: Admin, Gerente y Cajero (cada quien limitado a su sucursal)
+// Ventas / Punto de venta: Admin, Gerente y Cajero
 Route::middleware(['auth', 'role:admin,gerente,cajero'])->group(function () {
     Route::get('ventas', [VentaController::class, 'index'])->name('ventas.index');
     Route::get('ventas/pos', [VentaController::class, 'create'])->name('ventas.create');
@@ -64,4 +59,9 @@ Route::middleware(['auth', 'role:admin,gerente,cajero'])->group(function () {
     Route::post('ventas', [VentaController::class, 'store'])->name('ventas.store');
     Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
     Route::get('ventas/{venta}/recibo-digital', [VentaController::class, 'reciboDigital'])->name('ventas.recibo-digital');
+});
+
+// Solo el Administrador puede borrar tickets del historial
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::delete('ventas/{venta}', [VentaController::class, 'destroy'])->name('ventas.destroy');
 });
