@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="Logo Librería JILS" width="180"/>
+<img src="public\vendor\adminlte\dist\img\J_logo.jpeg" alt="Logo Librería JILS" width="180"/>
 
 # Librería JILS
 ### Sistema POS e Inventario Multi-Sede
