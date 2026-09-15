@@ -1,111 +1,245 @@
-<p align="center">
-    <img src="public/vendor/adminlte/dist/img/J_logo.jpeg" alt="Logo Librería JILS">
-</p>
-
 <div align="center">
 
-# Librería JILS
+<img src="docs/assets/logo.png" alt="Logo Librería JILS" width="180"/>
 
+# Librería JILS
 ### Sistema POS e Inventario Multi-Sede
 
-Aplicación web integral para la gestión centralizada de ventas, control de inventario y administración de sucursales.
-
-<br>
-
-[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
-[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
-
-<br>
-
-**Proyecto Integrador — Facultad de Ingeniería Electromecánica**  
-**Universidad de Colima**
-
-**Semestre:** Agosto 2026 – Enero 2027  
-**Grupo:** 3ºE — Ingeniería de Software
+Aplicación web para la gestión centralizada de ventas, inventario y sucursales.
 
 </div>
 
 ---
 
-## Descripción del Proyecto
+## Información del proyecto
 
-Librería JILS es una plataforma web diseñada para optimizar y administrar las operaciones de una red de librerías con múltiples sucursales.
-
-El sistema permite centralizar la información del catálogo de productos, controlar el inventario de cada sede de forma independiente, procesar transacciones mediante un Punto de Venta (POS) y gestionar los accesos de usuario mediante un sistema basado en roles.
-
-El objetivo principal es automatizar los procesos operativos, reducir la carga de gestión manual y proporcionar métricas precisas y actualizadas sobre las existencias y el flujo de ventas corporativo.
-
----
-
-## Características Principales
-
-### Gestión Multi-Sede
-
-- Administración centralizada del esquema de sucursales.
-- Segmentación de inventario independiente por cada sede.
-- Control detallado de productos y trazabilidad de existencias.
-- Gestión de cajas registradoras y asignación de personal.
-
-### Punto de Venta (POS)
-
-- Interfaz optimizada para el registro ágil de ventas.
-- Cálculo automatizado de importes, impuestos y subtotales.
-- Integración y gestión de múltiples métodos de pago.
-- Emisión de comprobantes y tickets de compra.
-- Conciliación y descuento automático en el inventario.
-
-### Control de Inventario
-
-- Panel de consulta de existencias en tiempo real.
-- Supervisión del nivel de stock segmentado por sucursal.
-- Sistema de alertas automatizadas para bajo inventario.
-- Catálogo maestro unificado para productos y fondo editorial.
-
-### Roles y Permisos (RBAC)
-
-| Rol | Funciones Principales |
+| Dato | Detalle |
 |---|---|
-| **Administrador General** | Acceso global y control total del sistema, gestión de sucursales, administración de usuarios y visualización de métricas generales. |
-| **Gerente de Sede** | Administración del catálogo local, supervisión del inventario específico de su sucursal y gestión de aperturas/cierres de caja. |
-| **Cajero** | Operación directa del Punto de Venta, procesamiento de transacciones y cobros al cliente. |
-
-### Soporte Multilingüe
-
-La arquitectura de la aplicación incluye soporte de internacionalización para los siguientes idiomas:
-
-- Español
-- Inglés
+| Proyecto | Proyecto Integrador — Facultad de Ingeniería Electromecánica |
+| Institución | Universidad de Colima |
+| Semestre | Agosto 2026 – Enero 2027 |
+| Grupo | 3ºE — Ingeniería de Software |
 
 ---
 
-## Arquitectura del Sistema
+## Descripción
 
-```text
-                    ┌─────────────────────────┐
-                    │ Administrador General   │
-                    └────────────┬────────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 │                               │
-                 ▼                               ▼
-        ┌─────────────────┐             ┌─────────────────┐
-        │   Sucursal A    │             │   Sucursal B    │
-        │    Gerente      │             │    Gerente      │
-        └────────┬────────┘             └────────┬────────┘
-                 │                               │
-                 ▼                               ▼
-        ┌─────────────────┐             ┌─────────────────┐
-        │   Inventario A  │             │   Inventario B  │
-        └────────┬────────┘             └────────┬────────┘
-                 │                               │
-                 ▼                               ▼
-        ┌─────────────────┐             ┌─────────────────┐
-        │ Cajas / Cajeros │             │ Cajas / Cajeros │
-        └────────┬────────┘             └────────┬────────┘
-                 │                               │
-                 └───────────────┬───────────────┘
-                                 ▼
-                               Ventas
+Librería JILS es una aplicación web diseñada para administrar las operaciones de una librería con múltiples sucursales. El sistema centraliza la información de productos, controla el inventario de cada sede, registra ventas mediante un Punto de Venta (POS) y administra los distintos usuarios según sus responsabilidades.
+
+El objetivo principal es reducir la gestión manual y mantener información actualizada sobre las existencias y ventas de cada sucursal.
+
+---
+
+## Características
+
+### Gestión multi-sede
+- Administración centralizada de sucursales.
+- Inventario independiente por sede.
+- Control de productos y existencias.
+- Gestión de cajas y cajeros.
+
+### Punto de venta (POS)
+- Registro de ventas.
+- Cálculo automático de importes.
+- Gestión de métodos de pago.
+- Generación de tickets.
+- Descuento automático del inventario.
+
+### Inventario
+- Consulta de existencias.
+- Control de stock por sucursal.
+- Alertas de bajo inventario.
+- Catálogo centralizado de productos y libros.
+
+### Roles y permisos
+
+| Rol | Funciones principales |
+|---|---|
+| Administrador General | Control total del sistema, sucursales, usuarios y reportes |
+| Gerente de Sede | Administración de productos, inventario y cajas de su sucursal |
+| Cajero | Registro de ventas y cobros en caja |
+
+### Soporte multilingüe
+La aplicación cuenta con soporte para español e inglés.
+
+---
+
+## Arquitectura del sistema
+
+```
+                    Administrador General
+                            │
+              ┌─────────────┴─────────────┐
+              │                           │
+         Sucursal A                  Sucursal B
+          (Gerente)                   (Gerente)
+              │                           │
+        Inventario A                Inventario B
+              │                           │
+       Cajas / Cajeros            Cajas / Cajeros
+              │                           │
+              └─────────────┬─────────────┘
+                             │
+                          Ventas
+```
+
+---
+
+## Entidades de la base de datos
+
+Principales entidades del sistema:
+
+- Usuarios
+- Roles
+- Sucursales
+- Productos
+- Categorías
+- Inventario
+- Ventas
+- Detalles_Venta
+- Métodos_Pago
+
+**Relación simplificada:**
+
+```
+Usuarios ──► Roles
+
+Sucursal ──► Inventario ──► Productos
+
+Ventas ──► Detalles_Venta ──► Métodos_Pago
+```
+
+---
+
+## Instalación
+
+### Requisitos previos
+
+- PHP 8.2 o superior
+- Composer 2.0 o superior
+- MySQL 8.0 o superior
+- Node.js y NPM
+- Git
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/libreria-jils.git
+cd libreria-jils
+```
+
+### 2. Instalar dependencias
+
+```bash
+composer install
+npm install
+npm run build
+```
+
+### 3. Configurar el entorno
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+> En Windows, si el comando `cp` no funciona, copia manualmente `.env.example` y renómbralo como `.env`.
+
+### 4. Configurar la base de datos
+
+Edita el archivo `.env` con tus datos de conexión:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=jils_pos
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Asegúrate de que la base de datos `jils_pos` exista en MySQL antes de continuar.
+
+### 5. Ejecutar migraciones
+
+```bash
+php artisan migrate --seed
+```
+
+### 6. Iniciar el servidor
+
+```bash
+php artisan serve
+```
+
+Abre tu navegador en: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
+## Desarrollo asistido por IA
+
+El proyecto puede complementarse con herramientas de desarrollo asistido por inteligencia artificial, como Claude Code, Cursor, GitHub Copilot y Laravel Boost.
+
+Para instalar Laravel Boost:
+
+```bash
+composer require laravel/boost --dev
+php artisan boost:install
+```
+
+---
+
+## Tecnologías utilizadas
+
+| Tecnología | Uso |
+|---|---|
+| Laravel | Framework backend |
+| PHP | Lenguaje principal |
+| MySQL | Base de datos |
+| Node.js | Entorno para herramientas frontend |
+| NPM | Gestión de paquetes |
+| Blade | Motor de plantillas |
+| RBAC | Control de acceso por roles |
+
+---
+
+## Equipo de desarrollo
+
+- Díaz Maluenga Joshua Gabriel
+- Figueroa Huerta Isai Shalom
+- Segura Paulino Isis Alejandra
+- Virgen Ambriz Lucia Lorena
+
+**Tutor de grupo:** Mtro. Emilio Ballinas Arteaga
+
+### Comité docente
+
+| Asignatura | Docente |
+|---|---|
+| Estructura de Datos | Ernesto Navarro Álvarez |
+| Base de Datos | Enrique C. Rosales Busquets |
+| Metodologías Ágiles | Emilio Ballinas Arteaga |
+| Legislación y Derecho Informático | Fernando Tomás Díaz García |
+| Matemáticas Discretas | Juan Pablo Martínez Vargas |
+| Estructuras de Computadoras | Daniel Alfonso Verde Romero |
+| Inglés III | Ilse Abarca Torres |
+
+---
+
+## Recursos
+
+- [Documentación oficial de Laravel](https://laravel.com/docs)
+- [Laracasts](https://laracasts.com)
+- [Laravel Learn](https://laravel.com/learn)
+
+---
+
+## Seguridad
+
+Si encuentras una vulnerabilidad de seguridad en este proyecto, evita publicar los detalles públicamente. Para vulnerabilidades relacionadas con Laravel, consulta los canales oficiales de seguridad de Laravel.
+
+---
+
+## Licencia
+
+Este proyecto está disponible bajo la licencia MIT. Consulta el archivo `LICENSE` para más información.
