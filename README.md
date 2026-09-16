@@ -175,8 +175,3 @@ php artisan key:generate
 - [Documentación oficial de Laravel](https://laravel.com/docs)
 - [Laracasts](https://laracasts.com)
 - [Laravel Learn](https://laravel.com/learn)
-
----
-## Licencia
-
-Este proyecto está disponible bajo la licencia MIT. Consulta el archivo `LICENSE` para más información.
