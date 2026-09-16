@@ -142,7 +142,8 @@ return [
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    'usermenu_profile_url' => true,
+    'usermenu_profile_url' => 'mi-cuenta/contrasena',
 
     /*
     |--------------------------------------------------------------------------
@@ -332,11 +333,6 @@ return [
             ],
         ],
 
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
         [
             'text' => 'blog',
             'url' => 'admin/blog',
@@ -385,6 +381,13 @@ return [
         [
             'text' => 'Categorías',
             'url' => 'categorias',
+            'icon' => 'fas fa-fw fa-tags',
+            'classes' => 'pos-nav-item pos-nav-categorias text-white',
+            'can' => 'es-admin-o-gerente',
+        ],
+        [
+            'text' => 'Géneros',
+            'url' => 'generos',
             'icon' => 'fas fa-fw fa-tags',
             'classes' => 'pos-nav-item pos-nav-categorias text-white',
             'can' => 'es-admin-o-gerente',

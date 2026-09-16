@@ -4,6 +4,12 @@
 
 @section('content_header')
     <h1>{{ __('Sucursales') }}</h1>
+
+    <div class="js-search-empty text-center text-muted py-4" style="display:none;">
+        <i class="fas fa-search fa-2x mb-2 d-block"></i>
+        {{ __('No existe ninguna sucursal con esa búsqueda.') }}
+    </div>
+
 @stop
 
 @section('css')
@@ -126,7 +132,8 @@
                 $colores = ['#6f5cf0', '#0d9488', '#e0762a', '#2563eb', '#c0247a', '#059669'];
                 $accent = $colores[$sucursal->id % count($colores)];
             @endphp
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 js-search-item"
+                 data-search="{{ strtolower(($sucursal->nombre??'').' '.($sucursal->direccion??'').' '.($sucursal->telefono??'').' '.($sucursal->gerente->name??'')) }}">
                 <div class="card sucursal-card {{ $sucursal->activa ? '' : 'is-inactiva' }}"
                      style="--suc-accent: {{ $accent }}; --suc-accent-2: {{ $accent }}cc;">
                     <div class="card-body">
@@ -202,4 +209,34 @@
     </div>
 
     {{ $sucursales->links() }}
+@stop
+
+
+@section('js')
+<script>
+(function(){
+  function filtrar(texto){
+    var q=(texto||'').toString().trim().toLowerCase();
+    var items=document.querySelectorAll('.js-search-item');
+    var n=0;
+    items.forEach(function(el){
+      var ok=!q||(el.getAttribute('data-search')||'').indexOf(q)!==-1;
+      el.style.display=ok?'':'none';
+      if(ok)n++;
+    });
+    var empty=document.querySelector('.js-search-empty');
+    if(empty) empty.style.display=(items.length&&n===0)?'':'none';
+  }
+  document.addEventListener('input',function(e){
+    if(e.target&&(e.target.name==='q'||e.target.name==='adminlteSearch')) filtrar(e.target.value);
+  });
+  document.addEventListener('submit',function(e){
+    var f=e.target, inp=f&&f.querySelector&&f.querySelector('input[name="adminlteSearch"],input[name="q"]');
+    if(inp&&document.querySelector('.js-search-item')){ e.preventDefault(); filtrar(inp.value); }
+  });
+  var p=new URLSearchParams(location.search);
+  var ini=p.get('q')||p.get('adminlteSearch')||'';
+  if(ini) filtrar(ini);
+})();
+</script>
 @stop

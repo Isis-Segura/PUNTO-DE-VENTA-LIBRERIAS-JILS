@@ -17,7 +17,7 @@ class UsuarioController extends Controller
      * - Gerente: solo ve a los Cajeros de su propia sucursal (no puede ver
      *   a otros Gerentes, Administradores, ni cajeros de otras sucursales).
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         $query = User::with(['role', 'sucursal'])->orderBy('name');
 
@@ -25,7 +25,15 @@ class UsuarioController extends Controller
             $this->limitarAlAlcanceDelGerente($query);
         }
 
-        $usuarios = $query->paginate(10);
+        if ($request->filled('q') || $request->filled('adminlteSearch')) {
+            $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
+            });
+        }
+
+        $usuarios = $query->paginate(10)->withQueryString();
 
         return view('admin.usuarios.index', compact('usuarios'));
     }
@@ -139,11 +147,38 @@ class UsuarioController extends Controller
             return back()->with('error', 'No puedes eliminar tu propio usuario.');
         }
 
+        $mensaje = 'Usuario eliminado correctamente.';
+
+        // Si era Gerente: desactivar su(s) sucursal(es) y quitar el enlace de gerente
+        if ($usuario->isGerente()) {
+            $sucursales = \App\Models\Sucursal::query()
+                ->where(function ($q) use ($usuario) {
+                    $q->where('gerente_id', $usuario->id);
+                    if ($usuario->sucursal_id) {
+                        $q->orWhere('id', $usuario->sucursal_id);
+                    }
+                })
+                ->get();
+
+            foreach ($sucursales as $sucursal) {
+                $sucursal->activa = false;
+                if ((int) $sucursal->gerente_id === (int) $usuario->id) {
+                    $sucursal->gerente_id = null;
+                }
+                $sucursal->save();
+            }
+
+            if ($sucursales->isNotEmpty()) {
+                $nombres = $sucursales->pluck('nombre')->implode(', ');
+                $mensaje .= ' La(s) sucursal(es) '.$nombres.' quedaron inactivas al quedarse sin gerente.';
+            }
+        }
+
         $usuario->delete();
 
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuario eliminado correctamente.');
+            ->with('success', $mensaje);
     }
 
     /**

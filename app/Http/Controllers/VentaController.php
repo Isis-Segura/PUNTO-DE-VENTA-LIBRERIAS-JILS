@@ -17,6 +17,17 @@ class VentaController extends Controller
      */
     public function index(Request $request)
     {
+        $datos = $request->validate([
+            'sucursal_id' => ['nullable', 'integer', 'exists:sucursales,id'],
+            'desde' => ['nullable', 'date'],
+            'hasta' => ['nullable', 'date', 'after_or_equal:desde'],
+        ], [
+            'desde.date' => 'La fecha "Desde" no es válida.',
+            'hasta.date' => 'La fecha "Hasta" no es válida.',
+            'hasta.after_or_equal' => 'La fecha "Hasta" debe ser igual o posterior a "Desde".',
+            'sucursal_id.exists' => 'La sucursal seleccionada no es válida.',
+        ]);
+
         $query = Venta::with(['sucursal', 'cajero', 'metodoPago']);
 
         $ids = auth()->user()->sucursalIdsPermitidas();
@@ -24,16 +35,24 @@ class VentaController extends Controller
             $query->whereIn('sucursal_id', $ids);
         }
 
-        if ($request->filled('sucursal_id')) {
-            $query->where('sucursal_id', $request->sucursal_id);
+        if (! empty($datos['sucursal_id'])) {
+            $query->where('sucursal_id', $datos['sucursal_id']);
         }
 
-        if ($request->filled('desde')) {
-            $query->whereDate('created_at', '>=', $request->desde);
+        if (! empty($datos['desde'])) {
+            $query->where('created_at', '>=', $datos['desde'].' 00:00:00');
         }
 
-        if ($request->filled('hasta')) {
-            $query->whereDate('created_at', '<=', $request->hasta);
+        if (! empty($datos['hasta'])) {
+            $query->where('created_at', '<=', $datos['hasta'].' 23:59:59');
+        }
+
+        if ($request->filled('q') || $request->filled('adminlteSearch')) {
+            $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
+            $query->where(function ($sub) use ($q) {
+                $sub->where('folio', 'like', "%{$q}%")
+                    ->orWhereHas('cajero', fn ($u) => $u->where('name', 'like', "%{$q}%"));
+            });
         }
 
         $ventas = $query->latest()->paginate(15)->withQueryString();

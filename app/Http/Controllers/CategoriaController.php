@@ -18,9 +18,19 @@ class CategoriaController extends Controller
     /**
      * Listado de categorías.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categorias = Categoria::withCount('productos')->orderBy('nombre')->paginate(15);
+        $query = Categoria::withCount('productos')->orderBy('nombre');
+
+        if ($request->filled('q') || $request->filled('adminlteSearch')) {
+            $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
+            $query->where(function ($sub) use ($q) {
+                $sub->where('nombre', 'like', "%{$q}%")
+                    ->orWhere('descripcion', 'like', "%{$q}%");
+            });
+        }
+
+        $categorias = $query->paginate(15)->withQueryString();
 
         return view('admin.categorias.index', compact('categorias'));
     }

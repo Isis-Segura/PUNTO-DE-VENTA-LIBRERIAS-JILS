@@ -10,8 +10,14 @@ use Illuminate\Http\Request;
 
 class SucursalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Gerente: ir directo a su sucursal (sin listado/resumen)
+        $user = auth()->user();
+        if ($user->isGerente() && $user->sucursal_id) {
+            return redirect()->route('sucursales.show', $user->sucursal_id);
+        }
+
         $query = Sucursal::with('gerente')
             ->withCount([
                 'productos',
@@ -27,12 +33,21 @@ class SucursalController extends Controller
             $query->whereIn('id', $ids);
         }
 
+        if ($request->filled('q') || $request->filled('adminlteSearch')) {
+            $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
+            $query->where(function ($sub) use ($q) {
+                $sub->where('nombre', 'like', "%{$q}%")
+                    ->orWhere('direccion', 'like', "%{$q}%")
+                    ->orWhere('telefono', 'like', "%{$q}%");
+            });
+        }
+
         // Contadores para las tarjetas de resumen (sobre el total, no solo la página actual).
         $totalSucursales = (clone $query)->count();
         $activas = (clone $query)->where('activa', true)->count();
         $inactivas = $totalSucursales - $activas;
 
-        $sucursales = $query->paginate(9);
+        $sucursales = $query->paginate(9)->withQueryString();
 
         return view('sucursales.index', compact('sucursales', 'totalSucursales', 'activas', 'inactivas'));
     }
