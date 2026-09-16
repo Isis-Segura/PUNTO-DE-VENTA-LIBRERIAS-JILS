@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('productos.store') }}" method="POST">
+            <form action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
@@ -96,6 +96,17 @@
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>{{ __('Portada del libro (imagen)') }}</label>
+                    <input type="file" name="imagen" accept="image/*"
+                           class="form-control-file @error('imagen') is-invalid @enderror">
+                    <small class="form-text text-muted">{{ __('JPG, PNG o WEBP. Máx. 4 MB.') }}</small>
+                    @error('imagen')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
