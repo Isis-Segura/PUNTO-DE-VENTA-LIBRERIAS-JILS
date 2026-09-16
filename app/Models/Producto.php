@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 class Producto extends Model
 {
@@ -27,6 +28,8 @@ class Producto extends Model
         'activo' => 'boolean',
     ];
 
+    protected $appends = ['imagen_url'];
+
     public function sucursal(): BelongsTo
     {
         return $this->belongsTo(Sucursal::class);
@@ -47,17 +50,23 @@ class Producto extends Model
         return $this->hasMany(DetalleVenta::class);
     }
 
-    /**
-     * Cantidad disponible actual (0 si por alguna razón no tiene registro de inventario).
-     */
     public function getExistenciaAttribute(): int
     {
         return $this->inventario?->cantidad ?? 0;
     }
 
     /**
-     * Solo productos con stock disponible mayor a cero.
+     * URL pública de la portada (o null si no hay imagen).
      */
+    public function getImagenUrlAttribute(): ?string
+    {
+        if (! $this->imagen) {
+            return null;
+        }
+
+        return asset('storage/'.$this->imagen);
+    }
+
     public function scopeConStock($query)
     {
         return $query->whereHas('inventario', fn ($q) => $q->where('cantidad', '>', 0));

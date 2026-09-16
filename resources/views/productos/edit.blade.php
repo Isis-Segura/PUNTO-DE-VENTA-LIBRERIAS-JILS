@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('productos.update', $producto) }}" method="POST">
+            <form action="{{ route('productos.update', $producto) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -96,6 +96,26 @@
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>{{ __('Portada del libro (imagen)') }}</label>
+                    @if ($producto->imagen_url)
+                        <div class="mb-2">
+                            <img src="{{ $producto->imagen_url }}" alt="" style="max-height:140px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.12);">
+                        </div>
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="quitar_imagen" name="quitar_imagen" value="1">
+                            <label class="custom-control-label" for="quitar_imagen">{{ __('Quitar imagen actual') }}</label>
+                        </div>
+                    @endif
+                    <input type="file" name="imagen" accept="image/*"
+                           class="form-control-file @error('imagen') is-invalid @enderror">
+                    <small class="form-text text-muted">{{ __('Deja vacío para mantener la actual. JPG, PNG o WEBP. Máx. 4 MB.') }}</small>
+                    @error('imagen')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">

@@ -7,6 +7,7 @@ use App\Models\Inventario;
 use App\Models\Producto;
 use App\Models\Sucursal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
@@ -20,7 +21,7 @@ class ProductoController extends Controller
             $query->where('sucursal_id', $request->sucursal_id);
         }
 
-        $productos = $query->orderBy('nombre')->paginate(10)->withQueryString();
+        $productos = $query->orderBy('nombre')->paginate(12)->withQueryString();
         $sucursales = $this->sucursalesVisibles();
 
         return view('productos.index', compact('productos', 'sucursales'));
@@ -36,11 +37,6 @@ class ProductoController extends Controller
 
     public function store(Request $request)
     {
-        // "precio" vive en una columna decimal(10,2): el valor más grande que
-        // admite es 99,999,999.99. Sin este máximo, la validación dejaba
-        // pasar cualquier número y MySQL terminaba tronando con un error SQL
-        // crudo (mismo patrón que el bug del pago en efectivo). Igual para
-        // "cantidad_inicial" y "stock_minimo" (columnas unsignedInteger).
         $data = $request->validate([
             'sucursal_id' => ['required', 'exists:sucursales,id'],
             'categoria_id' => ['nullable', 'exists:categorias,id'],
@@ -51,13 +47,21 @@ class ProductoController extends Controller
             'cantidad_inicial' => ['required', 'integer', 'min:0', 'max:999999999'],
             'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
             'activo' => ['required', 'boolean'],
+            'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:4096'],
         ], [
             'precio.max' => 'El precio no puede ser mayor a $99,999,999.99.',
             'cantidad_inicial.max' => 'La cantidad inicial no puede ser mayor a 999,999,999.',
             'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
+            'imagen.image' => 'El archivo debe ser una imagen.',
+            'imagen.max' => 'La imagen no puede pesar más de 4 MB.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
+
+        $rutaImagen = null;
+        if ($request->hasFile('imagen')) {
+            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+        }
 
         $producto = Producto::create([
             'sucursal_id' => $data['sucursal_id'],
@@ -66,6 +70,7 @@ class ProductoController extends Controller
             'descripcion' => $data['descripcion'] ?? null,
             'codigo' => $data['codigo'] ?? null,
             'precio' => $data['precio'],
+            'imagen' => $rutaImagen,
             'activo' => $data['activo'],
         ]);
 
@@ -104,12 +109,28 @@ class ProductoController extends Controller
             'precio' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
             'activo' => ['required', 'boolean'],
+            'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:4096'],
+            'quitar_imagen' => ['nullable', 'boolean'],
         ], [
             'precio.max' => 'El precio no puede ser mayor a $99,999,999.99.',
             'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
+
+        $rutaImagen = $producto->imagen;
+
+        if ($request->boolean('quitar_imagen') && $rutaImagen) {
+            Storage::disk('public')->delete($rutaImagen);
+            $rutaImagen = null;
+        }
+
+        if ($request->hasFile('imagen')) {
+            if ($producto->imagen) {
+                Storage::disk('public')->delete($producto->imagen);
+            }
+            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+        }
 
         $producto->update([
             'sucursal_id' => $data['sucursal_id'],
@@ -118,10 +139,10 @@ class ProductoController extends Controller
             'descripcion' => $data['descripcion'] ?? null,
             'codigo' => $data['codigo'] ?? null,
             'precio' => $data['precio'],
+            'imagen' => $rutaImagen,
             'activo' => $data['activo'],
         ]);
 
-        // El stock mínimo se puede editar aquí; la cantidad real se ajusta desde Inventario
         if ($producto->inventario) {
             $producto->inventario->update(['stock_minimo' => $data['stock_minimo']]);
         }
@@ -139,6 +160,11 @@ class ProductoController extends Controller
             return back()->with('error', 'No puedes eliminar un producto que ya tiene ventas registradas. Desactívalo en su lugar.');
         }
 
+        if ($producto->imagen) {
+            Storage::disk('public')->delete($producto->imagen);
+        }
+
+        $producto->inventario()?->delete();
         $producto->delete();
 
         return redirect()
@@ -146,9 +172,6 @@ class ProductoController extends Controller
             ->with('success', 'Producto eliminado correctamente.');
     }
 
-    /**
-     * Limita el listado a la(s) sucursal(es) del usuario, salvo que sea Admin.
-     */
     private function aplicarFiltroSucursal($query): void
     {
         $ids = auth()->user()->sucursalIdsPermitidas();
@@ -158,13 +181,9 @@ class ProductoController extends Controller
         }
     }
 
-    /**
-     * Sucursales que el usuario puede elegir en los formularios.
-     */
     private function sucursalesVisibles()
     {
         $query = Sucursal::orderBy('nombre');
-
         $ids = auth()->user()->sucursalIdsPermitidas();
 
         if ($ids !== null) {
@@ -174,10 +193,6 @@ class ProductoController extends Controller
         return $query->get();
     }
 
-    /**
-     * Corta el acceso si un Gerente intenta crear/editar un producto de
-     * una sucursal que no es la suya (ej. manipulando el formulario a mano).
-     */
     private function verificarAccesoSucursal(int $sucursalId): void
     {
         $ids = auth()->user()->sucursalIdsPermitidas();

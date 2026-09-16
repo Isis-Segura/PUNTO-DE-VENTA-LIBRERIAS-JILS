@@ -40,20 +40,10 @@
                     <input type="text" id="buscador" class="form-control" autofocus
                            placeholder="{{ __('Buscar producto por nombre o código...') }}">
                 </div>
-                <div class="card-body p-0" style="max-height: 480px; overflow-y: auto;">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>{{ __('Producto') }}</th>
-                                <th>{{ __('Precio') }}</th>
-                                <th>{{ __('Existencia') }}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultados">
-                            <tr><td colspan="4" class="text-center text-muted py-3">{{ $sucursal ? __('Cargando productos...') : __('Selecciona una sucursal para ver productos') }}</td></tr>
-                        </tbody>
-                    </table>
+                <div class="card-body" style="max-height: 520px; overflow-y: auto;">
+                    <div id="resultados" class="row pos-prod-grid">
+                        <div class="col-12 text-center text-muted py-4">{{ $sucursal ? __('Cargando productos...') : __('Selecciona una sucursal para ver productos') }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,6 +112,41 @@
             </div>
         </div>
     </div>
+@stop
+
+
+@section('css')
+<style>
+.pos-prod-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(15,23,42,.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.pos-prod-card.is-sin-stock { opacity: .55; }
+.pos-prod-img {
+    aspect-ratio: 2/3;
+    background: linear-gradient(145deg,#1e293b,#475569);
+    overflow: hidden;
+}
+.pos-prod-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.pos-prod-ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.4); font-size: 2rem;
+}
+.pos-prod-info { padding: 8px 10px 10px; flex: 1; display: flex; flex-direction: column; }
+.pos-prod-name {
+    font-weight: 700; font-size: .82rem; line-height: 1.25;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    min-height: 2.1em; margin-bottom: 4px;
+}
+.pos-prod-price { font-weight: 800; font-size: 1.05rem; }
+.pos-prod-stock { font-size: .72rem; color: #64748b; margin-bottom: 4px; }
+</style>
 @stop
 
 @section('js')
@@ -198,7 +223,7 @@
 
     function mostrarResultados(productos) {
         if (!productos.length) {
-            resultados.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">{{ __('Sin resultados') }}</td></tr>';
+            resultados.innerHTML = '<div class="col-12 text-center text-muted py-4">{{ __('Sin resultados') }}</div>';
             return;
         }
 
@@ -206,21 +231,28 @@
 
         productos.forEach(function (p) {
             const sinStock = p.existencia <= 0;
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${escaparHtml(p.nombre)}</td>
-                <td>$${p.precio.toFixed(2)}</td>
-                <td>${p.existencia}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-primary" ${sinStock ? 'disabled' : ''}>
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </td>
+            const col = document.createElement('div');
+            col.className = 'col-6 col-md-4 mb-3';
+            const imgHtml = p.imagen
+                ? '<img src="' + p.imagen + '" alt="">'
+                : '<div class="pos-prod-ph"><i class="fas fa-book"></i></div>';
+            col.innerHTML = `
+                <div class="pos-prod-card ${sinStock ? 'is-sin-stock' : ''}">
+                    <div class="pos-prod-img">${imgHtml}</div>
+                    <div class="pos-prod-info">
+                        <div class="pos-prod-name">${escaparHtml(p.nombre)}</div>
+                        <div class="pos-prod-price">$${p.precio.toFixed(2)}</div>
+                        <div class="pos-prod-stock">{{ __('Stock') }}: ${p.existencia}</div>
+                        <button type="button" class="btn btn-sm btn-primary btn-block mt-1" ${sinStock ? 'disabled' : ''}>
+                            <i class="fas fa-plus"></i> {{ __('Agregar') }}
+                        </button>
+                    </div>
+                </div>
             `;
-            tr.querySelector('button').addEventListener('click', function () {
+            col.querySelector('button').addEventListener('click', function () {
                 agregarAlCarrito(p);
             });
-            resultados.appendChild(tr);
+            resultados.appendChild(col);
         });
     }
 
