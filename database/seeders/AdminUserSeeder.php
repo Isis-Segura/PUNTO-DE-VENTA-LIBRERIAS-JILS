@@ -8,23 +8,28 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/**
+ * Crea un administrador SOLO si se define ADMIN_SEED_EMAIL y ADMIN_SEED_PASSWORD
+ * en el .env. Ya no se usa el correo fijo admin@pi.com.
+ */
 class AdminUserSeeder extends Seeder
 {
-    /**
-     * Antes, este seeder usaba updateOrCreate con la contraseña incluida en
-     * los datos a actualizar. Eso significa que si alguien vuelve a correr
-     * `php artisan db:seed` en producción (por accidente o de rutina), la
-     * contraseña del admin se resetea sola a "password" cada vez.
-     *
-     * Ahora: si el usuario admin@pi.com YA existe, solo nos aseguramos de que
-     * tenga el rol correcto y esté activo, pero NUNCA tocamos su contraseña.
-     * La contraseña solo se establece la primera vez que se crea la cuenta.
-     */
     public function run(): void
     {
+        $email = env('ADMIN_SEED_EMAIL');
+        $password = env('ADMIN_SEED_PASSWORD');
+
+        if (! $email || ! $password) {
+            if (app()->runningInConsole()) {
+                fwrite(STDOUT, "\n[AdminUserSeeder] Omitido: define ADMIN_SEED_EMAIL y ADMIN_SEED_PASSWORD en .env para crear el primer admin.\n\n");
+            }
+
+            return;
+        }
+
         $adminRole = Role::where('slug', Role::ADMIN)->first();
 
-        $admin = User::where('email', 'admin@pi.com')->first();
+        $admin = User::where('email', $email)->first();
 
         if ($admin) {
             $admin->forceFill([
@@ -35,24 +40,17 @@ class AdminUserSeeder extends Seeder
             return;
         }
 
-        // Contraseña inicial: se puede fijar por variable de entorno
-        // (ADMIN_SEED_PASSWORD) para entornos de producción; si no se
-        // define, se genera una aleatoria y se muestra una sola vez en
-        // consola (nunca se guarda en texto plano en el repositorio).
-        $password = env('ADMIN_SEED_PASSWORD') ?: Str::password(12);
-
         User::create([
-            'name' => 'Administrador General',
-            'email' => 'admin@pi.com',
+            'name' => env('ADMIN_SEED_NAME', 'Administrador'),
+            'email' => $email,
             'password' => Hash::make($password),
             'role_id' => $adminRole?->id,
             'email_verified_at' => now(),
             'activo' => true,
         ]);
 
-        if (! env('ADMIN_SEED_PASSWORD') && app()->runningInConsole()) {
-            fwrite(STDOUT, "\n[AdminUserSeeder] Usuario admin@pi.com creado con contraseña temporal: {$password}\n");
-            fwrite(STDOUT, "[AdminUserSeeder] Guárdala y cámbiala después de tu primer login.\n\n");
+        if (app()->runningInConsole()) {
+            fwrite(STDOUT, "\n[AdminUserSeeder] Administrador creado: {$email}\n\n");
         }
     }
 }

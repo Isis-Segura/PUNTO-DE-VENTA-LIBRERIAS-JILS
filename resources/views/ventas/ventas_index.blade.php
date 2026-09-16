@@ -16,6 +16,17 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>{{ __('No se pudo filtrar') }}:</strong>
+            <ul class="mb-0 pl-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="mb-3">
         <a href="{{ route('ventas.create') }}" class="btn btn-success">
             <i class="fas fa-cash-register"></i> {{ __('Nueva venta') }}
@@ -42,6 +53,7 @@
                 <input type="date" name="hasta" class="form-control form-control-sm mr-3" value="{{ request('hasta') }}">
 
                 <button type="submit" class="btn btn-sm btn-primary">{{ __('Filtrar') }}</button>
+                <a href="{{ route('ventas.index') }}" class="btn btn-sm btn-outline-secondary ml-1">{{ __('Limpiar') }}</a>
             </form>
         </div>
 

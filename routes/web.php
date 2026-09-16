@@ -9,6 +9,9 @@ use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PasswordResetRequestController;
+use App\Http\Controllers\GeneroController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -79,3 +82,35 @@ Route::middleware(['auth', 'role:admin,gerente,cajero'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('ventas/{venta}', [VentaController::class, 'destroy'])->name('ventas.destroy');
 });
+
+// Módulo de Perfil: cambiar contraseña
+Route::middleware('auth')->group(function () {
+    Route::get('mi-cuenta/contrasena', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
+    Route::put('mi-cuenta/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('mi-cuenta/contrasena', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
+    Route::put('mi-cuenta/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('mi-cuenta/contrasena/ayuda', [ProfileController::class, 'requestPasswordHelp'])->name('profile.password.help');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('solicitudes-contrasena', [PasswordResetRequestController::class, 'index'])->name('password-requests.index');
+    Route::post('solicitudes-contrasena/{passwordResetRequest}/atender', [PasswordResetRequestController::class, 'attend'])->name('password-requests.attend');
+});
+
+#Solicitudes de cambio de contraseña: solo el Administrador puede verlas y atenderlas
+Route::middleware('auth')->group(function () {
+    Route::get('mi-cuenta/contrasena', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
+    Route::put('mi-cuenta/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('mi-cuenta/contrasena/ayuda', [ProfileController::class, 'requestPasswordHelp'])->name('profile.password.help');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('solicitudes-contrasena', [PasswordResetRequestController::class, 'index'])->name('password-requests.index');
+    Route::post('solicitudes-contrasena/{passwordResetRequest}/atender', [PasswordResetRequestController::class, 'attend'])->name('password-requests.attend');
+});
+
+// En el mismo grupo auth + role:admin,gerente que categorias:
+Route::resource('generos', GeneroController::class);

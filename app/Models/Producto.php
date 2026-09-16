@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\Storage;
 
 class Producto extends Model
 {
@@ -18,6 +18,8 @@ class Producto extends Model
         'nombre',
         'descripcion',
         'codigo',
+        'autor',
+        'editorial',
         'precio',
         'imagen',
         'activo',
@@ -28,8 +30,6 @@ class Producto extends Model
         'activo' => 'boolean',
     ];
 
-    protected $appends = ['imagen_url'];
-
     public function sucursal(): BelongsTo
     {
         return $this->belongsTo(Sucursal::class);
@@ -38,6 +38,17 @@ class Producto extends Model
     public function categoria(): BelongsTo
     {
         return $this->belongsTo(Categoria::class);
+    }
+
+    public function generos(): BelongsToMany
+    {
+        return $this->belongsToMany(Genero::class, 'genero_producto')->withTimestamps();
+    }
+
+    /** @deprecated usar generos() */
+    public function categorias(): BelongsToMany
+    {
+        return $this->belongsToMany(Categoria::class, 'categoria_producto')->withTimestamps();
     }
 
     public function inventario(): HasOne
@@ -55,9 +66,6 @@ class Producto extends Model
         return $this->inventario?->cantidad ?? 0;
     }
 
-    /**
-     * URL pública de la portada (o null si no hay imagen).
-     */
     public function getImagenUrlAttribute(): ?string
     {
         if (! $this->imagen) {
@@ -67,8 +75,12 @@ class Producto extends Model
         return asset('storage/'.$this->imagen);
     }
 
-    public function scopeConStock($query)
+    public function getGenerosListaAttribute(): string
     {
-        return $query->whereHas('inventario', fn ($q) => $q->where('cantidad', '>', 0));
+        $nombres = $this->relationLoaded('generos')
+            ? $this->generos->pluck('nombre')
+            : $this->generos()->pluck('nombre');
+
+        return $nombres->filter()->implode(', ') ?: '—';
     }
 }

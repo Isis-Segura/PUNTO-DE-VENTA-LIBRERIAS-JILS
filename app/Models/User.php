@@ -78,6 +78,16 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+
+    /**
+     * URL del enlace "Perfil" del menú de usuario de AdminLTE
+     * (cambiar contraseña).
+     */
+    public function adminlte_profile_url(): string
+    {
+        return route('profile.password.edit');
+    }
+
     protected function casts(): array
     {
         return [

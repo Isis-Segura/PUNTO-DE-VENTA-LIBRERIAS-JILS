@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Genero;
 use App\Models\Inventario;
 use App\Models\Producto;
 use App\Models\Sucursal;
@@ -13,12 +14,23 @@ class ProductoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Producto::with(['categoria', 'sucursal', 'inventario']);
+        $query = Producto::with(['generos', 'categoria', 'sucursal', 'inventario']);
 
         $this->aplicarFiltroSucursal($query);
 
         if ($request->filled('sucursal_id')) {
             $query->where('sucursal_id', $request->sucursal_id);
+        }
+
+        if ($request->filled('q') || $request->filled('adminlteSearch')) {
+            $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
+            $query->where(function ($sub) use ($q) {
+                $sub->where('nombre', 'like', "%{$q}%")
+                    ->orWhere('codigo', 'like', "%{$q}%")
+                    ->orWhere('descripcion', 'like', "%{$q}%")
+                    ->orWhere('autor', 'like', "%{$q}%")
+                    ->orWhere('editorial', 'like', "%{$q}%");
+            });
         }
 
         $productos = $query->orderBy('nombre')->paginate(12)->withQueryString();
@@ -31,8 +43,9 @@ class ProductoController extends Controller
     {
         $sucursales = $this->sucursalesVisibles();
         $categorias = Categoria::orderBy('nombre')->get();
+        $generos = Genero::orderBy('nombre')->get();
 
-        return view('productos.create', compact('sucursales', 'categorias'));
+        return view('productos.create', compact('sucursales', 'categorias', 'generos'));
     }
 
     public function store(Request $request)
@@ -40,20 +53,22 @@ class ProductoController extends Controller
         $data = $request->validate([
             'sucursal_id' => ['required', 'exists:sucursales,id'],
             'categoria_id' => ['nullable', 'exists:categorias,id'],
+            'genero_ids' => ['required', 'array', 'min:1', 'max:5'],
+            'genero_ids.*' => ['integer', 'exists:generos,id'],
             'nombre' => ['required', 'string', 'max:200'],
             'descripcion' => ['nullable', 'string'],
             'codigo' => ['nullable', 'string', 'max:60'],
+            'autor' => ['nullable', 'string', 'max:200'],
+            'editorial' => ['nullable', 'string', 'max:200'],
             'precio' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'cantidad_inicial' => ['required', 'integer', 'min:0', 'max:999999999'],
             'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
             'activo' => ['required', 'boolean'],
             'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:4096'],
         ], [
-            'precio.max' => 'El precio no puede ser mayor a $99,999,999.99.',
-            'cantidad_inicial.max' => 'La cantidad inicial no puede ser mayor a 999,999,999.',
-            'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
-            'imagen.image' => 'El archivo debe ser una imagen.',
-            'imagen.max' => 'La imagen no puede pesar más de 4 MB.',
+            'genero_ids.required' => 'Selecciona al menos 1 género.',
+            'genero_ids.min' => 'Selecciona al menos 1 género.',
+            'genero_ids.max' => 'Solo puedes seleccionar hasta 5 géneros.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
@@ -69,10 +84,14 @@ class ProductoController extends Controller
             'nombre' => $data['nombre'],
             'descripcion' => $data['descripcion'] ?? null,
             'codigo' => $data['codigo'] ?? null,
+            'autor' => $data['autor'] ?? null,
+            'editorial' => $data['editorial'] ?? null,
             'precio' => $data['precio'],
             'imagen' => $rutaImagen,
             'activo' => $data['activo'],
         ]);
+
+        $producto->generos()->sync($data['genero_ids']);
 
         Inventario::create([
             'producto_id' => $producto->id,
@@ -80,9 +99,7 @@ class ProductoController extends Controller
             'stock_minimo' => $data['stock_minimo'],
         ]);
 
-        return redirect()
-            ->route('productos.index')
-            ->with('success', 'Producto creado correctamente.');
+        return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
     }
 
     public function edit(Producto $producto)
@@ -91,29 +108,41 @@ class ProductoController extends Controller
 
         $sucursales = $this->sucursalesVisibles();
         $categorias = Categoria::orderBy('nombre')->get();
-        $producto->load('inventario');
+        $generos = Genero::orderBy('nombre')->get();
+        $producto->load(['inventario', 'generos']);
 
-        return view('productos.edit', compact('producto', 'sucursales', 'categorias'));
+        return view('productos.edit', compact('producto', 'sucursales', 'categorias', 'generos'));
     }
 
     public function update(Request $request, Producto $producto)
     {
         $this->verificarAccesoSucursal($producto->sucursal_id);
 
-        $data = $request->validate([
+        $rules = [
             'sucursal_id' => ['required', 'exists:sucursales,id'],
             'categoria_id' => ['nullable', 'exists:categorias,id'],
+            'genero_ids' => ['required', 'array', 'min:1', 'max:5'],
+            'genero_ids.*' => ['integer', 'exists:generos,id'],
             'nombre' => ['required', 'string', 'max:200'],
             'descripcion' => ['nullable', 'string'],
             'codigo' => ['nullable', 'string', 'max:60'],
+            'autor' => ['nullable', 'string', 'max:200'],
+            'editorial' => ['nullable', 'string', 'max:200'],
             'precio' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'stock_minimo' => ['required', 'integer', 'min:0', 'max:999999999'],
             'activo' => ['required', 'boolean'],
             'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:4096'],
             'quitar_imagen' => ['nullable', 'boolean'],
-        ], [
-            'precio.max' => 'El precio no puede ser mayor a $99,999,999.99.',
-            'stock_minimo.max' => 'El stock mínimo no puede ser mayor a 999,999,999.',
+        ];
+
+        // Admin y Gerente pueden ajustar existencia
+        if (auth()->user()->isAdmin() || auth()->user()->isGerente()) {
+            $rules['cantidad'] = ['required', 'integer', 'min:0', 'max:999999999'];
+        }
+
+        $data = $request->validate($rules, [
+            'genero_ids.required' => 'Selecciona al menos 1 género.',
+            'genero_ids.max' => 'Solo puedes seleccionar hasta 5 géneros.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
@@ -138,18 +167,24 @@ class ProductoController extends Controller
             'nombre' => $data['nombre'],
             'descripcion' => $data['descripcion'] ?? null,
             'codigo' => $data['codigo'] ?? null,
+            'autor' => $data['autor'] ?? null,
+            'editorial' => $data['editorial'] ?? null,
             'precio' => $data['precio'],
             'imagen' => $rutaImagen,
             'activo' => $data['activo'],
         ]);
 
+        $producto->generos()->sync($data['genero_ids']);
+
         if ($producto->inventario) {
-            $producto->inventario->update(['stock_minimo' => $data['stock_minimo']]);
+            $inv = ['stock_minimo' => $data['stock_minimo']];
+            if (array_key_exists('cantidad', $data)) {
+                $inv['cantidad'] = $data['cantidad'];
+            }
+            $producto->inventario->update($inv);
         }
 
-        return redirect()
-            ->route('productos.index')
-            ->with('success', 'Producto actualizado correctamente.');
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }
 
     public function destroy(Producto $producto)
@@ -167,15 +202,12 @@ class ProductoController extends Controller
         $producto->inventario()?->delete();
         $producto->delete();
 
-        return redirect()
-            ->route('productos.index')
-            ->with('success', 'Producto eliminado correctamente.');
+        return redirect()->route('productos.index')->with('success', 'Producto eliminado correctamente.');
     }
 
     private function aplicarFiltroSucursal($query): void
     {
         $ids = auth()->user()->sucursalIdsPermitidas();
-
         if ($ids !== null) {
             $query->whereIn('sucursal_id', $ids);
         }
@@ -185,7 +217,6 @@ class ProductoController extends Controller
     {
         $query = Sucursal::orderBy('nombre');
         $ids = auth()->user()->sucursalIdsPermitidas();
-
         if ($ids !== null) {
             $query->whereIn('id', $ids);
         }
@@ -196,7 +227,6 @@ class ProductoController extends Controller
     private function verificarAccesoSucursal(int $sucursalId): void
     {
         $ids = auth()->user()->sucursalIdsPermitidas();
-
         if ($ids !== null && ! in_array($sucursalId, $ids, true)) {
             abort(403, 'No tienes permiso sobre esa sucursal.');
         }

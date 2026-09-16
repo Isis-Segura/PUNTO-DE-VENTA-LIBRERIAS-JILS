@@ -16,6 +16,17 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>{{ __('No se pudo filtrar') }}:</strong>
+            <ul class="mb-0 pl-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="mb-3">
         <a href="{{ route('ventas.create') }}" class="btn btn-success">
             <i class="fas fa-cash-register"></i> {{ __('Nueva venta') }}
@@ -42,6 +53,7 @@
                 <input type="date" name="hasta" class="form-control form-control-sm mr-3" value="{{ request('hasta') }}">
 
                 <button type="submit" class="btn btn-sm btn-primary">{{ __('Filtrar') }}</button>
+                <a href="{{ route('ventas.index') }}" class="btn btn-sm btn-outline-secondary ml-1">{{ __('Limpiar') }}</a>
             </form>
         </div>
 
@@ -60,7 +72,7 @@
                 </thead>
                 <tbody>
                     @forelse ($ventas as $venta)
-                        <tr>
+                        <tr class="js-search-item" data-search="{{ strtolower(($venta->folio??'').' '.($venta->sucursal->nombre??'').' '.($venta->cajero->name??'').' '.($venta->metodoPago->nombre??'')) }}">
                             <td>{{ $venta->folio }}</td>
                             <td>{{ $venta->created_at->format('d/m/Y H:i') }}</td>
                             <td>{{ $venta->sucursal->nombre ?? '-' }}</td>
@@ -72,10 +84,8 @@
                                     <i class="fas fa-receipt"></i> {{ __('Ver ticket') }}
                                 </a>
                                 @if (auth()->user()->isAdmin())
-                                    <form action="{{ route('ventas.destroy', $venta) }}"
-                                          method="POST"
-                                          class="d-inline"
-                                          onsubmit="return confirm('¿Eliminar el ticket {{ $venta->folio }}? Se devolverá el stock al inventario.');">
+                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirm(@json(__('¿Eliminar el ticket :folio? Se devolverá el stock al inventario.', ['folio' => $venta->folio])));">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">
@@ -86,6 +96,11 @@
                             </td>
                         </tr>
                     @empty
+                        <tr class="js-search-empty" style="display:none;">
+                            <td colspan="99" class="text-center text-muted py-4">
+                                <i class="fas fa-search mr-1"></i> {{ __('No existe ningún ticket con esa búsqueda.') }}
+                            </td>
+                        </tr>
                         <tr>
                             <td colspan="7" class="text-center py-3">{{ __('No hay ventas registradas.') }}</td>
                         </tr>
@@ -98,4 +113,34 @@
             {{ $ventas->links() }}
         </div>
     </div>
+@stop
+
+
+@section('js')
+<script>
+(function(){
+  function filtrar(texto){
+    var q=(texto||'').toString().trim().toLowerCase();
+    var items=document.querySelectorAll('tr.js-search-item');
+    var n=0;
+    items.forEach(function(el){
+      var ok=!q||(el.getAttribute('data-search')||'').indexOf(q)!==-1;
+      el.style.display=ok?'':'none';
+      if(ok)n++;
+    });
+    var empty=document.querySelector('tr.js-search-empty');
+    if(empty) empty.style.display=(items.length&&n===0)?'':'none';
+  }
+  document.addEventListener('input',function(e){
+    if(e.target&&(e.target.name==='q'||e.target.name==='adminlteSearch')) filtrar(e.target.value);
+  });
+  document.addEventListener('submit',function(e){
+    var f=e.target, inp=f&&f.querySelector&&f.querySelector('input[name="adminlteSearch"],input[name="q"]');
+    if(inp&&document.querySelector('tr.js-search-item')){ e.preventDefault(); filtrar(inp.value); }
+  });
+  var p=new URLSearchParams(location.search);
+  var ini=p.get('q')||p.get('adminlteSearch')||'';
+  if(ini) filtrar(ini);
+})();
+</script>
 @stop
