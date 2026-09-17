@@ -1,5 +1,7 @@
 <?php
 
+#Johiel puntos
+#Para traducción
 return [
 
     'full_name' => 'Nombre completo',
