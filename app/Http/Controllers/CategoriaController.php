@@ -49,8 +49,8 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nombre' => ['required', 'string', 'max:150', 'unique:categorias,nombre'],
-            'descripcion' => ['nullable', 'string', 'max:1000'],
+            'nombre' => ['required', 'string', 'max:80', 'unique:categorias,nombre'],
+            'descripcion' => ['nullable', 'string', 'max:500'],
         ]);
 
         Categoria::create($data);
@@ -82,8 +82,8 @@ class CategoriaController extends Controller
     public function update(Request $request, Categoria $categoria)
     {
         $data = $request->validate([
-            'nombre' => ['required', 'string', 'max:150', Rule::unique('categorias', 'nombre')->ignore($categoria->id)],
-            'descripcion' => ['nullable', 'string', 'max:1000'],
+            'nombre' => ['required', 'string', 'max:80', Rule::unique('categorias', 'nombre')->ignore($categoria->id)],
+            'descripcion' => ['nullable', 'string', 'max:500'],
         ]);
 
         $categoria->update($data);

@@ -17,17 +17,6 @@ class VentaController extends Controller
      */
     public function index(Request $request)
     {
-        $datos = $request->validate([
-            'sucursal_id' => ['nullable', 'integer', 'exists:sucursales,id'],
-            'desde' => ['nullable', 'date'],
-            'hasta' => ['nullable', 'date', 'after_or_equal:desde'],
-        ], [
-            'desde.date' => 'La fecha "Desde" no es válida.',
-            'hasta.date' => 'La fecha "Hasta" no es válida.',
-            'hasta.after_or_equal' => 'La fecha "Hasta" debe ser igual o posterior a "Desde".',
-            'sucursal_id.exists' => 'La sucursal seleccionada no es válida.',
-        ]);
-
         $query = Venta::with(['sucursal', 'cajero', 'metodoPago']);
 
         $ids = auth()->user()->sucursalIdsPermitidas();
@@ -35,27 +24,43 @@ class VentaController extends Controller
             $query->whereIn('sucursal_id', $ids);
         }
 
-        if (! empty($datos['sucursal_id'])) {
-            $query->where('sucursal_id', $datos['sucursal_id']);
+        if ($request->filled('sucursal_id')) {
+            $query->where('sucursal_id', $request->sucursal_id);
         }
 
-        if (! empty($datos['desde'])) {
-            $query->where('created_at', '>=', $datos['desde'].' 00:00:00');
-        }
-
-        if (! empty($datos['hasta'])) {
-            $query->where('created_at', '<=', $datos['hasta'].' 23:59:59');
-        }
-
+        // Búsqueda por folio, cajero o fecha (día)
         if ($request->filled('q') || $request->filled('adminlteSearch')) {
             $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
             $query->where(function ($sub) use ($q) {
                 $sub->where('folio', 'like', "%{$q}%")
-                    ->orWhereHas('cajero', fn ($u) => $u->where('name', 'like', "%{$q}%"));
+                    ->orWhereHas('cajero', fn ($u) => $u->where('name', 'like', "%{$q}%"))
+                    ->orWhereHas('sucursal', fn ($s) => $s->where('nombre', 'like', "%{$q}%"))
+                    ->orWhereHas('metodoPago', fn ($m) => $m->where('nombre', 'like', "%{$q}%"));
+
+                // Si parece una fecha (17/09/2026, 17-09-2026, 2026-09-17, 17/09, etc.)
+                $norm = str_replace(['.', ' '], ['/', ''], $q);
+                if (preg_match('/^(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?$/', $norm, $m)) {
+                    $d = (int) $m[1];
+                    $mo = (int) $m[2];
+                    $y = isset($m[3]) ? (int) $m[3] : null;
+                    if ($y !== null && $y < 100) {
+                        $y += 2000;
+                    }
+                    $sub->orWhere(function ($f) use ($d, $mo, $y) {
+                        $f->whereDay('created_at', $d)->whereMonth('created_at', $mo);
+                        if ($y) {
+                            $f->whereYear('created_at', $y);
+                        }
+                    });
+                } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $q)) {
+                    $sub->orWhereDate('created_at', $q);
+                } elseif (preg_match('/^\d{1,2}$/', $q)) {
+                    $sub->orWhereDay('created_at', (int) $q);
+                }
             });
         }
 
-        $ventas = $query->latest()->paginate(15)->withQueryString();
+        $ventas = $query->latest()->paginate(50)->withQueryString();
 
         $sucursalesQuery = Sucursal::orderBy('nombre');
         if ($ids !== null) {
@@ -74,7 +79,7 @@ class VentaController extends Controller
         $user = auth()->user();
         $sucursal = $this->resolverSucursalActiva($request);
         $sucursales = $this->sucursalesVisibles();
-        $metodosPago = MetodoPago::orderBy('nombre')->get();
+        $metodosPago = MetodoPago::whereIn('nombre', ['Efectivo', 'Tarjeta'])->orderBy('nombre')->get();
 
         // Gerente/Cajero sin sucursal: no pueden vender
         if (! $user->isAdmin() && ! $sucursal) {
@@ -133,8 +138,8 @@ class VentaController extends Controller
             'metodo_pago_id' => ['required', 'exists:metodos_pago,id'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.producto_id' => ['required', 'exists:productos,id'],
-            'items.*.cantidad' => ['required', 'integer', 'min:1'],
-            'monto_recibido' => ['nullable', 'numeric', 'min:0'],
+            'items.*.cantidad' => ['required', 'integer', 'min:1', 'max:1000'],
+            'monto_recibido' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
         ]);
 
         $ids = auth()->user()->sucursalIdsPermitidas();
@@ -184,6 +189,10 @@ class VentaController extends Controller
                 $iva = round($subtotal * ($tasaIva / 100), 2);
                 $total = round($subtotal + $iva, 2);
 
+                if ($total > 999999.99) {
+                    throw new \RuntimeException('El total de la venta supera el máximo permitido ($999,999.99).');
+                }
+
                 $montoRecibido = null;
                 $cambio = null;
 
@@ -197,11 +206,19 @@ class VentaController extends Controller
                     $cambio = round($montoRecibido - $total, 2);
                 }
 
+                // Folio correlativo según tickets existentes (si se borran, se reutiliza la secuencia)
+                $maxFolio = (int) (Venta::query()
+                    ->where('folio', 'like', 'V-%')
+                    ->selectRaw('MAX(CAST(SUBSTRING(folio, 3) AS UNSIGNED)) as max_folio')
+                    ->value('max_folio') ?? 0);
+                $siguiente = $maxFolio + 1;
+                $folio = 'V-'.str_pad((string) $siguiente, 6, '0', STR_PAD_LEFT);
+
                 $venta = Venta::create([
                     'sucursal_id' => $data['sucursal_id'],
                     'user_id' => auth()->id(),
                     'metodo_pago_id' => $data['metodo_pago_id'],
-                    'folio' => 'TEMP',
+                    'folio' => $folio,
                     'subtotal' => $subtotal,
                     'iva' => $iva,
                     'tasa_iva' => $tasaIva,
@@ -209,8 +226,6 @@ class VentaController extends Controller
                     'monto_recibido' => $montoRecibido,
                     'cambio' => $cambio,
                 ]);
-
-                $venta->update(['folio' => 'V-'.str_pad($venta->id, 6, '0', STR_PAD_LEFT)]);
 
                 foreach ($lineas as $linea) {
                     $venta->detalles()->create([
@@ -343,4 +358,74 @@ class VentaController extends Controller
     {
         return Sucursal::where('activa', true)->orderBy('nombre')->get();
     }
+    #Johiel Puntos
+    /**
+     * Simula un cobro con tarjeta (API interna de prueba).
+     * No mueve dinero real: valida formato y responde aprobado/rechazado.
+     */
+    public function simularPagoTarjeta(Request $request)
+    {
+        $data = $request->validate([
+            'monto' => ['required', 'numeric', 'min:0.01', 'max:999999.99'],
+            'numero' => ['required', 'string'],
+            'titular' => ['required', 'string', 'max:80'],
+            'vencimiento' => ['required', 'string', 'max:7'],
+            'cvv' => ['required', 'string', 'min:3', 'max:4'],
+        ], [
+            'numero.required' => 'Ingresa el número de tarjeta.',
+            'titular.required' => 'Ingresa el nombre del titular.',
+            'vencimiento.required' => 'Ingresa el vencimiento (MM/AA).',
+            'cvv.required' => 'Ingresa el CVV.',
+        ]);
+
+        // Simular latencia de red de una pasarela real
+        usleep(900000); // ~0.9 s
+
+        $numero = preg_replace('/\D+/', '', $data['numero']);
+
+        if (strlen($numero) < 13 || strlen($numero) > 19) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Número de tarjeta inválido.',
+            ], 422);
+        }
+
+        // Tarjetas de prueba conocidas (estilo Stripe de demo)
+        // 4242... = aprobada | 4000 0000 0000 0002 = rechazada
+        if (str_starts_with($numero, '4000000000000002') || $numero === '4000000000000002') {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Pago rechazado por el banco emisor (fondos insuficientes o tarjeta bloqueada).',
+                'codigo' => 'card_declined',
+            ], 402);
+        }
+
+        // CVV trivialmente inválido
+        if (! preg_match('/^\d{3,4}$/', $data['cvv'])) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'CVV inválido.',
+            ], 422);
+        }
+
+        // Vencimiento MM/AA o MM/AAAA
+        $venc = preg_replace('/\s+/', '', $data['vencimiento']);
+        if (! preg_match('/^(0[1-9]|1[0-2])\/(\d{2}|\d{4})$/', $venc)) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Vencimiento inválido. Usa el formato MM/AA.',
+            ], 422);
+        }
+
+        $auth = 'AUTH-'.strtoupper(substr(md5($numero.microtime(true)), 0, 10));
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Pago aprobado',
+            'autorizacion' => $auth,
+            'ultimos4' => substr($numero, -4),
+            'monto' => round((float) $data['monto'], 2),
+        ]);
+    }
+
 }

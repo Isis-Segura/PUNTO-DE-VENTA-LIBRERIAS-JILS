@@ -63,30 +63,30 @@
 
             <div class="form-group">
                 <label>{{ __('Nombre del libro') }}</label>
-                <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required>
+                <input type="text" name="nombre" maxlength="120" class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required>
                 @error('nombre')<span class="invalid-feedback">{{ $message }}</span>@enderror
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label>{{ __('Autor(es)') }}</label>
-                    <input type="text" name="autor" class="form-control" value="{{ old('autor') }}" placeholder="{{ __('Ej. Rumiko Takahashi') }}">
+                    <label>{{ __('Autor(es)') }} <small class="text-muted">({{ __('opcional') }})</small></label>
+                    <input type="text" name="autor" maxlength="120" class="form-control" value="{{ old('autor') }}" placeholder="{{ __('Ej. Rumiko Takahashi') }}">
                 </div>
                 <div class="form-group col-md-6">
                     <label>{{ __('Editorial') }} <small class="text-muted">({{ __('opcional') }})</small></label>
-                    <input type="text" name="editorial" class="form-control" value="{{ old('editorial') }}" placeholder="{{ __('Ej. Panini') }}">
+                    <input type="text" name="editorial" maxlength="120" class="form-control" value="{{ old('editorial') }}" placeholder="{{ __('Ej. Panini') }}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label>{{ __('Descripción') }}</label>
-                <textarea name="descripcion" rows="3" class="form-control">{{ old('descripcion') }}</textarea>
+                <textarea name="descripcion" rows="3" maxlength="2000" class="form-control">{{ old('descripcion') }}</textarea>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label>{{ __('Código / SKU') }}</label>
-                    <input type="text" name="codigo" class="form-control" value="{{ old('codigo') }}">
+                    <input type="text" name="codigo" maxlength="40" class="form-control" value="{{ old('codigo') }}">
                 </div>
                 <div class="form-group col-md-4">
                     <label>{{ __('Categoría') }}</label>
@@ -100,18 +100,18 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>{{ __('Precio') }}</label>
-                    <input type="number" step="0.01" min="0" name="precio" class="form-control" value="{{ old('precio') }}" required>
+                    <input type="number" step="0.01" min="0" name="precio" max="999999.99" class="form-control" value="{{ old('precio') }}" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>{{ __('Cantidad inicial en inventario') }}</label>
-                    <input type="number" min="0" name="cantidad_inicial" class="form-control" value="{{ old('cantidad_inicial', 0) }}" required>
+                    <input type="number" min="0" name="cantidad_inicial" max="100000" class="form-control" value="{{ old('cantidad_inicial', 0) }}" required>
                 </div>
                 <div class="form-group col-md-6">
                     <label>{{ __('Stock mínimo (alerta)') }}</label>
-                    <input type="number" min="0" name="stock_minimo" class="form-control" value="{{ old('stock_minimo', 5) }}" required>
+                    <input type="number" min="0" name="stock_minimo" max="100000" class="form-control" value="{{ old('stock_minimo', 5) }}" required>
                 </div>
             </div>
 

@@ -9,8 +9,11 @@ class MetodoPagoSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (['Efectivo', 'Tarjeta', 'Transferencia'] as $nombre) {
+        foreach (['Efectivo', 'Tarjeta'] as $nombre) {
             MetodoPago::updateOrCreate(['nombre' => $nombre]);
         }
+
+        // Eliminar métodos que ya no se usan
+        MetodoPago::whereNotIn('nombre', ['Efectivo', 'Tarjeta'])->delete();
     }
 }

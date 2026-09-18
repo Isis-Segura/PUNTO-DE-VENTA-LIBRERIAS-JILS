@@ -49,8 +49,8 @@ class GeneroController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nombre' => ['required', 'string', 'max:150', 'unique:generos,nombre'],
-            'descripcion' => ['nullable', 'string', 'max:1000'],
+            'nombre' => ['required', 'string', 'max:80', 'unique:generos,nombre'],
+            'descripcion' => ['nullable', 'string', 'max:500'],
         ]);
 
         Genero::create($data);
@@ -82,8 +82,8 @@ class GeneroController extends Controller
     public function update(Request $request, Genero $genero)
     {
         $data = $request->validate([
-            'nombre' => ['required', 'string', 'max:150', Rule::unique('generos', 'nombre')->ignore($genero->id)],
-            'descripcion' => ['nullable', 'string', 'max:1000'],
+            'nombre' => ['required', 'string', 'max:80', Rule::unique('generos', 'nombre')->ignore($genero->id)],
+            'descripcion' => ['nullable', 'string', 'max:500'],
         ]);
 
         $genero->update($data);

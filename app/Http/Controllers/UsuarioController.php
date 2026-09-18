@@ -21,6 +21,9 @@ class UsuarioController extends Controller
     {
         $query = User::with(['role', 'sucursal'])->orderBy('name');
 
+        // No mostrar al usuario que está usando la sesión actual
+        $query->where('id', '!=', auth()->id());
+
         if (! auth()->user()->isAdmin()) {
             $this->limitarAlAlcanceDelGerente($query);
         }
@@ -55,9 +58,9 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => ['required', 'string', 'max:80'],
+            'email' => ['required', 'string', 'email', 'max:120', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'max:64', 'confirmed'],
             'role_id' => ['required', Rule::exists('roles', 'id')],
             // Un Gerente o un Cajero necesitan sucursal para poder trabajar
             // (buscar/vender productos, ver su inventario, etc.). El
@@ -103,9 +106,9 @@ class UsuarioController extends Controller
         $this->verificarAccesoAUsuario($usuario);
 
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($usuario->id)],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'name' => ['required', 'string', 'max:80'],
+            'email' => ['required', 'string', 'email', 'max:120', Rule::unique('users', 'email')->ignore($usuario->id)],
+            'password' => ['nullable', 'string', 'min:8', 'max:64', 'confirmed'],
             'role_id' => ['required', Rule::exists('roles', 'id')],
             'sucursal_id' => ['nullable', Rule::exists('sucursales', 'id')],
             'activo' => ['required', 'boolean'],

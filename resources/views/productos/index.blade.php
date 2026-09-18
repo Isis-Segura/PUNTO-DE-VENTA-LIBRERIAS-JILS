@@ -144,12 +144,15 @@
                 $stockMin = $producto->inventario->stock_minimo ?? 0;
                 $bajo = $producto->inventario && $existencia <= $stockMin;
                 $img = $producto->imagen ? asset('storage/'.$producto->imagen) : null;
-                $payload = [
+                                $payload = [
                     'nombre' => $producto->nombre,
                     'descripcion' => $producto->descripcion ?? '',
                     'codigo' => $producto->codigo ?? '',
+                    'autor' => $producto->autor ?? '',
+                    'editorial' => $producto->editorial ?? '',
                     'precio' => number_format($producto->precio, 2),
-                    'categorias' => $producto->generos_lista,
+                    'categoria' => $producto->categoria->nombre ?? '—',
+                    'generos' => $producto->generos_lista,
                     'sucursal' => $producto->sucursal->nombre ?? '—',
                     'existencia' => $existencia,
                     'stockMin' => $stockMin,
@@ -158,7 +161,7 @@
                 ];
             @endphp
             <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3 js-prod-item"
-                 data-search="{{ strtolower($producto->nombre.' '.$producto->codigo.' '.$producto->descripcion.' '.$producto->generos_lista) }}">
+                 data-search="{{ strtolower($producto->nombre.' '.$producto->codigo.' '.$producto->descripcion.' '.$producto->autor.' '.$producto->editorial.' '.$producto->generos_lista.' '.($producto->categoria->nombre??'')) }}">
                 <div class="libro-card js-prod-detail" data-prod='@json($payload)'>
                     <div class="libro-portada">
                         <div class="libro-badges">
@@ -181,7 +184,8 @@
                         <h3 class="libro-titulo" title="{{ $producto->nombre }}">{{ $producto->nombre }}</h3>
                         <div class="libro-meta">
                             {{ $producto->sucursal->nombre ?? '—' }}
-                            · {{ $producto->generos_lista }}
+                            @if($producto->categoria)· {{ $producto->categoria->nombre }}@endif
+                            @if($producto->autor)· {{ $producto->autor }}@endif
                             <br>{{ __('Stock') }}: {{ $existencia }}
                         </div>
                         <div class="libro-precio">${{ number_format($producto->precio, 2) }}</div>
@@ -242,8 +246,20 @@
                             <span class="prod-detail-value" id="pd-codigo">—</span>
                         </div>
                         <div class="prod-detail-row">
-                            <span class="prod-detail-label">{{ __('Categorías') }}</span>
-                            <span class="prod-detail-value" id="pd-categorias">—</span>
+                            <span class="prod-detail-label">{{ __('Autor') }}</span>
+                            <span class="prod-detail-value" id="pd-autor">—</span>
+                        </div>
+                        <div class="prod-detail-row">
+                            <span class="prod-detail-label">{{ __('Editorial') }}</span>
+                            <span class="prod-detail-value" id="pd-editorial">—</span>
+                        </div>
+                        <div class="prod-detail-row">
+                            <span class="prod-detail-label">{{ __('Categoría') }}</span>
+                            <span class="prod-detail-value" id="pd-categoria">—</span>
+                        </div>
+                        <div class="prod-detail-row">
+                            <span class="prod-detail-label">{{ __('Géneros') }}</span>
+                            <span class="prod-detail-value" id="pd-generos">—</span>
                         </div>
                         <div class="prod-detail-row">
                             <span class="prod-detail-label">{{ __('Sucursal') }}</span>
@@ -330,7 +346,10 @@
     function fillModal(data) {
         $('#pd-nombre').text(data.nombre || '');
         $('#pd-codigo').text(data.codigo || '—');
-        $('#pd-categorias').text(data.categorias || data.generos || '—');
+        $('#pd-autor').text((data.autor || '').trim() !== '' ? data.autor : '—');
+        $('#pd-editorial').text((data.editorial || '').trim() !== '' ? data.editorial : '—');
+        $('#pd-categoria').text(data.categoria || '—');
+        $('#pd-generos').text(data.generos || '—');
         $('#pd-sucursal').text(data.sucursal || '—');
         $('#pd-precio').text('$' + (data.precio || '0.00'));
         $('#pd-existencia').text(data.existencia);

@@ -16,17 +16,6 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>{{ __('No se pudo filtrar') }}:</strong>
-            <ul class="mb-0 pl-3">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <div class="mb-3">
         <a href="{{ route('ventas.create') }}" class="btn btn-success">
             <i class="fas fa-cash-register"></i> {{ __('Nueva venta') }}
@@ -34,28 +23,19 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            <form method="GET" class="form-inline">
-                @if ($sucursales->count() > 1)
+        @if ($sucursales->count() > 1)
+            <div class="card-header">
+                <form method="GET" class="form-inline">
                     <label class="mr-2 mb-0">{{ __('Sucursal') }}</label>
-                    <select name="sucursal_id" class="form-control form-control-sm mr-3">
+                    <select name="sucursal_id" class="form-control form-control-sm" onchange="this.form.submit()">
                         <option value="">{{ __('Todas') }}</option>
                         @foreach ($sucursales as $s)
                             <option value="{{ $s->id }}" {{ request('sucursal_id') == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
                         @endforeach
                     </select>
-                @endif
-
-                <label class="mr-2 mb-0">{{ __('Desde') }}</label>
-                <input type="date" name="desde" class="form-control form-control-sm mr-3" value="{{ request('desde') }}">
-
-                <label class="mr-2 mb-0">{{ __('Hasta') }}</label>
-                <input type="date" name="hasta" class="form-control form-control-sm mr-3" value="{{ request('hasta') }}">
-
-                <button type="submit" class="btn btn-sm btn-primary">{{ __('Filtrar') }}</button>
-                <a href="{{ route('ventas.index') }}" class="btn btn-sm btn-outline-secondary ml-1">{{ __('Limpiar') }}</a>
-            </form>
-        </div>
+                </form>
+            </div>
+        @endif
 
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
@@ -72,15 +52,41 @@
                 </thead>
                 <tbody>
                     @forelse ($ventas as $venta)
-                        <tr class="js-search-item" data-search="{{ strtolower(($venta->folio??'').' '.($venta->sucursal->nombre??'').' '.($venta->cajero->name??'').' '.($venta->metodoPago->nombre??'')) }}">
+                        @php
+                            $fecha = $venta->created_at;
+                            $search = strtolower(implode(' ', array_filter([
+                                $venta->folio,
+                                $venta->sucursal->nombre ?? '',
+                                $venta->cajero->name ?? '',
+                                $venta->metodoPago->nombre ?? '',
+                                // Fecha y hora (el buscador usa contains)
+                                $fecha?->format('d/m/Y H:i'),
+                                $fecha?->format('d/m/Y H'),
+                                $fecha?->format('d/m/Y'),
+                                $fecha?->format('d-m-Y H:i'),
+                                $fecha?->format('d-m-Y'),
+                                $fecha?->format('Y-m-d H:i'),
+                                $fecha?->format('Y-m-d'),
+                                $fecha?->format('d/m/y H:i'),
+                                $fecha?->format('d/m'),
+                                $fecha?->format('H:i'),
+                                $fecha?->format('H'),
+                                $fecha?->format('d'),
+                                // sin ceros a la izquierda
+                                $fecha ? ((int)$fecha->format('d')).'/'.((int)$fecha->format('m')).'/'.$fecha->format('Y').' '.$fecha->format('H:i') : '',
+                                $fecha ? ((int)$fecha->format('d')).'/'.((int)$fecha->format('m')).'/'.$fecha->format('Y').' '.$fecha->format('H') : '',
+                                $fecha ? ((int)$fecha->format('d')).'/'.((int)$fecha->format('m')).'/'.$fecha->format('Y') : '',
+                            ])));
+                        @endphp
+                        <tr class="js-search-item" data-search="{{ $search }}">
                             <td>{{ $venta->folio }}</td>
-                            <td>{{ $venta->created_at->format('d/m/Y H:i') }}</td>
-                            <td>{{ $venta->sucursal->nombre ?? '-' }}</td>
-                            <td>{{ $venta->cajero->name ?? '-' }}</td>
-                            <td>{{ $venta->metodoPago->nombre ?? '-' }}</td>
+                            <td>{{ $fecha?->format('d/m/Y H:i') }}</td>
+                            <td>{{ $venta->sucursal->nombre ?? '—' }}</td>
+                            <td>{{ $venta->cajero->name ?? '—' }}</td>
+                            <td>{{ $venta->metodoPago->nombre ?? '—' }}</td>
                             <td>${{ number_format($venta->total, 2) }}</td>
                             <td class="text-right text-nowrap">
-                                <a href="{{ route('ventas.show', $venta) }}" class="btn btn-sm btn-info">
+                                <a href="{{ route('ventas.show', $venta) }}" class="btn btn-sm btn-info" title="{{ __('Ver ticket') }}">
                                     <i class="fas fa-receipt"></i> {{ __('Ver ticket') }}
                                 </a>
                                 @if (auth()->user()->isAdmin())
@@ -96,35 +102,37 @@
                             </td>
                         </tr>
                     @empty
-                        <tr class="js-search-empty" style="display:none;">
-                            <td colspan="99" class="text-center text-muted py-4">
-                                <i class="fas fa-search mr-1"></i> {{ __('No existe ningún ticket con esa búsqueda.') }}
-                            </td>
-                        </tr>
                         <tr>
                             <td colspan="7" class="text-center py-3">{{ __('No hay ventas registradas.') }}</td>
                         </tr>
                     @endforelse
+                    <tr class="js-search-empty" style="display:none;">
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="fas fa-search mr-1"></i> {{ __('No existe ningún ticket con esa búsqueda.') }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="card-footer">
-            {{ $ventas->links() }}
-        </div>
+        @if ($ventas->hasPages())
+            <div class="card-footer">
+                {{ $ventas->links() }}
+            </div>
+        @endif
     </div>
 @stop
-
 
 @section('js')
 <script>
 (function(){
   function filtrar(texto){
-    var q=(texto||'').toString().trim().toLowerCase();
+    var q=(texto||'').toString().trim().toLowerCase().replace(/\s+/g,' ');
     var items=document.querySelectorAll('tr.js-search-item');
     var n=0;
     items.forEach(function(el){
-      var ok=!q||(el.getAttribute('data-search')||'').indexOf(q)!==-1;
+      var hay=(el.getAttribute('data-search')||'').replace(/\s+/g,' ');
+      var ok=!q||hay.indexOf(q)!==-1;
       el.style.display=ok?'':'none';
       if(ok)n++;
     });
