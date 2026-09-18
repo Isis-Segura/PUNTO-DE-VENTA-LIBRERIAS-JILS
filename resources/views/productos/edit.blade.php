@@ -64,29 +64,29 @@
 
             <div class="form-group">
                 <label>{{ __('Nombre del libro') }}</label>
-                <input type="text" name="nombre" class="form-control" value="{{ old('nombre', $producto->nombre) }}" required>
+                <input type="text" name="nombre" maxlength="120" class="form-control" value="{{ old('nombre', $producto->nombre) }}" required>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label>{{ __('Autor(es)') }}</label>
-                    <input type="text" name="autor" class="form-control" value="{{ old('autor', $producto->autor) }}">
+                    <label>{{ __('Autor(es)') }} <small class="text-muted">({{ __('opcional') }})</small></label>
+                    <input type="text" name="autor" maxlength="120" class="form-control" value="{{ old('autor', $producto->autor) }}">
                 </div>
                 <div class="form-group col-md-6">
                     <label>{{ __('Editorial') }} <small class="text-muted">({{ __('opcional') }})</small></label>
-                    <input type="text" name="editorial" class="form-control" value="{{ old('editorial', $producto->editorial) }}">
+                    <input type="text" name="editorial" maxlength="120" class="form-control" value="{{ old('editorial', $producto->editorial) }}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label>{{ __('Descripción') }}</label>
-                <textarea name="descripcion" rows="3" class="form-control">{{ old('descripcion', $producto->descripcion) }}</textarea>
+                <textarea name="descripcion" rows="3" maxlength="2000" class="form-control">{{ old('descripcion', $producto->descripcion) }}</textarea>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label>{{ __('Código / SKU') }}</label>
-                    <input type="text" name="codigo" class="form-control" value="{{ old('codigo', $producto->codigo) }}">
+                    <input type="text" name="codigo" maxlength="40" class="form-control" value="{{ old('codigo', $producto->codigo) }}">
                 </div>
                 <div class="form-group col-md-4">
                     <label>{{ __('Categoría') }}</label>
@@ -99,20 +99,20 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>{{ __('Precio') }}</label>
-                    <input type="number" step="0.01" min="0" name="precio" class="form-control" value="{{ old('precio', $producto->precio) }}" required>
+                    <input type="number" step="0.01" min="0" name="precio" max="999999.99" class="form-control" value="{{ old('precio', $producto->precio) }}" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>{{ __('Existencia (stock)') }}</label>
-                    <input type="number" min="0" name="cantidad" class="form-control"
+                    <input type="number" min="0" name="cantidad" max="100000" class="form-control"
                            value="{{ old('cantidad', $producto->inventario->cantidad ?? 0) }}" required>
                     <small class="form-text text-muted">{{ __('Admin y Gerente pueden ajustar la cantidad cuando quieran.') }}</small>
                 </div>
                 <div class="form-group col-md-6">
                     <label>{{ __('Stock mínimo (alerta)') }}</label>
-                    <input type="number" min="0" name="stock_minimo" class="form-control"
+                    <input type="number" min="0" name="stock_minimo" max="100000" class="form-control"
                            value="{{ old('stock_minimo', $producto->inventario->stock_minimo ?? 5) }}" required>
                 </div>
             </div>

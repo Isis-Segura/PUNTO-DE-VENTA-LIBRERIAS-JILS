@@ -77,6 +77,8 @@ Route::middleware(['auth', 'role:admin,gerente,cajero'])->group(function () {
     Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
     Route::get('ventas/{venta}/recibo-digital', [VentaController::class, 'reciboDigital'])->name('ventas.recibo-digital');
 });
+Route::post('ventas/simular-pago-tarjeta', [VentaController::class, 'simularPagoTarjeta'])
+    ->name('ventas.simular-pago-tarjeta');
 
 // Solo el Administrador puede borrar tickets del historial
 Route::middleware(['auth', 'role:admin'])->group(function () {

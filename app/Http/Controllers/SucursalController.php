@@ -86,10 +86,10 @@ class SucursalController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nombre' => ['required', 'string', 'max:150'],
-            'direccion' => ['nullable', 'string', 'max:255'],
-            'telefono' => ['nullable', 'string', 'max:30'],
-            'contacto' => ['nullable', 'string', 'max:150'],
+            'nombre' => ['required', 'string', 'max:100'],
+            'direccion' => ['nullable', 'string', 'max:200'],
+            'telefono' => ['nullable', 'string', 'max:20'],
+            'contacto' => ['nullable', 'string', 'max:100'],
             'gerente_id' => ['nullable', 'exists:users,id'],
             'activa' => ['required', 'boolean'],
         ]);
@@ -116,10 +116,10 @@ class SucursalController extends Controller
     public function update(Request $request, Sucursal $sucursal)
     {
         $data = $request->validate([
-            'nombre' => ['required', 'string', 'max:150'],
-            'direccion' => ['nullable', 'string', 'max:255'],
-            'telefono' => ['nullable', 'string', 'max:30'],
-            'contacto' => ['nullable', 'string', 'max:150'],
+            'nombre' => ['required', 'string', 'max:100'],
+            'direccion' => ['nullable', 'string', 'max:200'],
+            'telefono' => ['nullable', 'string', 'max:20'],
+            'contacto' => ['nullable', 'string', 'max:100'],
             'gerente_id' => ['nullable', 'exists:users,id'],
             'activa' => ['required', 'boolean'],
         ]);

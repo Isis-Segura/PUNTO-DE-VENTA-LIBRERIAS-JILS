@@ -100,9 +100,16 @@
                         <div class="form-group" id="grupo-efectivo" style="display: none;">
                             <label>{{ __('Monto recibido en efectivo') }}</label>
                             <input type="number" step="0.01" min="0" name="monto_recibido" id="monto-recibido"
-                                   class="form-control" placeholder="0.00">
+                                   class="form-control" placeholder="0.00" min="0" max="999999.99" step="0.01">
                             <small class="form-text" id="vuelto-info"></small>
                         </div>
+
+                        <div id="grupo-tarjeta" class="alert alert-info py-2" style="display: none; font-size: 0.9rem;">
+                            <i class="fas fa-credit-card"></i>
+                            {{ __('Pago con tarjeta seleccionado') }}
+                        </div>
+
+                        <input type="hidden" name="tarjeta_autorizacion" id="tarjeta-autorizacion" value="">
 
                         <button type="submit" id="btn-confirmar" class="btn btn-success btn-block" disabled>
                             <i class="fas fa-check"></i> {{ __('Confirmar venta') }}
@@ -112,11 +119,156 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal pago con tarjeta (simulado) — estilo alineado al resto de la app --}}
+    <div class="modal fade" id="modalTarjeta" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 420px;">
+            <div class="modal-content card-pago-tarjeta">
+                <div class="modal-body p-0">
+                    <div class="pago-tarjeta-head">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="pago-tarjeta-kicker">{{ __('Cobro simulado') }}</div>
+                                <h5 class="mb-0 font-weight-bold">{{ __('Pago con tarjeta') }}</h5>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="pago-tarjeta-monto mt-3">
+                            <span>{{ __('Total a cobrar') }}</span>
+                            <strong id="tarjeta-monto-label">$0.00</strong>
+                        </div>
+                    </div>
+
+                    <div class="pago-tarjeta-body">
+                        <div class="form-group">
+                            <label class="pago-label">{{ __('Número de tarjeta') }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                </div>
+                                <input type="text" id="tarjeta-numero" class="form-control" placeholder="4242 4242 4242 4242" maxlength="19" autocomplete="off">
+                            </div>
+                            <small class="form-text text-muted">{{ __('Prueba: 4000…0002 rechaza') }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="pago-label">{{ __('Nombre del titular') }}</label>
+                            <input type="text" id="tarjeta-titular" class="form-control" placeholder="{{ __('Como aparece en la tarjeta') }}">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-7">
+                                <label class="pago-label">{{ __('Vencimiento') }}</label>
+                                <input type="text" id="tarjeta-venc" class="form-control" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="form-group col-5">
+                                <label class="pago-label">CVV</label>
+                                <input type="password" id="tarjeta-cvv" class="form-control" placeholder="•••" maxlength="4">
+                            </div>
+                        </div>
+
+                        <div id="tarjeta-msg" class="pago-msg" style="display:none;"></div>
+
+                        <div class="d-flex mt-3" style="gap: 0.5rem;">
+                            <button type="button" class="btn btn-outline-secondary flex-fill" data-dismiss="modal">{{ __('Cancelar') }}</button>
+                            <button type="button" class="btn btn-primary flex-fill" id="btn-procesar-tarjeta">
+                                <i class="fas fa-lock mr-1"></i> {{ __('Procesar pago') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 
 @section('css')
 <style>
+
+
+/* Modal pago tarjeta — mismo lenguaje visual que formularios del sistema */
+.card-pago-tarjeta {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
+}
+.pago-tarjeta-head {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.15rem 1.35rem 1rem;
+}
+.pago-tarjeta-kicker {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+.pago-tarjeta-monto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    color: #475569;
+}
+.pago-tarjeta-monto strong {
+    font-size: 1.25rem;
+    color: #0f172a;
+}
+.pago-tarjeta-body {
+    padding: 1.25rem 1.35rem 1.35rem;
+    background: #fff;
+}
+.pago-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.3rem;
+}
+.pago-tarjeta-body .form-control,
+.pago-tarjeta-body .input-group-text {
+    border-radius: 8px;
+    border-color: #e2e8f0;
+}
+.pago-tarjeta-body .input-group-text {
+    background: #f8fafc;
+    color: #64748b;
+}
+.pago-tarjeta-body .input-group .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.pago-tarjeta-body .input-group-prepend .input-group-text {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.pago-msg {
+    margin-top: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+.pago-msg.text-success {
+    background: #ecfdf5;
+    color: #047857 !important;
+}
+.pago-msg.text-danger {
+    background: #fef2f2;
+    color: #b91c1c !important;
+}
+.pago-msg.text-muted {
+    background: #f1f5f9;
+}
+
 .pos-prod-card {
     background: #fff;
     border-radius: 10px;
@@ -146,6 +298,9 @@
 }
 .pos-prod-price { font-weight: 800; font-size: 1.05rem; }
 .pos-prod-stock { font-size: .72rem; color: #64748b; margin-bottom: 4px; }
+.pos-btn-add {
+    border-radius: 8px; font-weight: 600; margin-top: auto;
+}
 </style>
 @stop
 
@@ -329,7 +484,7 @@
             tr.innerHTML = `
                 <td>${escaparHtml(item.nombre)}</td>
                 <td>
-                    <input type="number" min="1" max="${item.existencia}" value="${item.cantidad}"
+                    <input type="number" min="1" max="${Math.min(item.existencia, 1000)}" value="${item.cantidad}"
                            class="form-control form-control-sm cantidad-input" style="width: 70px;">
                 </td>
                 <td>$${importe.toFixed(2)}</td>
@@ -387,7 +542,40 @@
     }
     cargarProductosInicial();
 
-formVenta.addEventListener('submit', function (e) {
+
+    const grupoTarjeta = document.getElementById('grupo-tarjeta');
+    const inputAuth = document.getElementById('tarjeta-autorizacion');
+    const urlSimularTarjeta = @json(route('ventas.simular-pago-tarjeta'));
+    let pagoTarjetaAprobado = false;
+
+    function esTarjetaSeleccionada() {
+        const op = selectMetodoPago.options[selectMetodoPago.selectedIndex];
+        return op && op.getAttribute('data-nombre') === 'Tarjeta';
+    }
+
+    const _actualizarVueltoOrig = typeof actualizarVuelto === 'function' ? actualizarVuelto : null;
+
+    function actualizarPagoUI() {
+        if (typeof actualizarVuelto === 'function') actualizarVuelto();
+        if (grupoTarjeta) {
+            grupoTarjeta.style.display = esTarjetaSeleccionada() ? '' : 'none';
+        }
+        if (!esTarjetaSeleccionada() && inputAuth) {
+            inputAuth.value = '';
+            pagoTarjetaAprobado = false;
+        }
+    }
+    selectMetodoPago.addEventListener('change', actualizarPagoUI);
+    actualizarPagoUI();
+
+    formVenta.addEventListener('submit', function (e) {
+        const TOTAL_MAX = 999999.99;
+        if (totalActual > TOTAL_MAX) {
+            e.preventDefault();
+            alert('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}');
+            return;
+        }
+
         if (!Object.keys(carrito).length) {
             e.preventDefault();
             alert('{{ __('Agrega al menos un producto al carrito.') }}');
@@ -396,12 +584,74 @@ formVenta.addEventListener('submit', function (e) {
 
         if (esEfectivoSeleccionado()) {
             const recibido = parseFloat(inputMontoRecibido.value);
-
             if (isNaN(recibido) || recibido < totalActual) {
                 e.preventDefault();
                 alert('{{ __('Ingresa un monto en efectivo suficiente para cubrir el total de la venta.') }}');
+                return;
             }
         }
+
+        if (esTarjetaSeleccionada() && !pagoTarjetaAprobado) {
+            e.preventDefault();
+            document.getElementById('tarjeta-monto-label').textContent = '$' + totalActual.toFixed(2);
+            document.getElementById('tarjeta-msg').style.display = 'none';
+            $('#modalTarjeta').modal('show');
+            return;
+        }
+    });
+
+    document.getElementById('btn-procesar-tarjeta').addEventListener('click', function () {
+        const btn = this;
+        const msg = document.getElementById('tarjeta-msg');
+        const numero = document.getElementById('tarjeta-numero').value;
+        const titular = document.getElementById('tarjeta-titular').value;
+        const vencimiento = document.getElementById('tarjeta-venc').value;
+        const cvv = document.getElementById('tarjeta-cvv').value;
+
+        msg.style.display = 'block';
+        msg.className = 'pago-msg text-muted';
+        msg.textContent = '{{ __('Procesando con la pasarela…') }}';
+        btn.disabled = true;
+
+        fetch(urlSimularTarjeta, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: JSON.stringify({
+                monto: totalActual,
+                numero: numero,
+                titular: titular,
+                vencimiento: vencimiento,
+                cvv: cvv
+            })
+        })
+        .then(async function (r) {
+            const data = await r.json().catch(function () { return {}; });
+            if (!r.ok || !data.ok) {
+                throw new Error(data.mensaje || '{{ __('Pago rechazado') }}');
+            }
+            return data;
+        })
+        .then(function (data) {
+            msg.className = 'pago-msg text-success';
+            msg.textContent = '{{ __('Aprobado') }}: ' + (data.autorizacion || '') + ' (****' + (data.ultimos4 || '') + ')';
+            if (inputAuth) inputAuth.value = data.autorizacion || 'OK';
+            pagoTarjetaAprobado = true;
+            setTimeout(function () {
+                $('#modalTarjeta').modal('hide');
+                btn.disabled = false;
+                formVenta.submit();
+            }, 700);
+        })
+        .catch(function (err) {
+            msg.className = 'pago-msg text-danger';
+            msg.textContent = err.message || '{{ __('Error al procesar el pago') }}';
+            btn.disabled = false;
+            pagoTarjetaAprobado = false;
+        });
     });
 })();
 </script>
