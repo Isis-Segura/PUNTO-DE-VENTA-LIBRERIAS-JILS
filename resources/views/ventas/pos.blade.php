@@ -59,7 +59,7 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Producto') }}</th>
-                                <th style="width: 90px;">{{ __('Cant.') }}</th>
+                                <th style="width: 130px;">{{ __('Cant.') }}</th>
                                 <th>{{ __('Subtotal') }}</th>
                                 <th></th>
                             </tr>
@@ -106,7 +106,7 @@
 
                         <div id="grupo-tarjeta" class="alert alert-info py-2" style="display: none; font-size: 0.9rem;">
                             <i class="fas fa-credit-card"></i>
-                            {{ __('Pago con tarjeta seleccionado') }}
+                            {{ __('Al confirmar se abrirá el cobro simulado con tarjeta.') }}
                         </div>
 
                         <input type="hidden" name="tarjeta_autorizacion" id="tarjeta-autorizacion" value="">
@@ -150,7 +150,7 @@
                                 </div>
                                 <input type="text" id="tarjeta-numero" class="form-control" placeholder="4242 4242 4242 4242" maxlength="19" autocomplete="off">
                             </div>
-                            <small class="form-text text-muted">{{ __('Prueba: 4000…0002 rechaza') }}</small>
+                            <small class="form-text text-muted">{{ __('Prueba: 4242… aprueba · 4000…0002 rechaza') }}</small>
                         </div>
 
                         <div class="form-group">
@@ -484,12 +484,20 @@
             tr.innerHTML = `
                 <td>${escaparHtml(item.nombre)}</td>
                 <td>
-                    <input type="number" min="1" max="${Math.min(item.existencia, 1000)}" value="${item.cantidad}"
-                           class="form-control form-control-sm cantidad-input" style="width: 70px;">
+                    <div class="d-flex align-items-center" style="gap: 4px;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary btn-menos" title="{{ __('Quitar uno') }}">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" min="1" max="${Math.min(item.existencia, 1000)}" value="${item.cantidad}"
+                               class="form-control form-control-sm cantidad-input" style="width: 58px; text-align: center;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary btn-mas" title="{{ __('Agregar uno') }}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </td>
                 <td>$${importe.toFixed(2)}</td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-danger btn-quitar">
+                    <button type="button" class="btn btn-sm btn-danger btn-quitar" title="{{ __('Quitar del carrito') }}">
                         <i class="fas fa-times"></i>
                     </button>
                 </td>
@@ -497,6 +505,12 @@
 
             tr.querySelector('.cantidad-input').addEventListener('change', function () {
                 cambiarCantidad(id, this.value);
+            });
+            tr.querySelector('.btn-menos').addEventListener('click', function () {
+                cambiarCantidad(id, item.cantidad - 1);
+            });
+            tr.querySelector('.btn-mas').addEventListener('click', function () {
+                cambiarCantidad(id, item.cantidad + 1);
             });
             tr.querySelector('.btn-quitar').addEventListener('click', function () {
                 quitarDelCarrito(id);
