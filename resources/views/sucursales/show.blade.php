@@ -34,7 +34,8 @@
     .libro-meta { font-size: 0.72rem; color: #64748b; margin-bottom: 0.35rem; }
     .libro-precio { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-top: auto; }
     .libro-badges { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between; z-index: 1; }
-    .libro-actions { margin-top: 0.5rem; }
+    .libro-actions { margin-top: 0.6rem; display: flex; gap: 0.4rem; }
+    .libro-actions form { flex: 1; margin: 0; }
     .libro-actions .btn { width: 100%; }
 
     .prod-detail-modal .modal-dialog { max-width: 720px; }
@@ -83,6 +84,10 @@
 @stop
 
 @section('content')
+
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -185,40 +190,25 @@
                                 </div>
                                 <div class="libro-precio">${{ number_format($p->precio, 2) }}</div>
                                 <div class="libro-actions" onclick="event.stopPropagation();">
-                                    <button type="button" class="btn btn-sm btn-warning"
-                                            data-toggle="modal" data-target="#ajustar{{ $inv->id }}">
-                                        <i class="fas fa-edit"></i> {{ __('Ajustar') }}
-                                    </button>
+                                    <a href="{{ route('productos.edit', $p) }}" class="btn btn-sm btn-warning"
+                                       data-confirm="{{ __('¿Deseas editar este registro?') }}"
+                                       data-confirm-title="{{ __('Confirmar edición') }}"
+                                       data-confirm-type="warning"
+                                       data-confirm-ok="{{ __('Sí, editar') }}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('productos.destroy', $p) }}" method="POST"
+                                          data-confirm="{{ __('¿Eliminar este producto?') }}"
+                                          data-confirm-title="{{ __('¿Eliminar?') }}"
+                                          data-confirm-type="danger"
+                                          data-confirm-ok="{{ __('Sí, eliminar') }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="ajustar{{ $inv->id }}" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <form action="{{ route('inventario.update', $inv) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">{{ __('Ajustar inventario') }} — {{ $p->nombre }}</h5>
-                                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label>{{ __('Existencia') }}</label>
-                                            <input type="number" min="0" name="cantidad" class="form-control" value="{{ $inv->cantidad }}" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>{{ __('Stock mínimo') }}</label>
-                                            <input type="number" min="0" name="stock_minimo" class="form-control" value="{{ $inv->stock_minimo }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Cancelar') }}</button>
-                                        <button type="submit" class="btn btn-primary">{{ __('Guardar') }}</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
