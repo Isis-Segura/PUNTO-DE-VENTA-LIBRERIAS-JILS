@@ -78,8 +78,8 @@ class Producto extends Model
     public function getGenerosListaAttribute(): string
     {
         $nombres = $this->relationLoaded('generos')
-            ? $this->generos->pluck('nombre')
-            : $this->generos()->pluck('nombre');
+            ? $this->generos->map->nombre_traducido
+            : $this->generos()->get()->map->nombre_traducido;
 
         return $nombres->filter()->implode(', ') ?: '—';
     }

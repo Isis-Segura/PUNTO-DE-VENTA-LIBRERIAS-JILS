@@ -23,7 +23,7 @@ class PasswordResetRequestController extends Controller
     public function attend(PasswordResetRequest $passwordResetRequest)
     {
         if ($passwordResetRequest->status !== 'pending') {
-            return back()->with('info', 'Esta solicitud ya fue atendida.');
+            return back()->with('info', __('messages.request_attended'));
         }
 
         $passwordResetRequest->update([
@@ -42,6 +42,6 @@ class PasswordResetRequestController extends Controller
     {
         $passwordResetRequest->delete();
 
-        return back()->with('success', 'Solicitud eliminada correctamente.');
+        return back()->with('success', __('messages.request_deleted'));
     }
 }

@@ -125,7 +125,7 @@
                         <label class="cat-chip">
                             <input type="checkbox" name="genero_ids[]" value="{{ $g->id }}" class="cat-check"
                                    {{ in_array($g->id, old('genero_ids', [])) ? 'checked' : '' }}>
-                            <span>{{ $g->nombre }}</span>
+                            <span>{{ $g->nombre_traducido }}</span>
                         </label>
                     @empty
                         <span class="text-muted">{{ __('No hay géneros. Créalos en el menú Géneros.') }}</span>

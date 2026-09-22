@@ -78,7 +78,7 @@
 
             <div class="pie">
                 <p>{{ __('¡Gracias por su compra!') }}</p>
-                <p class="brand">PDV JILS</p>
+                <p class="brand">{{ __('PDV JILS') }}</p>
             </div>
         </div>
 

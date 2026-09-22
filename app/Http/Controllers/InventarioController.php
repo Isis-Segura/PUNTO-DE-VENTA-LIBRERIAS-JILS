@@ -16,7 +16,7 @@ class InventarioController extends Controller
         $ids = auth()->user()->sucursalIdsPermitidas();
 
         if ($ids !== null && ! in_array($inventario->producto->sucursal_id, $ids, true)) {
-            abort(403, 'No tienes permiso sobre esa sucursal.');
+            abort(403, __('messages.branch_permission'));
         }
 
         // Antes no había tope máximo, así que un número extremadamente
@@ -35,6 +35,6 @@ class InventarioController extends Controller
 
         $inventario->update($data);
 
-        return back()->with('success', 'Inventario actualizado correctamente.');
+        return back()->with('success', __('messages.inventory_updated'));
     }
 }
