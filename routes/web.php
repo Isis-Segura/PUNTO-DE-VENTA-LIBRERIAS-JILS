@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetRequestController;
 use App\Http\Controllers\GeneroController;
+use App\Http\Controllers\CajaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -114,8 +115,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('solicitudes-contrasena/{passwordResetRequest}/atender', [PasswordResetRequestController::class, 'attend'])->name('password-requests.attend');
 });
 
+
+// Cajas: Admin y Gerente (el gerente solo ve las de su sucursal)
+// Requerido por el protocolo: "Registrar nuevas cajas" / "Eliminar cajas"
+Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
+    Route::resource('cajas', CajaController::class)->except(['show']);
+});
+
 // En el mismo grupo auth + role:admin,gerente que categorias:
-Route::resource('generos', GeneroController::class);
+Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
+    Route::resource('generos', GeneroController::class);
+});
 
 Route::delete('admin/solicitudes-contrasena/{passwordResetRequest}', [PasswordResetRequestController::class, 'destroy'])
     ->name('admin.password-requests.destroy');

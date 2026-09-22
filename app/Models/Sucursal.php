@@ -45,4 +45,9 @@ class Sucursal extends Model
     {
         return $this->hasMany(Venta::class);
     }
+
+    public function cajas(): HasMany
+    {
+        return $this->hasMany(Caja::class);
+    }
 }
