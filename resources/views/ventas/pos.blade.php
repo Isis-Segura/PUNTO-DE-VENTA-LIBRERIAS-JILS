@@ -15,6 +15,30 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+
+    {{-- Selector de caja (visible cuando hay sucursal activa) --}}
+    @if ($sucursal)
+        <div class="form-inline mb-3">
+            <label class="mr-2 font-weight-bold">{{ __('Caja') }}:</label>
+            <select id="selector-caja" class="form-control" style="min-width: 200px;" {{ $cajas->isEmpty() ? 'disabled' : '' }}>
+                @if ($cajas->isEmpty())
+                    <option value="">{{ __('No hay cajas activas en esta sucursal') }}</option>
+                @else
+                    <option value="">{{ __('— Elige una caja —') }}</option>
+                    @foreach ($cajas as $caja)
+                        <option value="{{ $caja->id }}">{{ $caja->nombre }}</option>
+                    @endforeach
+                @endif
+            </select>
+            @if ($cajas->isEmpty() && (auth()->user()->isAdmin() || auth()->user()->isGerente()))
+                <a href="{{ route('cajas.create') }}" class="btn btn-sm btn-outline-primary ml-2">
+                    <i class="fas fa-plus"></i> {{ __('Crear caja') }}
+                </a>
+            @endif
+        </div>
+    @endif
+
+
     @if (auth()->user()->isAdmin())
         <form method="GET" action="{{ route('ventas.create') }}" class="form-inline mb-3">
             <label class="mr-2">{{ __('Vendiendo en la sucursal') }}:</label>
@@ -89,6 +113,7 @@
                     <form id="form-venta" action="{{ route('ventas.store') }}" method="POST" class="mt-3">
                         @csrf
                         @if($sucursal)<input type="hidden" name="sucursal_id" value="{{ $sucursal->id }}">@endif
+                        <input type="hidden" name="caja_id" id="input-caja-id" value="">
                         <div id="items-container"></div>
 
                         <div class="form-group">
@@ -328,6 +353,20 @@
 
     // Carrito en memoria: { productoId: { nombre, precio, cantidad, existencia } }
     let carrito = {};
+
+    function cajaSeleccionada() {
+        var inputCaja = document.getElementById('input-caja-id');
+        return inputCaja && inputCaja.value;
+    }
+
+
+    function puedeConfirmar() {
+        var inputCaja = document.getElementById('input-caja-id');
+        var tieneCaja = inputCaja && inputCaja.value;
+        var tieneItems = Object.keys(carrito).length > 0;
+        return tieneCaja && tieneItems;
+    }
+
     let timeoutBusqueda = null;
     let totalActual = 0;
 
@@ -417,13 +456,15 @@
 
         productos.forEach(function (p) {
             const sinStock = p.existencia <= 0;
+            const sinCaja = !cajaSeleccionada();
+            const bloqueado = sinStock || sinCaja;
             const col = document.createElement('div');
             col.className = 'col-6 col-md-4 mb-3';
             const imgHtml = p.imagen
                 ? '<img src="' + p.imagen + '" alt="">'
                 : '<div class="pos-prod-ph"><i class="fas fa-book"></i></div>';
             col.innerHTML = `
-                <div class="pos-prod-card ${sinStock ? 'is-sin-stock' : ''}">
+                <div class="pos-prod-card ${bloqueado ? 'is-sin-stock' : ''}">
                     <div class="pos-prod-img">${imgHtml}</div>
                     <div class="pos-prod-info">
                         <div class="pos-prod-name">${escaparHtml(p.nombre)}</div>
@@ -436,6 +477,14 @@
                 </div>
             `;
             col.querySelector('button').addEventListener('click', function () {
+                if (!cajaSeleccionada()) {
+                    if (typeof appToast === 'function') {
+                        appToast(@json(__('Selecciona una caja antes de agregar productos.')), 'warning');
+                    } else {
+                        alert(@json(__('Selecciona una caja antes de agregar productos.')));
+                    }
+                    return;
+                }
                 agregarAlCarrito(p);
             });
             resultados.appendChild(col);
@@ -443,6 +492,15 @@
     }
 
     function agregarAlCarrito(producto) {
+        if (!cajaSeleccionada()) {
+            if (typeof appToast === 'function') {
+                appToast(@json(__('Selecciona una caja antes de agregar productos.')), 'warning');
+            } else {
+                alert(@json(__('Selecciona una caja antes de agregar productos.')));
+            }
+            return;
+        }
+
         const existente = carrito[producto.id];
         const cantidadActual = existente ? existente.cantidad : 0;
 
@@ -562,7 +620,7 @@
         subtotalEl.textContent = '$' + subtotal.toFixed(2);
         if (ivaEl) ivaEl.textContent = '$' + iva.toFixed(2);
         totalEl.innerHTML = '<strong>$' + total.toFixed(2) + '</strong>';
-        btnConfirmar.disabled = false;
+        btnConfirmar.disabled = !puedeConfirmar();
 
         totalActual = total;
         actualizarVuelto();
@@ -700,4 +758,49 @@
     });
 })();
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var selectorCaja = document.getElementById('selector-caja');
+    var inputCaja = document.getElementById('input-caja-id');
+    var btnConfirmar = document.getElementById('btn-confirmar');
+
+    function syncCaja() {
+        if (!selectorCaja || !inputCaja) return;
+        inputCaja.value = selectorCaja.value || '';
+        // Re-evaluate confirm button if carrito has items
+        if (btnConfirmar && inputCaja && !inputCaja.value) {
+            btnConfirmar.disabled = true;
+        }
+        // Actualizar apariencia: translúcidos si no hay caja seleccionada
+        var hayCaja = !!inputCaja.value;
+        document.querySelectorAll('.pos-prod-card').forEach(function (card) {
+            var btn = card.querySelector('button');
+            var sinStock = btn && btn.disabled;
+            if (!hayCaja || sinStock) {
+                card.classList.add('is-sin-stock');
+            } else {
+                card.classList.remove('is-sin-stock');
+            }
+        });
+    }
+
+    if (selectorCaja) {
+        selectorCaja.addEventListener('change', syncCaja);
+        syncCaja();
+    }
+
+    // Intercept form submit to require caja
+    var formVenta = document.getElementById('form-venta');
+    if (formVenta) {
+        formVenta.addEventListener('submit', function (e) {
+            if (!inputCaja || !inputCaja.value) {
+                e.preventDefault();
+                alert(@json(__('Selecciona una caja antes de confirmar la venta.')));
+            }
+        });
+    }
+});
+</script>
+
 @stop
