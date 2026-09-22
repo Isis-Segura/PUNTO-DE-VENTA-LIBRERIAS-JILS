@@ -78,6 +78,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -180,11 +184,10 @@
 
                         @can('es-admin')
                             <div>
-                                <a href="{{ route('sucursales.edit', $sucursal) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('sucursales.edit', $sucursal) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('sucursales.destroy', $sucursal) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('{{ __('¿Eliminar esta sucursal?') }}');">
+                                <form action="{{ route('sucursales.destroy', $sucursal) }}" method="POST" class="d-inline" data-confirm="{{ __('¿Eliminar esta sucursal?') }}" data-confirm-title="{{ __('¿Eliminar?') }}" data-confirm-type="danger" data-confirm-ok="{{ __('Sí, eliminar') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">

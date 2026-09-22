@@ -7,6 +7,9 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-toasts')
+    @endonce
 
     @if (session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
@@ -416,7 +419,7 @@
         const cantidadActual = existente ? existente.cantidad : 0;
 
         if (cantidadActual + 1 > producto.existencia) {
-            alert('{{ __('No hay suficiente existencia de este producto.') }}');
+            appToast('{{ __('No hay suficiente existencia de este producto.') }}', 'warning');
             return;
         }
 
@@ -443,7 +446,7 @@
         if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
             delete carrito[id];
         } else if (nuevaCantidad > item.existencia) {
-            alert('{{ __('No hay suficiente existencia de este producto.') }}');
+            appToast('{{ __('No hay suficiente existencia de este producto.') }}', 'warning');
             item.cantidad = item.existencia;
         } else {
             item.cantidad = nuevaCantidad;
@@ -586,13 +589,13 @@
         const TOTAL_MAX = 999999.99;
         if (totalActual > TOTAL_MAX) {
             e.preventDefault();
-            alert('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}');
+            appToast('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}', 'error');
             return;
         }
 
         if (!Object.keys(carrito).length) {
             e.preventDefault();
-            alert('{{ __('Agrega al menos un producto al carrito.') }}');
+            appToast('{{ __('Agrega al menos un producto al carrito.') }}', 'warning');
             return;
         }
 
@@ -600,7 +603,7 @@
             const recibido = parseFloat(inputMontoRecibido.value);
             if (isNaN(recibido) || recibido < totalActual) {
                 e.preventDefault();
-                alert('{{ __('Ingresa un monto en efectivo suficiente para cubrir el total de la venta.') }}');
+                appToast('{{ __('Ingresa un monto en efectivo suficiente para cubrir el total de la venta.') }}', 'warning');
                 return;
             }
         }

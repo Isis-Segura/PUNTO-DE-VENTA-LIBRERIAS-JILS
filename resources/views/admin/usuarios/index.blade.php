@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -51,11 +55,10 @@
                                 @endif
                             </td>
                             <td class="text-right">
-                                <a href="{{ route('admin.usuarios.edit', $usuario) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('admin.usuarios.edit', $usuario) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('admin.usuarios.destroy', $usuario) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('{{ __('¿Eliminar este usuario?') }}');">
+                                <form action="{{ route('admin.usuarios.destroy', $usuario) }}" method="POST" class="d-inline" data-confirm="{{ __('¿Eliminar este usuario?') }}" data-confirm-title="{{ __('¿Eliminar?') }}" data-confirm-type="danger" data-confirm-ok="{{ __('Sí, eliminar') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">
