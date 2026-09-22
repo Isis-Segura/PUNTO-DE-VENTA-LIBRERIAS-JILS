@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -64,7 +68,10 @@
                                     @endif
                                 @endif
                                 <form action="{{ route('admin.password-requests.destroy', $s) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm(@json(__('¿Eliminar esta solicitud de contraseña?')));">
+                                      data-confirm="{{ __('¿Eliminar esta solicitud de contraseña?') }}"
+                                      data-confirm-title="{{ __('¿Eliminar?') }}"
+                                      data-confirm-type="danger"
+                                      data-confirm-ok="{{ __('Sí, eliminar') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">
