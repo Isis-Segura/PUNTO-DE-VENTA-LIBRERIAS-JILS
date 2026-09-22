@@ -1,4 +1,5 @@
-@extends('adminlte::page')
+
+                            <td>{{ $venta->caja->nombre ?? "—" }}</td>@extends('adminlte::page')
 
 @section('title', __('Ventas'))
 
@@ -49,6 +50,7 @@
                         <th>{{ __('Fecha') }}</th>
                         <th>{{ __('Sucursal') }}</th>
                         <th>{{ __('Cajero') }}</th>
+                        <th>{{ __('Caja') }}</th>
                         <th>{{ __('Método de pago') }}</th>
                         <th>{{ __('Total') }}</th>
                         <th class="text-right">{{ __('Acciones') }}</th>

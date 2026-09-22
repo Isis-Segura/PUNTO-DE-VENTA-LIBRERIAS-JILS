@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventario;
+use App\Models\Caja;
 use App\Models\MetodoPago;
 use App\Models\Producto;
 use App\Models\Sucursal;
@@ -17,7 +18,7 @@ class VentaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Venta::with(['sucursal', 'cajero', 'metodoPago']);
+        $query = Venta::with(['sucursal', 'cajero', 'caja', 'metodoPago']);
 
         $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null) {
@@ -88,8 +89,17 @@ class VentaController extends Controller
                 ->with('error', 'No tienes una sucursal asignada. Pide al Administrador General que te asigne una.');
         }
 
+        // Cajas activas de la sucursal seleccionada
+        $cajas = collect();
+        if ($sucursal) {
+            $cajas = Caja::where('sucursal_id', $sucursal->id)
+                ->where('activa', true)
+                ->orderBy('nombre')
+                ->get();
+        }
+
         // Admin puede entrar sin sucursal elegida (debe escogerla en pantalla)
-        return view('ventas.pos', compact('sucursal', 'metodosPago', 'sucursales'));
+        return view('ventas.pos', compact('sucursal', 'metodosPago', 'sucursales', 'cajas'));
     }
 
     /**
@@ -135,12 +145,22 @@ class VentaController extends Controller
     {
         $data = $request->validate([
             'sucursal_id' => ['required', 'exists:sucursales,id'],
+            'caja_id' => ['required', 'exists:cajas,id'],
             'metodo_pago_id' => ['required', 'exists:metodos_pago,id'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.producto_id' => ['required', 'exists:productos,id'],
             'items.*.cantidad' => ['required', 'integer', 'min:1', 'max:1000'],
             'monto_recibido' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
         ]);
+
+        // Verificar que la caja pertenezca a la sucursal y esté activa
+        $caja = Caja::where('id', $data['caja_id'])
+            ->where('sucursal_id', $data['sucursal_id'])
+            ->where('activa', true)
+            ->first();
+        if (! $caja) {
+            return back()->withInput()->with('error', 'La caja seleccionada no es válida para esta sucursal.');
+        }
 
         $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null && ! in_array((int) $data['sucursal_id'], $ids, true)) {
@@ -217,6 +237,7 @@ class VentaController extends Controller
                 $venta = Venta::create([
                     'sucursal_id' => $data['sucursal_id'],
                     'user_id' => auth()->id(),
+                    'caja_id' => $data['caja_id'],
                     'metodo_pago_id' => $data['metodo_pago_id'],
                     'folio' => $folio,
                     'subtotal' => $subtotal,
@@ -263,7 +284,7 @@ class VentaController extends Controller
             abort(403);
         }
 
-        $venta->load(['detalles.producto', 'sucursal', 'cajero', 'metodoPago']);
+        $venta->load(['detalles.producto', 'sucursal', 'cajero', 'caja', 'metodoPago']);
 
         return view('ventas.ticket', compact('venta'));
     }
@@ -278,7 +299,7 @@ class VentaController extends Controller
             abort(403);
         }
 
-        $venta->load(['detalles.producto', 'sucursal', 'cajero', 'metodoPago']);
+        $venta->load(['detalles.producto', 'sucursal', 'cajero', 'caja', 'metodoPago']);
 
         $html = view('ventas.recibo-digital', compact('venta'))->render();
         $nombreArchivo = 'recibo-'.$venta->folio.'.pdf';

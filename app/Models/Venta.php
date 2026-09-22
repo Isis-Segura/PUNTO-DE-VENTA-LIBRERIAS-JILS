@@ -13,6 +13,7 @@ class Venta extends Model
     protected $fillable = [
         'sucursal_id',
         'user_id',
+        'caja_id',
         'metodo_pago_id',
         'folio',
         'subtotal',
@@ -40,6 +41,11 @@ class Venta extends Model
     public function cajero(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function caja(): BelongsTo
+    {
+        return $this->belongsTo(Caja::class);
     }
 
     public function metodoPago(): BelongsTo
