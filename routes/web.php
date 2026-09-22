@@ -116,3 +116,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // En el mismo grupo auth + role:admin,gerente que categorias:
 Route::resource('generos', GeneroController::class);
+
+Route::delete('admin/solicitudes-contrasena/{passwordResetRequest}', [PasswordResetRequestController::class, 'destroy'])
+    ->name('admin.password-requests.destroy');

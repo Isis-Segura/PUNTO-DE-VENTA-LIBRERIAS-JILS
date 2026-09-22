@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -90,8 +94,7 @@
                                     <i class="fas fa-receipt"></i> {{ __('Ver ticket') }}
                                 </a>
                                 @if (auth()->user()->isAdmin())
-                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline"
-                                          onsubmit="return confirm(@json(__('¿Eliminar el ticket :folio? Se devolverá el stock al inventario.', ['folio' => $venta->folio])));">
+                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline" data-confirm="¿Eliminar el ticket {{ $venta->folio }}? Se devolverá el stock al inventario." data-confirm-title="¿Eliminar ticket?" data-confirm-type="danger" data-confirm-ok="Sí, eliminar">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">

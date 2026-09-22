@@ -110,6 +110,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -190,11 +194,10 @@
                         </div>
                         <div class="libro-precio">${{ number_format($producto->precio, 2) }}</div>
                         <div class="libro-actions" onclick="event.stopPropagation();">
-                            <a href="{{ route('productos.edit', $producto) }}" class="btn btn-sm btn-warning">
+                            <a href="{{ route('productos.edit', $producto) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('productos.destroy', $producto) }}" method="POST"
-                                  onsubmit="return confirm('¿Eliminar este producto?');">
+                            <form action="{{ route('productos.destroy', $producto) }}" method="POST" data-confirm="¿Eliminar este producto?" data-confirm-title="¿Eliminar?" data-confirm-type="danger" data-confirm-ok="Sí, eliminar">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">

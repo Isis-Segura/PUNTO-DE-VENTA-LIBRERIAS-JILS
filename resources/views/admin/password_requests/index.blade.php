@@ -24,7 +24,7 @@
                         <th>{{ __('Fecha') }}</th>
                         <th>{{ __('Estado') }}</th>
                         <th>{{ __('Atendido por') }}</th>
-                        <th></th>
+                        <th class="text-right">{{ __('Acciones') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,7 +34,7 @@
                                 <strong>{{ $s->user->name ?? '—' }}</strong><br>
                                 <small class="text-muted">{{ $s->user->email ?? '' }}</small>
                             </td>
-                            <td>{{ $s->user->role->nombre ?? '—' }}</td>
+                            <td>{{ $s->user->role->nombre ?? ($s->user->role->name ?? '—') }}</td>
                             <td>{{ $s->created_at->format('d/m/Y H:i') }}</td>
                             <td>
                                 @if ($s->status === 'pending')
@@ -51,7 +51,7 @@
                                     —
                                 @endif
                             </td>
-                            <td class="text-right">
+                            <td class="text-right text-nowrap">
                                 @if ($s->status === 'pending')
                                     <form action="{{ route('admin.password-requests.attend', $s) }}" method="POST" class="d-inline">
                                         @csrf
@@ -63,6 +63,14 @@
                                         </a>
                                     @endif
                                 @endif
+                                <form action="{{ route('admin.password-requests.destroy', $s) }}" method="POST" class="d-inline"
+                                      onsubmit="return confirm(@json(__('¿Eliminar esta solicitud de contraseña?')));">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @empty

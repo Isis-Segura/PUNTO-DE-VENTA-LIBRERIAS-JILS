@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -40,11 +44,10 @@
                             <td>{{ $categoria->descripcion ?? '—' }}</td>
                             <td>{{ $categoria->productos_count }}</td>
                             <td class="text-right">
-                                <a href="{{ route('categorias.edit', $categoria) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('categorias.edit', $categoria) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('categorias.destroy', $categoria) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('{{ __('¿Eliminar esta categoría?') }}');">
+                                <form action="{{ route('categorias.destroy', $categoria) }}" method="POST" class="d-inline" data-confirm="{{ __('¿Eliminar esta categoría?') }}" data-confirm-title="{{ __('¿Eliminar?') }}" data-confirm-type="danger" data-confirm-ok="{{ __('Sí, eliminar') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">

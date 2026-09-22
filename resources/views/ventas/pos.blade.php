@@ -7,6 +7,9 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-toasts')
+    @endonce
 
     @if (session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
@@ -333,6 +336,29 @@
         return !!opcion && opcion.dataset.nombre === 'Efectivo';
     }
 
+    const MONTO_MAX = 999999.99;
+
+    function clampMontoInput(el) {
+        if (!el) return;
+        let raw = String(el.value || '').replace(/[^0-9.]/g, '');
+        // una sola parte decimal
+        const parts = raw.split('.');
+        if (parts.length > 2) raw = parts[0] + '.' + parts.slice(1).join('');
+        if (parts.length >= 2) raw = parts[0] + '.' + parts[1].slice(0, 2);
+        // máximo 6 enteros + 2 decimales (hasta 999999.99)
+        const enteros = raw.split('.')[0] || '';
+        if (enteros.length > 6) {
+            raw = enteros.slice(0, 6) + (raw.includes('.') ? '.' + (raw.split('.')[1] || '') : '');
+        }
+        let n = parseFloat(raw);
+        if (!isNaN(n) && n > MONTO_MAX) {
+            n = MONTO_MAX;
+            raw = String(MONTO_MAX);
+        }
+        if (el.value !== raw) el.value = raw;
+        return isNaN(n) ? null : n;
+    }
+
     function actualizarVuelto() {
         if (!esEfectivoSeleccionado()) {
             grupoEfectivo.style.display = 'none';
@@ -342,14 +368,14 @@
 
         grupoEfectivo.style.display = '';
 
-        const recibido = parseFloat(inputMontoRecibido.value);
+        const recibido = clampMontoInput(inputMontoRecibido);
 
-        if (isNaN(recibido)) {
+        if (recibido === null) {
             vueltoInfo.textContent = '';
             return;
         }
 
-        const vuelto = recibido - totalActual;
+        const vuelto = Math.round((recibido - totalActual) * 100) / 100;
 
         if (vuelto < 0) {
             vueltoInfo.innerHTML = '<span class="text-danger">{{ __('Falta') }}: $' + Math.abs(vuelto).toFixed(2) + '</span>';
@@ -360,6 +386,11 @@
 
     selectMetodoPago.addEventListener('change', actualizarVuelto);
     inputMontoRecibido.addEventListener('input', actualizarVuelto);
+    inputMontoRecibido.addEventListener('blur', function () {
+        const n = clampMontoInput(inputMontoRecibido);
+        if (n !== null) inputMontoRecibido.value = n.toFixed(2);
+        actualizarVuelto();
+    });
 
     buscador.addEventListener('input', function () {
         if (!urlBuscar) return;
@@ -416,7 +447,7 @@
         const cantidadActual = existente ? existente.cantidad : 0;
 
         if (cantidadActual + 1 > producto.existencia) {
-            alert('{{ __('No hay suficiente existencia de este producto.') }}');
+            appToast('{{ __('No hay suficiente existencia de este producto.') }}', 'warning');
             return;
         }
 
@@ -443,7 +474,7 @@
         if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
             delete carrito[id];
         } else if (nuevaCantidad > item.existencia) {
-            alert('{{ __('No hay suficiente existencia de este producto.') }}');
+            appToast('{{ __('No hay suficiente existencia de este producto.') }}', 'warning');
             item.cantidad = item.existencia;
         } else {
             item.cantidad = nuevaCantidad;
@@ -586,21 +617,21 @@
         const TOTAL_MAX = 999999.99;
         if (totalActual > TOTAL_MAX) {
             e.preventDefault();
-            alert('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}');
+            appToast('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}', 'error');
             return;
         }
 
         if (!Object.keys(carrito).length) {
             e.preventDefault();
-            alert('{{ __('Agrega al menos un producto al carrito.') }}');
+            appToast('{{ __('Agrega al menos un producto al carrito.') }}', 'warning');
             return;
         }
 
         if (esEfectivoSeleccionado()) {
-            const recibido = parseFloat(inputMontoRecibido.value);
-            if (isNaN(recibido) || recibido < totalActual) {
+            const recibido = clampMontoInput(inputMontoRecibido);
+            if (recibido === null || recibido < totalActual || recibido > MONTO_MAX) {
                 e.preventDefault();
-                alert('{{ __('Ingresa un monto en efectivo suficiente para cubrir el total de la venta.') }}');
+                appToast('{{ __('Ingresa un monto en efectivo válido (máx. $999,999.99) y suficiente para cubrir el total.') }}', 'warning');
                 return;
             }
         }
