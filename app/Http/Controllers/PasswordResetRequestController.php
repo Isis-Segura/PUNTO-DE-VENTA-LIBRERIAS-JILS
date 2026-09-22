@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\PasswordResetRequest;
-use Illuminate\Http\Request;
 
 class PasswordResetRequestController extends Controller
 {
@@ -37,5 +36,12 @@ class PasswordResetRequestController extends Controller
             'success',
             'Solicitud marcada como atendida. Ahora puedes editar al usuario y asignarle una nueva contraseña desde Usuarios.'
         );
+    }
+
+    public function destroy(PasswordResetRequest $passwordResetRequest)
+    {
+        $passwordResetRequest->delete();
+
+        return back()->with('success', 'Solicitud eliminada correctamente.');
     }
 }
