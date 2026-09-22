@@ -99,7 +99,7 @@ class ProductoController extends Controller
             'stock_minimo' => $data['stock_minimo'],
         ]);
 
-        return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
+        return redirect()->route('productos.index')->with('success', __('messages.product_created'));
     }
 
     public function edit(Producto $producto)
@@ -184,7 +184,7 @@ class ProductoController extends Controller
             $producto->inventario->update($inv);
         }
 
-        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
+        return redirect()->route('productos.index')->with('success', __('messages.product_updated'));
     }
 
     public function destroy(Producto $producto)
@@ -192,7 +192,7 @@ class ProductoController extends Controller
         $this->verificarAccesoSucursal($producto->sucursal_id);
 
         if ($producto->detalleVentas()->exists()) {
-            return back()->with('error', 'No puedes eliminar un producto que ya tiene ventas registradas. Desactívalo en su lugar.');
+            return back()->with('error', __('messages.product_has_sales'));
         }
 
         if ($producto->imagen) {
@@ -202,7 +202,7 @@ class ProductoController extends Controller
         $producto->inventario()?->delete();
         $producto->delete();
 
-        return redirect()->route('productos.index')->with('success', 'Producto eliminado correctamente.');
+        return redirect()->route('productos.index')->with('success', __('messages.product_deleted'));
     }
 
     private function aplicarFiltroSucursal($query): void
@@ -228,7 +228,7 @@ class ProductoController extends Controller
     {
         $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null && ! in_array($sucursalId, $ids, true)) {
-            abort(403, 'No tienes permiso sobre esa sucursal.');
+            abort(403, __('messages.branch_permission'));
         }
     }
 }

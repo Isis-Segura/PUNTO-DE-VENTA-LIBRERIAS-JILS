@@ -30,6 +30,18 @@
                     @enderror
                 </div>
 
+                <div class="form-group">
+                    <label>{{ __('Nombre') }} (English)</label>
+                    <input type="text" name="nombre_en" class="form-control @error('nombre_en') is-invalid @enderror" value="{{ old('nombre_en', $genero->nombre_en) }}">
+                    @error('nombre_en')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label>{{ __('Descripción') }} (English)</label>
+                    <textarea name="descripcion_en" rows="3" class="form-control @error('descripcion_en') is-invalid @enderror">{{ old('descripcion_en', $genero->descripcion_en) }}</textarea>
+                    @error('descripcion_en')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                </div>
+
                 <button type="submit" class="btn btn-primary">{{ __('Guardar') }}</button>
                 <a href="{{ route('generos.index') }}" class="btn btn-secondary">{{ __('Cancelar') }}</a>
             </form>
