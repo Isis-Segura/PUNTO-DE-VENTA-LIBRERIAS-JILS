@@ -355,6 +355,13 @@ return [
             'can' => 'es-admin-o-gerente',
         ],
         [
+            'text' => 'Cajas',
+            'url'  => 'cajas',
+            'icon' => 'fas fa-fw fa-cash-register',
+            'classes' => 'pos-nav-item pos-nav-cajas text-white',
+            'can'  => 'es-admin-o-gerente',
+        ],
+        [
             'text' => 'Productos',
             'url' => 'productos',
             'icon' => 'fas fa-fw fa-box',
