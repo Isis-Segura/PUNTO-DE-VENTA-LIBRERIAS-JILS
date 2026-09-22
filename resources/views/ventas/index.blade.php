@@ -1,4 +1,5 @@
-@extends('adminlte::page')
+
+                            <td>{{ $venta->caja->nombre ?? "—" }}</td>@extends('adminlte::page')
 
 @section('title', __('Ventas'))
 
@@ -7,6 +8,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -45,6 +50,7 @@
                         <th>{{ __('Fecha') }}</th>
                         <th>{{ __('Sucursal') }}</th>
                         <th>{{ __('Cajero') }}</th>
+                        <th>{{ __('Caja') }}</th>
                         <th>{{ __('Método de pago') }}</th>
                         <th>{{ __('Total') }}</th>
                         <th class="text-right">{{ __('Acciones') }}</th>
@@ -90,8 +96,7 @@
                                     <i class="fas fa-receipt"></i> {{ __('Ver ticket') }}
                                 </a>
                                 @if (auth()->user()->isAdmin())
-                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline"
-                                          onsubmit="return confirm(@json(__('¿Eliminar el ticket :folio? Se devolverá el stock al inventario.', ['folio' => $venta->folio])));">
+                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline" data-confirm="¿Eliminar el ticket {{ $venta->folio }}? Se devolverá el stock al inventario." data-confirm-title="¿Eliminar ticket?" data-confirm-type="danger" data-confirm-ok="Sí, eliminar">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">

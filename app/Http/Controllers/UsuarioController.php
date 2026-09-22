@@ -7,6 +7,9 @@ use App\Models\Sucursal;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CredencialesUsuarioMail;
+
 use Illuminate\Validation\Rule;
 
 class UsuarioController extends Controller
@@ -70,7 +73,7 @@ class UsuarioController extends Controller
 
         $this->autorizarRolYSucursal($data['role_id'], $data['sucursal_id'] ?? null);
 
-        User::create([
+        $usuario = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -79,9 +82,29 @@ class UsuarioController extends Controller
             'activo' => true,
         ]);
 
+        $usuario->load('role');
+        $rol = $usuario->role;
+        $rolNombre = 'Usuario';
+        if ($rol) {
+            $rolNombre = $rol->nombre ?? $rol->name ?? 'Usuario';
+        }
+
+        $mensaje = 'Usuario creado correctamente.';
+
+        try {
+            Mail::to($usuario->email)->send(
+                new CredencialesUsuarioMail($usuario, $data['password'], $rolNombre)
+            );
+            $mensaje .= ' Se envió un correo a '.$usuario->email.' con usuario, rol y contraseña.';
+        } catch (\Throwable $e) {
+            report($e);
+            // Mensaje corto para no romper la sesión / la vista
+            $mensaje .= ' El usuario se creó, pero el correo no se pudo enviar.';
+        }
+
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuario creado correctamente.');
+            ->with('success', $mensaje);
     }
 
     /**

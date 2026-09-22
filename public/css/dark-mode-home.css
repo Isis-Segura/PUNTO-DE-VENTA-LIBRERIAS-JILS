@@ -1,0 +1,44 @@
+/* Modo oscuro — landing / home público */
+html.theme-dark body,
+body.theme-dark {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+html.theme-dark .navbar,
+body.theme-dark .navbar,
+html.theme-dark header,
+body.theme-dark header {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+html.theme-dark h1,
+html.theme-dark h2,
+html.theme-dark h3,
+body.theme-dark h1,
+body.theme-dark h2,
+body.theme-dark h3 {
+  color: #f8fafc !important;
+}
+html.theme-dark p,
+body.theme-dark p {
+  color: #94a3b8 !important;
+}
+html.theme-dark .card,
+body.theme-dark .card,
+html.theme-dark [class*="module"],
+body.theme-dark .bg-white {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+html.theme-dark .btn-outline-primary,
+body.theme-dark .btn-outline-primary {
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+html.theme-dark .btn-light,
+body.theme-dark .btn-light {
+  background: #334155;
+  color: #e2e8f0;
+  border-color: #475569;
+}

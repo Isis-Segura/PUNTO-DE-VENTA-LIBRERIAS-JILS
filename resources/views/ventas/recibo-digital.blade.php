@@ -109,7 +109,9 @@
             <p class="muted">{{ __('Recibo digital de venta') }}</p>
             <p class="muted">{{ __('Folio') }}: <strong>{{ $venta->folio }}</strong></p>
             <p class="muted">{{ $venta->created_at->format('d/m/Y H:i') }}</p>
-            <p class="muted">{{ __('Atendió') }}: {{ $venta->cajero->name ?? '-' }}</p>
+            <p class="muted">{{ __('Atendió') }}: {{ $venta->cajero->name ?? '-' }}
+            </p>
+            <p class="muted">{{ __('Caja') }}: {{ $venta->caja->nombre ?? '—' }}</p>
         </div>
 
         <hr class="sep">

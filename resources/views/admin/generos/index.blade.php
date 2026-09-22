@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-confirm-modal')
+    @endonce
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -40,11 +44,10 @@
                             <td>{{ $genero->descripcion ?? '—' }}</td>
                             <td>{{ $genero->productos_count }}</td>
                             <td class="text-right">
-                                <a href="{{ route('generos.edit', $genero) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('generos.edit', $genero) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('generos.destroy', $genero) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('{{ __('¿Eliminar esta género?') }}');">
+                                <form action="{{ route('generos.destroy', $genero) }}" method="POST" class="d-inline" data-confirm="{{ __('¿Eliminar esta género?') }}" data-confirm-title="{{ __('¿Eliminar?') }}" data-confirm-type="danger" data-confirm-ok="{{ __('Sí, eliminar') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">

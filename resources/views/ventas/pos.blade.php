@@ -7,10 +7,37 @@
 @stop
 
 @section('content')
+    @once
+        @include('partials.app-toasts')
+    @endonce
 
     @if (session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
+
+
+    {{-- Selector de caja (visible cuando hay sucursal activa) --}}
+    @if ($sucursal)
+        <div class="form-inline mb-3">
+            <label class="mr-2 font-weight-bold">{{ __('Caja') }}:</label>
+            <select id="selector-caja" class="form-control" style="min-width: 200px;" {{ $cajas->isEmpty() ? 'disabled' : '' }}>
+                @if ($cajas->isEmpty())
+                    <option value="">{{ __('No hay cajas activas en esta sucursal') }}</option>
+                @else
+                    <option value="">{{ __('— Elige una caja —') }}</option>
+                    @foreach ($cajas as $caja)
+                        <option value="{{ $caja->id }}">{{ $caja->nombre }}</option>
+                    @endforeach
+                @endif
+            </select>
+            @if ($cajas->isEmpty() && (auth()->user()->isAdmin() || auth()->user()->isGerente()))
+                <a href="{{ route('cajas.create') }}" class="btn btn-sm btn-outline-primary ml-2">
+                    <i class="fas fa-plus"></i> {{ __('Crear caja') }}
+                </a>
+            @endif
+        </div>
+    @endif
+
 
     @if (auth()->user()->isAdmin())
         <form method="GET" action="{{ route('ventas.create') }}" class="form-inline mb-3">
@@ -59,7 +86,7 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Producto') }}</th>
-                                <th style="width: 90px;">{{ __('Cant.') }}</th>
+                                <th style="width: 130px;">{{ __('Cant.') }}</th>
                                 <th>{{ __('Subtotal') }}</th>
                                 <th></th>
                             </tr>
@@ -86,6 +113,7 @@
                     <form id="form-venta" action="{{ route('ventas.store') }}" method="POST" class="mt-3">
                         @csrf
                         @if($sucursal)<input type="hidden" name="sucursal_id" value="{{ $sucursal->id }}">@endif
+                        <input type="hidden" name="caja_id" id="input-caja-id" value="">
                         <div id="items-container"></div>
 
                         <div class="form-group">
@@ -106,7 +134,7 @@
 
                         <div id="grupo-tarjeta" class="alert alert-info py-2" style="display: none; font-size: 0.9rem;">
                             <i class="fas fa-credit-card"></i>
-                            {{ __('Pago con tarjeta seleccionado') }}
+                            {{ __('Al confirmar se abrirá el cobro simulado con tarjeta.') }}
                         </div>
 
                         <input type="hidden" name="tarjeta_autorizacion" id="tarjeta-autorizacion" value="">
@@ -150,7 +178,7 @@
                                 </div>
                                 <input type="text" id="tarjeta-numero" class="form-control" placeholder="4242 4242 4242 4242" maxlength="19" autocomplete="off">
                             </div>
-                            <small class="form-text text-muted">{{ __('Prueba: 4000…0002 rechaza') }}</small>
+                            <small class="form-text text-muted">{{ __('Prueba: 4242… aprueba · 4000…0002 rechaza') }}</small>
                         </div>
 
                         <div class="form-group">
@@ -325,12 +353,49 @@
 
     // Carrito en memoria: { productoId: { nombre, precio, cantidad, existencia } }
     let carrito = {};
+
+    function cajaSeleccionada() {
+        var inputCaja = document.getElementById('input-caja-id');
+        return inputCaja && inputCaja.value;
+    }
+
+
+    function puedeConfirmar() {
+        var inputCaja = document.getElementById('input-caja-id');
+        var tieneCaja = inputCaja && inputCaja.value;
+        var tieneItems = Object.keys(carrito).length > 0;
+        return tieneCaja && tieneItems;
+    }
+
     let timeoutBusqueda = null;
     let totalActual = 0;
 
     function esEfectivoSeleccionado() {
         const opcion = selectMetodoPago.options[selectMetodoPago.selectedIndex];
         return !!opcion && opcion.dataset.nombre === 'Efectivo';
+    }
+
+    const MONTO_MAX = 999999.99;
+
+    function clampMontoInput(el) {
+        if (!el) return;
+        let raw = String(el.value || '').replace(/[^0-9.]/g, '');
+        // una sola parte decimal
+        const parts = raw.split('.');
+        if (parts.length > 2) raw = parts[0] + '.' + parts.slice(1).join('');
+        if (parts.length >= 2) raw = parts[0] + '.' + parts[1].slice(0, 2);
+        // máximo 6 enteros + 2 decimales (hasta 999999.99)
+        const enteros = raw.split('.')[0] || '';
+        if (enteros.length > 6) {
+            raw = enteros.slice(0, 6) + (raw.includes('.') ? '.' + (raw.split('.')[1] || '') : '');
+        }
+        let n = parseFloat(raw);
+        if (!isNaN(n) && n > MONTO_MAX) {
+            n = MONTO_MAX;
+            raw = String(MONTO_MAX);
+        }
+        if (el.value !== raw) el.value = raw;
+        return isNaN(n) ? null : n;
     }
 
     function actualizarVuelto() {
@@ -342,14 +407,14 @@
 
         grupoEfectivo.style.display = '';
 
-        const recibido = parseFloat(inputMontoRecibido.value);
+        const recibido = clampMontoInput(inputMontoRecibido);
 
-        if (isNaN(recibido)) {
+        if (recibido === null) {
             vueltoInfo.textContent = '';
             return;
         }
 
-        const vuelto = recibido - totalActual;
+        const vuelto = Math.round((recibido - totalActual) * 100) / 100;
 
         if (vuelto < 0) {
             vueltoInfo.innerHTML = '<span class="text-danger">{{ __('Falta') }}: $' + Math.abs(vuelto).toFixed(2) + '</span>';
@@ -360,6 +425,11 @@
 
     selectMetodoPago.addEventListener('change', actualizarVuelto);
     inputMontoRecibido.addEventListener('input', actualizarVuelto);
+    inputMontoRecibido.addEventListener('blur', function () {
+        const n = clampMontoInput(inputMontoRecibido);
+        if (n !== null) inputMontoRecibido.value = n.toFixed(2);
+        actualizarVuelto();
+    });
 
     buscador.addEventListener('input', function () {
         if (!urlBuscar) return;
@@ -386,13 +456,15 @@
 
         productos.forEach(function (p) {
             const sinStock = p.existencia <= 0;
+            const sinCaja = !cajaSeleccionada();
+            const bloqueado = sinStock || sinCaja;
             const col = document.createElement('div');
             col.className = 'col-6 col-md-4 mb-3';
             const imgHtml = p.imagen
                 ? '<img src="' + p.imagen + '" alt="">'
                 : '<div class="pos-prod-ph"><i class="fas fa-book"></i></div>';
             col.innerHTML = `
-                <div class="pos-prod-card ${sinStock ? 'is-sin-stock' : ''}">
+                <div class="pos-prod-card ${bloqueado ? 'is-sin-stock' : ''}">
                     <div class="pos-prod-img">${imgHtml}</div>
                     <div class="pos-prod-info">
                         <div class="pos-prod-name">${escaparHtml(p.nombre)}</div>
@@ -405,6 +477,14 @@
                 </div>
             `;
             col.querySelector('button').addEventListener('click', function () {
+                if (!cajaSeleccionada()) {
+                    if (typeof appToast === 'function') {
+                        appToast(@json(__('Selecciona una caja antes de agregar productos.')), 'warning');
+                    } else {
+                        alert(@json(__('Selecciona una caja antes de agregar productos.')));
+                    }
+                    return;
+                }
                 agregarAlCarrito(p);
             });
             resultados.appendChild(col);
@@ -412,11 +492,20 @@
     }
 
     function agregarAlCarrito(producto) {
+        if (!cajaSeleccionada()) {
+            if (typeof appToast === 'function') {
+                appToast(@json(__('Selecciona una caja antes de agregar productos.')), 'warning');
+            } else {
+                alert(@json(__('Selecciona una caja antes de agregar productos.')));
+            }
+            return;
+        }
+
         const existente = carrito[producto.id];
         const cantidadActual = existente ? existente.cantidad : 0;
 
         if (cantidadActual + 1 > producto.existencia) {
-            alert('{{ __('No hay suficiente existencia de este producto.') }}');
+            appToast('{{ __('No hay suficiente existencia de este producto.') }}', 'warning');
             return;
         }
 
@@ -443,7 +532,7 @@
         if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
             delete carrito[id];
         } else if (nuevaCantidad > item.existencia) {
-            alert('{{ __('No hay suficiente existencia de este producto.') }}');
+            appToast('{{ __('No hay suficiente existencia de este producto.') }}', 'warning');
             item.cantidad = item.existencia;
         } else {
             item.cantidad = nuevaCantidad;
@@ -484,12 +573,20 @@
             tr.innerHTML = `
                 <td>${escaparHtml(item.nombre)}</td>
                 <td>
-                    <input type="number" min="1" max="${Math.min(item.existencia, 1000)}" value="${item.cantidad}"
-                           class="form-control form-control-sm cantidad-input" style="width: 70px;">
+                    <div class="d-flex align-items-center" style="gap: 4px;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary btn-menos" title="{{ __('Quitar uno') }}">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" min="1" max="${Math.min(item.existencia, 1000)}" value="${item.cantidad}"
+                               class="form-control form-control-sm cantidad-input" style="width: 58px; text-align: center;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary btn-mas" title="{{ __('Agregar uno') }}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </td>
                 <td>$${importe.toFixed(2)}</td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-danger btn-quitar">
+                    <button type="button" class="btn btn-sm btn-danger btn-quitar" title="{{ __('Quitar del carrito') }}">
                         <i class="fas fa-times"></i>
                     </button>
                 </td>
@@ -497,6 +594,12 @@
 
             tr.querySelector('.cantidad-input').addEventListener('change', function () {
                 cambiarCantidad(id, this.value);
+            });
+            tr.querySelector('.btn-menos').addEventListener('click', function () {
+                cambiarCantidad(id, item.cantidad - 1);
+            });
+            tr.querySelector('.btn-mas').addEventListener('click', function () {
+                cambiarCantidad(id, item.cantidad + 1);
             });
             tr.querySelector('.btn-quitar').addEventListener('click', function () {
                 quitarDelCarrito(id);
@@ -517,7 +620,7 @@
         subtotalEl.textContent = '$' + subtotal.toFixed(2);
         if (ivaEl) ivaEl.textContent = '$' + iva.toFixed(2);
         totalEl.innerHTML = '<strong>$' + total.toFixed(2) + '</strong>';
-        btnConfirmar.disabled = false;
+        btnConfirmar.disabled = !puedeConfirmar();
 
         totalActual = total;
         actualizarVuelto();
@@ -572,21 +675,21 @@
         const TOTAL_MAX = 999999.99;
         if (totalActual > TOTAL_MAX) {
             e.preventDefault();
-            alert('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}');
+            appToast('{{ __('El total de la venta supera el máximo permitido ($999,999.99).') }}', 'error');
             return;
         }
 
         if (!Object.keys(carrito).length) {
             e.preventDefault();
-            alert('{{ __('Agrega al menos un producto al carrito.') }}');
+            appToast('{{ __('Agrega al menos un producto al carrito.') }}', 'warning');
             return;
         }
 
         if (esEfectivoSeleccionado()) {
-            const recibido = parseFloat(inputMontoRecibido.value);
-            if (isNaN(recibido) || recibido < totalActual) {
+            const recibido = clampMontoInput(inputMontoRecibido);
+            if (recibido === null || recibido < totalActual || recibido > MONTO_MAX) {
                 e.preventDefault();
-                alert('{{ __('Ingresa un monto en efectivo suficiente para cubrir el total de la venta.') }}');
+                appToast('{{ __('Ingresa un monto en efectivo válido (máx. $999,999.99) y suficiente para cubrir el total.') }}', 'warning');
                 return;
             }
         }
@@ -655,4 +758,49 @@
     });
 })();
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var selectorCaja = document.getElementById('selector-caja');
+    var inputCaja = document.getElementById('input-caja-id');
+    var btnConfirmar = document.getElementById('btn-confirmar');
+
+    function syncCaja() {
+        if (!selectorCaja || !inputCaja) return;
+        inputCaja.value = selectorCaja.value || '';
+        // Re-evaluate confirm button if carrito has items
+        if (btnConfirmar && inputCaja && !inputCaja.value) {
+            btnConfirmar.disabled = true;
+        }
+        // Actualizar apariencia: translúcidos si no hay caja seleccionada
+        var hayCaja = !!inputCaja.value;
+        document.querySelectorAll('.pos-prod-card').forEach(function (card) {
+            var btn = card.querySelector('button');
+            var sinStock = btn && btn.disabled;
+            if (!hayCaja || sinStock) {
+                card.classList.add('is-sin-stock');
+            } else {
+                card.classList.remove('is-sin-stock');
+            }
+        });
+    }
+
+    if (selectorCaja) {
+        selectorCaja.addEventListener('change', syncCaja);
+        syncCaja();
+    }
+
+    // Intercept form submit to require caja
+    var formVenta = document.getElementById('form-venta');
+    if (formVenta) {
+        formVenta.addEventListener('submit', function (e) {
+            if (!inputCaja || !inputCaja.value) {
+                e.preventDefault();
+                alert(@json(__('Selecciona una caja antes de confirmar la venta.')));
+            }
+        });
+    }
+});
+</script>
+
 @stop
