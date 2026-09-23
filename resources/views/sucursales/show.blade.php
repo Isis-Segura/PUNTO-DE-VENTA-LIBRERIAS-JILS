@@ -152,7 +152,7 @@
                         if (! $p) continue;
                         $existencia = $inv->cantidad;
                         $bajo = $existencia <= $inv->stock_minimo;
-                        $img = $p->imagen ? asset('storage/'.$p->imagen) : null;
+                        $img = $p->imagen ? asset('portadas/'.$p->imagen) : null;
                         $payload = [
                             'nombre' => $p->nombre,
                             'descripcion' => $p->descripcion ?? '',

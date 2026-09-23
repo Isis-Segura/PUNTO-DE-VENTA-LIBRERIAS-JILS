@@ -147,7 +147,7 @@
                 $existencia = $producto->inventario->cantidad ?? 0;
                 $stockMin = $producto->inventario->stock_minimo ?? 0;
                 $bajo = $producto->inventario && $existencia <= $stockMin;
-                $img = $producto->imagen ? asset('storage/'.$producto->imagen) : null;
+                $img = $producto->imagen ? asset('portadas/'.$producto->imagen) : null;
                                 $payload = [
                     'nombre' => $producto->nombre,
                     'descripcion' => $producto->descripcion ?? '',

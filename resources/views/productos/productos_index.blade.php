@@ -151,7 +151,7 @@
                 $existencia = $producto->inventario->cantidad ?? 0;
                 $stockMin = $producto->inventario->stock_minimo ?? 0;
                 $bajo = $producto->inventario && $existencia <= $stockMin;
-                $img = $producto->imagen ? asset('storage/'.$producto->imagen) : null;
+                $img = $producto->imagen ? asset('portadas/'.$producto->imagen) : null;
             @endphp
             <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
                 <div class="libro-card"

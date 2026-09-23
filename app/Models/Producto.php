@@ -72,7 +72,7 @@ class Producto extends Model
             return null;
         }
 
-        return asset('storage/'.$this->imagen);
+        return asset('portadas/'.$this->imagen);
     }
 
     public function getGenerosListaAttribute(): string
