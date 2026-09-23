@@ -20,7 +20,7 @@
                         @foreach ($sucursales as $sucursal)
                             <option value="{{ $sucursal->id }}"
                                 {{ old('sucursal_id', $caja->sucursal_id) == $sucursal->id ? 'selected' : '' }}>
-                                {{ $sucursal->nombre }}
+                                {{ $sucursal->nombre_traducido }}
                             </option>
                         @endforeach
                     </select>

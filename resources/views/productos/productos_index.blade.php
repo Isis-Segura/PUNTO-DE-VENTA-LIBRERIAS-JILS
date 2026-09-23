@@ -187,7 +187,7 @@
                     <div class="libro-body">
                         <h3 class="libro-titulo" title="{{ $producto->nombre }}">{{ $producto->nombre }}</h3>
                         <div class="libro-meta">
-                            {{ $producto->sucursal->nombre ?? '—' }}
+                            {{ $producto->sucursal->nombre_traducido ?? '—' }}
                             @if ($producto->categoria)
                                 · {{ $producto->categoria->nombre }}
                             @endif
@@ -199,7 +199,7 @@
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('productos.destroy', $producto) }}" method="POST"
-                                  onsubmit="return confirm('¿Eliminar este producto?');">
+                                  onsubmit="return confirm(@json(__('¿Eliminar este producto?')));">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">

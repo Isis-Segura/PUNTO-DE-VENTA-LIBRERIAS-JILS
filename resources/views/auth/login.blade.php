@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Librería JILS') }} - Acceso a Terminal POS</title>
+    <title>{{ config('app.name', 'Librería JILS') }} - {{ __('Acceso a Terminal POS') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}">
@@ -329,7 +329,7 @@
             <!-- Encabezado con Logo Oficial de Mostrador -->
             <div class="login-header">
                 <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo Librería JILS" class="login-logo">
-                <h1 class="login-title">Librería JILS</h1>
+                <h1 class="login-title">{{ __('Librería JILS') }}</h1>
                 <p class="text-muted small mb-0">{{ __('Punto de Venta') }}</p>
             </div>
 
@@ -360,7 +360,7 @@
                             name="email"
                             value="{{ old('email') }}"
                             class="form-control-pos @error('email') is-invalid @enderror"
-                            placeholder="ejemplo@correo.com"
+                            placeholder="{{ __('ejemplo@correo.com') }}"
                             required
                             autofocus
                         >

@@ -187,7 +187,7 @@
                     <div class="libro-body">
                         <h3 class="libro-titulo" title="{{ $producto->nombre }}">{{ $producto->nombre }}</h3>
                         <div class="libro-meta">
-                            {{ $producto->sucursal->nombre ?? '—' }}
+                            {{ $producto->sucursal->nombre_traducido ?? '—' }}
                             @if($producto->categoria)· {{ $producto->categoria->nombre }}@endif
                             @if($producto->autor)· {{ $producto->autor }}@endif
                             <br>{{ __('Stock') }}: {{ $existencia }}
@@ -197,7 +197,7 @@
                             <a href="{{ route('productos.edit', $producto) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('productos.destroy', $producto) }}" method="POST" data-confirm="¿Eliminar este producto?" data-confirm-title="¿Eliminar?" data-confirm-type="danger" data-confirm-ok="Sí, eliminar">
+                            <form action="{{ route('productos.destroy', $producto) }}" method="POST" data-confirm="{{ __('¿Eliminar este producto?') }}" data-confirm-title="{{ __('¿Eliminar?') }}" data-confirm-type="danger" data-confirm-ok="{{ __('Sí, eliminar') }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">

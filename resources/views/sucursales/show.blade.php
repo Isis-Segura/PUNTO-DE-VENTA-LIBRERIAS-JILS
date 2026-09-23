@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', __('Sucursal').' - '.$sucursal->nombre)
+@section('title', __('Sucursal').' - '.$sucursal->nombre_traducido)
 
 @section('content_header')
-    <h1>{{ $sucursal->nombre }}</h1>
+    <h1>{{ $sucursal->nombre_traducido }}</h1>
 @stop
 
 @section('css')
@@ -159,7 +159,7 @@
                             'codigo' => $p->codigo ?? '',
                             'precio' => number_format($p->precio, 2),
                             'categorias' => $p->generos_lista,
-                            'sucursal' => $sucursal->nombre,
+                            'sucursal' => $sucursal->nombre_traducido,
                             'existencia' => $existencia,
                             'stockMin' => $inv->stock_minimo,
                             'activo' => $p->activo ? 1 : 0,
