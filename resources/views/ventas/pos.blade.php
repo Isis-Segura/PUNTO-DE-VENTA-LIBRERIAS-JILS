@@ -120,7 +120,7 @@
                             <label>{{ __('Método de pago') }}</label>
                             <select name="metodo_pago_id" id="metodo-pago" class="form-control" required>
                                 @foreach ($metodosPago as $mp)
-                                    <option value="{{ $mp->id }}" data-nombre="{{ $mp->nombre }}">{{ $mp->nombre }}</option>
+                                    <option value="{{ $mp->id }}" data-nombre="{{ $mp->nombre }}">{{ $mp->nombre_traducido }}</option>
                                 @endforeach
                             </select>
                         </div>
