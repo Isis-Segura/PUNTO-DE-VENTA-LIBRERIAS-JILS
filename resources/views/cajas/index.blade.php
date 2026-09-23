@@ -39,8 +39,8 @@
                 </thead>
                 <tbody>
                     @forelse ($cajas as $caja)
-                        <tr class="js-search-item" data-search="{{ strtolower(($caja->nombre??'').' '.($caja->descripcion??'').' '.($caja->sucursal->nombre??'')) }}">
-                            <td>{{ $caja->nombre }}</td>
+                        <tr class="js-search-item" data-search="{{ strtolower(($caja->nombre_traducido??'').' '.($caja->descripcion??'').' '.($caja->sucursal->nombre_traducido??'')) }}">
+                            <td>{{ $caja->nombre_traducido }}</td>
                             <td>{{ $caja->sucursal->nombre ?? '—' }}</td>
                             <td>{{ $caja->descripcion ?? '—' }}</td>
                             <td>

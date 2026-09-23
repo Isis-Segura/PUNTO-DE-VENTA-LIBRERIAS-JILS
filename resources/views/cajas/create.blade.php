@@ -20,7 +20,7 @@
                         @foreach ($sucursales as $sucursal)
                             <option value="{{ $sucursal->id }}"
                                 {{ old('sucursal_id', $sucursales->count() === 1 ? $sucursales->first()->id : '') == $sucursal->id ? 'selected' : '' }}>
-                                {{ $sucursal->nombre }}
+                                {{ $sucursal->nombre_traducido }}
                             </option>
                         @endforeach
                     </select>
@@ -33,7 +33,7 @@
                     <label for="nombre">{{ __('Nombre') }} <span class="text-danger">*</span></label>
                     <input type="text" name="nombre" id="nombre" value="{{ old('nombre') }}"
                            class="form-control @error('nombre') is-invalid @enderror"
-                           maxlength="80" required placeholder="Ej. Caja 1, Caja Principal">
+                           maxlength="80" required placeholder="{{ __('Ej. Caja 1, Caja Principal') }}">
                     @error('nombre')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror

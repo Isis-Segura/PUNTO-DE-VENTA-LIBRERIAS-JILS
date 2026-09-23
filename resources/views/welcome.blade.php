@@ -413,10 +413,10 @@
     <footer class="pos-footer">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
             <div>
-                <strong>Librería JILS</strong> &bull; Proyecto Integrador &bull; Universidad de Colima
+                <strong>{{ __('Librería JILS') }}</strong> &bull; {{ __('Proyecto Integrador') }} &bull; {{ __('Universidad de Colima') }}
             </div>
             <div class="text-muted">
-                Facultad de Ingeniería Electromecánica &bull; Grupo 3ºE &bull; {{ date('Y') }}
+                {{ __('Facultad de Ingeniería Electromecánica') }} &bull; {{ __('Grupo 3ºE') }} &bull; {{ date('Y') }}
             </div>
         </div>
     </footer>

@@ -3,7 +3,7 @@
 @section('title', __('Punto de venta'))
 
 @section('content_header')
-    <h1>{{ __('Punto de venta') }}@if($sucursal) — {{ $sucursal->nombre }}@endif</h1>
+    <h1>{{ __('Punto de venta') }}@if($sucursal) — {{ $sucursal->nombre_traducido }}@endif</h1>
 @stop
 
 @section('content')
@@ -26,7 +26,7 @@
                 @else
                     <option value="">{{ __('— Elige una caja —') }}</option>
                     @foreach ($cajas as $caja)
-                        <option value="{{ $caja->id }}">{{ $caja->nombre }}</option>
+                        <option value="{{ $caja->id }}">{{ $caja->nombre_traducido }}</option>
                     @endforeach
                 @endif
             </select>
@@ -56,7 +56,7 @@
             </div>
         @endunless
     @elseif ($sucursal)
-        <p class="text-muted mb-3">{{ __('Vendiendo en') }}: <strong>{{ $sucursal->nombre }}</strong></p>
+        <p class="text-muted mb-3">{{ __('Vendiendo en') }}: <strong>{{ $sucursal->nombre_traducido }}</strong></p>
     @endif
 
     <div class="row">
@@ -120,7 +120,7 @@
                             <label>{{ __('Método de pago') }}</label>
                             <select name="metodo_pago_id" id="metodo-pago" class="form-control" required>
                                 @foreach ($metodosPago as $mp)
-                                    <option value="{{ $mp->id }}" data-nombre="{{ $mp->nombre }}">{{ $mp->nombre }}</option>
+                                    <option value="{{ $mp->id }}" data-nombre="{{ $mp->nombre }}">{{ $mp->nombre_traducido }}</option>
                                 @endforeach
                             </select>
                         </div>
