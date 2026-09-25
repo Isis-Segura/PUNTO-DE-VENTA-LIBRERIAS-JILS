@@ -72,7 +72,7 @@
 
     {{-- Custom Stylesheets (post AdminLTE) --}}
     {{-- Tema visual "POS JILS" (misma identidad que el login) --}}
-    <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}?v={{ @filemtime(public_path('css/pos-theme.css')) }}">
     @yield('adminlte_css')
 
     {{-- Favicon --}}
@@ -101,6 +101,9 @@
 </head>
 
 <body class="@yield('classes_body')" @yield('body_data')>
+
+    {{-- Aplicar modo oscuro cuanto antes, para evitar parpadeo --}}
+    <script src="{{ asset('js/dark-mode.js') }}?v={{ @filemtime(public_path('js/dark-mode.js')) }}"></script>
 
     {{-- Body Content --}}
     @yield('body')

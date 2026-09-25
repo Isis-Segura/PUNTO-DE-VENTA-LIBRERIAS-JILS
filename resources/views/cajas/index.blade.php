@@ -39,9 +39,19 @@
                 </thead>
                 <tbody>
                     @forelse ($cajas as $caja)
-                        <tr class="js-search-item" data-search="{{ strtolower(($caja->nombre??'').' '.($caja->descripcion??'').' '.($caja->sucursal->nombre??'')) }}">
-                            <td>{{ $caja->nombre }}</td>
-                            <td>{{ $caja->sucursal->nombre ?? '—' }}</td>
+                        @php
+                            $search = strtolower(implode(' ', array_filter([
+                                $caja->nombre ?? '',
+                                $caja->nombre_traducido ?? '',
+                                $caja->descripcion ?? '',
+                                $caja->sucursal->nombre ?? '',
+                                $caja->sucursal->nombre_traducido ?? '',
+                                $caja->activa ? __('Activa') : __('Inactiva'),
+                            ])));
+                        @endphp
+                        <tr class="js-search-item" data-search="{{ $search }}">
+                            <td>{{ $caja->nombre_traducido }}</td>
+                            <td>{{ $caja->sucursal->nombre_traducido ?? ($caja->sucursal->nombre ?? '—') }}</td>
                             <td>{{ $caja->descripcion ?? '—' }}</td>
                             <td>
                                 @if ($caja->activa)
@@ -73,12 +83,24 @@
                             </td>
                         </tr>
                     @empty
+                        <tr class="js-search-empty" style="display:none;">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fas fa-search mr-1"></i> {{ __('No existe ninguna caja con esa búsqueda.') }}
+                            </td>
+                        </tr>
                         <tr>
                             <td colspan="5" class="text-center text-muted py-4">
                                 {{ __('No hay cajas registradas.') }}
                             </td>
                         </tr>
                     @endforelse
+                    @if ($cajas->count())
+                        <tr class="js-search-empty" style="display:none;">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fas fa-search mr-1"></i> {{ __('No existe ninguna caja con esa búsqueda.') }}
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -89,4 +111,33 @@
             </div>
         @endif
     </div>
+@stop
+
+@section('js')
+<script>
+(function(){
+  function filtrar(texto){
+    var q=(texto||'').toString().trim().toLowerCase();
+    var items=document.querySelectorAll('tr.js-search-item');
+    var n=0;
+    items.forEach(function(el){
+      var ok=!q||(el.getAttribute('data-search')||'').indexOf(q)!==-1;
+      el.style.display=ok?'':'none';
+      if(ok)n++;
+    });
+    var empty=document.querySelector('tr.js-search-empty');
+    if(empty) empty.style.display=(items.length&&n===0)?'':'none';
+  }
+  document.addEventListener('input',function(e){
+    if(e.target&&(e.target.name==='q'||e.target.name==='adminlteSearch')) filtrar(e.target.value);
+  });
+  document.addEventListener('submit',function(e){
+    var f=e.target, inp=f&&f.querySelector&&f.querySelector('input[name="adminlteSearch"],input[name="q"]');
+    if(inp&&document.querySelector('tr.js-search-item')){ e.preventDefault(); filtrar(inp.value); }
+  });
+  var p=new URLSearchParams(location.search);
+  var ini=p.get('q')||p.get('adminlteSearch')||'';
+  if(ini) filtrar(ini);
+})();
+</script>
 @stop

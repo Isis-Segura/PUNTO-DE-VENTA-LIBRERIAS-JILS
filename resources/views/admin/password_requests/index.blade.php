@@ -38,7 +38,7 @@
                                 <strong>{{ $s->user->name ?? '—' }}</strong><br>
                                 <small class="text-muted">{{ $s->user->email ?? '' }}</small>
                             </td>
-                            <td>{{ $s->user->role->nombre ?? ($s->user->role->name ?? '—') }}</td>
+                            <td>{{ $s->user->role->nombre_traducido ?? ($s->user->role->name ?? '—') }}</td>
                             <td>{{ $s->created_at->format('d/m/Y H:i') }}</td>
                             <td>
                                 @if ($s->status === 'pending')

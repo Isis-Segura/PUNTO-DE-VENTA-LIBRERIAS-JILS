@@ -132,7 +132,7 @@ class VentaController extends Controller
                 'nombre' => $p->nombre,
                 'precio' => (float) $p->precio,
                 'existencia' => $p->inventario?->cantidad ?? 0,
-                'imagen' => $p->imagen ? asset('storage/'.$p->imagen) : null,
+                'imagen' => $p->imagen ? asset('portadas/'.$p->imagen) : null,
             ]);
 
         return response()->json($productos);

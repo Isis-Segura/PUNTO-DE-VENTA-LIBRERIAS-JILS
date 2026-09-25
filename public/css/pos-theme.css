@@ -141,13 +141,49 @@ a:hover {
     background: linear-gradient(135deg, #475569, #334155);
 }
 
+/* ---- Colores menú: Cajas, Categorías, Géneros ---- */
+.pos-nav-cajas {
+    background: linear-gradient(135deg, #db2777, #be185d) !important;
+    color: #fff !important;
+}
+.pos-nav-categorias {
+    background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+    color: #fff !important;
+}
+.pos-nav-generos {
+    background: linear-gradient(135deg, #ca8a04, #a16207) !important;
+    color: #fff !important;
+}
+
+/* También sobre el enlace del sidebar */
+.nav-sidebar .nav-item > .nav-link.pos-nav-cajas,
+.nav-sidebar .nav-item > .nav-link.pos-nav-categorias,
+.nav-sidebar .nav-item > .nav-link.pos-nav-generos {
+    color: #fff !important;
+}
+
+/* Respaldo por URL (si la clase no llega al <a>) */
+.nav-sidebar a.nav-link[href*="cajas"] {
+    background: linear-gradient(135deg, #db2777, #be185d) !important;
+    color: #fff !important;
+}
+.nav-sidebar a.nav-link[href*="categorias"] {
+    background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+    color: #fff !important;
+}
+.nav-sidebar a.nav-link[href*="generos"] {
+    background: linear-gradient(135deg, #ca8a04, #a16207) !important;
+    color: #fff !important;
+}
+
+
 /* Texto decorativo al final (menos sensación de “hueco” azul) */
 .main-sidebar {
     position: relative;
 }
 
 .main-sidebar::after {
-    content: "PDV JILS";
+    content: "JILS";
     position: absolute;
     bottom: 18px;
     left: 0;
@@ -602,4 +638,258 @@ td .btn-sm.btn-info:hover {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* =====================================================================
+   MODO OSCURO — cubre todo el panel (AdminLTE + estilos propios de PDV JILS)
+   Activado agregando la clase "dark-mode" en <html>/<body> (ver dark-mode.js)
+   ===================================================================== */
+
+.dark-mode {
+    --pos-bg: #0b1220;
+    --pos-card-bg: #131c2e;
+    --pos-border: #2b3a55;
+    --pos-text-main: #e6ebf5;
+    --pos-text-muted: #94a3b8;
+}
+
+.dark-mode,
+.dark-mode .wrapper {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .content-wrapper {
+    background-color: var(--pos-bg);
+}
+
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
+.dark-mode .content-header h1 {
+    color: var(--pos-text-main);
+}
+
+.dark-mode a { color: #93c5fd; }
+.dark-mode a:hover { color: #bfdbfe; }
+
+.dark-mode label { color: #cbd5e1; }
+.dark-mode .text-muted { color: var(--pos-text-muted) !important; }
+.dark-mode .text-dark { color: var(--pos-text-main) !important; }
+
+/* ---------- Barra superior (navbar) ---------- */
+.dark-mode .main-header.navbar {
+    background-color: var(--pos-card-bg);
+    border-bottom-color: var(--pos-border);
+}
+
+.dark-mode .main-header .nav-link {
+    color: var(--pos-text-main);
+}
+
+/* ---------- Tarjetas ---------- */
+.dark-mode .card {
+    background-color: var(--pos-card-bg);
+    border-color: var(--pos-border);
+    color: var(--pos-text-main);
+}
+
+.dark-mode .card-header {
+    background-color: var(--pos-card-bg);
+    border-bottom-color: var(--pos-border);
+    color: var(--pos-text-main);
+}
+
+.dark-mode .card-footer {
+    background-color: var(--pos-card-bg);
+    border-top-color: var(--pos-border);
+}
+
+.dark-mode .card-body.border-bottom {
+    background-color: #0f1a2e;
+}
+
+/* ---------- Formularios ---------- */
+.dark-mode .form-control,
+.dark-mode .custom-select,
+.dark-mode select.form-control {
+    background-color: #0f1a2e;
+    border-color: var(--pos-border);
+    color: var(--pos-text-main);
+}
+
+.dark-mode .form-control::placeholder {
+    color: #64748b;
+}
+
+.dark-mode .form-control:focus,
+.dark-mode .custom-select:focus {
+    background-color: #0f1a2e;
+    color: var(--pos-text-main);
+}
+
+.dark-mode .input-group-text {
+    background-color: #0f1a2e;
+    border-color: var(--pos-border);
+    color: var(--pos-text-muted);
+}
+
+/* ---------- Tablas ---------- */
+.dark-mode .table {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .table th,
+.dark-mode .table td {
+    border-top-color: var(--pos-border);
+}
+
+.dark-mode .table thead th {
+    background-color: #0f1a2e;
+    color: var(--pos-text-muted);
+    border-bottom-color: var(--pos-border);
+}
+
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #0f1a2e;
+}
+
+.dark-mode .table-hover tbody tr:hover {
+    background-color: #17233a;
+}
+
+/* ---------- Botones de acción en tablas ---------- */
+.dark-mode td .btn-sm.btn-warning { background-color: #78350f; color: #fde68a; }
+.dark-mode td .btn-sm.btn-warning:hover { background-color: #92400e; color: #fef3c7; }
+.dark-mode td .btn-sm.btn-danger { background-color: #7f1d1d; color: #fecaca; }
+.dark-mode td .btn-sm.btn-danger:hover { background-color: #991b1b; color: #fee2e2; }
+.dark-mode td .btn-sm.btn-info { background-color: #1e3a8a; color: #bfdbfe; }
+.dark-mode td .btn-sm.btn-info:hover { background-color: #1e40af; color: #dbeafe; }
+
+/* ---------- Badges ---------- */
+.dark-mode .badge-primary { background-color: #1e3a8a; color: #bfdbfe; }
+.dark-mode .badge-success { background-color: #064e3b; color: #a7f3d0; }
+.dark-mode .badge-danger { background-color: #7f1d1d; color: #fecaca; }
+.dark-mode .badge-warning { background-color: #78350f; color: #fde68a; }
+.dark-mode .badge-secondary { background-color: #334155; color: #cbd5e1; }
+
+/* ---------- Alertas ---------- */
+.dark-mode .alert-success { background-color: #064e3b; color: #a7f3d0; }
+.dark-mode .alert-danger { background-color: #7f1d1d; color: #fecaca; }
+.dark-mode .alert-warning { background-color: #78350f; color: #fde68a; }
+.dark-mode .alert-info { background-color: #0c4a6e; color: #bae6fd; }
+
+/* ---------- Paginación ---------- */
+.dark-mode .page-link {
+    background-color: var(--pos-card-bg);
+    border-color: var(--pos-border);
+    color: #93c5fd;
+}
+
+.dark-mode .page-item.disabled .page-link {
+    background-color: #0f1a2e;
+    color: #475569;
+}
+
+.dark-mode .page-item.active .page-link {
+    color: #fff;
+}
+
+/* ---------- Cajas de resumen (small-box / info-box) ---------- */
+.dark-mode .small-box,
+.dark-mode .info-box {
+    background-color: var(--pos-card-bg);
+    color: var(--pos-text-main);
+}
+
+/* ---------- Modales ---------- */
+.dark-mode .modal-content {
+    background-color: var(--pos-card-bg);
+    color: var(--pos-text-main);
+}
+
+/* ---------- Menús desplegables ---------- */
+.dark-mode .dropdown-menu {
+    background-color: var(--pos-card-bg);
+    border-color: var(--pos-border);
+}
+
+.dark-mode .dropdown-item {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .dropdown-item:hover {
+    background-color: #1e293b;
+    color: #fff;
+}
+
+/* ---------- Tarjetas de producto (Productos / Sucursales) ---------- */
+.dark-mode .libro-card { background-color: var(--pos-card-bg); }
+.dark-mode .libro-titulo { color: var(--pos-text-main); }
+.dark-mode .libro-meta { color: var(--pos-text-muted); }
+.dark-mode .libro-precio { color: var(--pos-text-main); }
+
+/* ---------- Modal de detalle de producto ---------- */
+.dark-mode .prod-detail-info { background-color: var(--pos-card-bg); }
+.dark-mode .prod-detail-row { border-bottom-color: var(--pos-border); }
+.dark-mode .prod-detail-label { color: #64748b; }
+.dark-mode .prod-detail-value { color: var(--pos-text-main); }
+.dark-mode .prod-detail-value.desc { color: #cbd5e1; }
+
+/* ---------- Punto de venta (POS) ---------- */
+.dark-mode .pos-prod-card { background-color: var(--pos-card-bg); }
+.dark-mode .pos-prod-stock { color: var(--pos-text-muted); }
+.dark-mode .pago-tarjeta-head { background-color: #0f1a2e; border-bottom-color: var(--pos-border); }
+.dark-mode .pago-tarjeta-monto { background-color: #0f1a2e; border-color: var(--pos-border); color: var(--pos-text-muted); }
+.dark-mode .pago-tarjeta-monto strong { color: var(--pos-text-main); }
+.dark-mode .pago-tarjeta-body { background-color: var(--pos-card-bg); }
+.dark-mode .pago-label { color: #cbd5e1; }
+.dark-mode .pago-tarjeta-body .input-group-text { background-color: #0f1a2e; color: var(--pos-text-muted); }
+.dark-mode .pago-msg.text-muted { background-color: #0f1a2e; }
+.dark-mode .pago-msg.text-success { background-color: #064e3b; }
+.dark-mode .pago-msg.text-danger { background-color: #7f1d1d; }
+
+/* ---------- Formularios de producto (crear / editar) ---------- */
+.dark-mode .prod-form-card { box-shadow: 0 2px 14px rgba(0,0,0,.35); }
+.dark-mode .cat-grid { background-color: #0f1a2e; border-color: var(--pos-border); }
+.dark-mode .cat-chip { background-color: #131c2e; border-color: var(--pos-border); color: #cbd5e1; }
+.dark-mode .cat-chip.is-on { background-color: #1e2547; border-color: #6366f1; color: #c7d2fe; box-shadow: 0 0 0 1px #6366f1 inset; }
+.dark-mode .cat-counter { color: var(--pos-text-muted); }
+.dark-mode .cover-upload { background-color: #0f1a2e; border-color: var(--pos-border); }
+
+/* ---------- Ajustes finos de modo oscuro (segunda pasada) ---------- */
+
+/* Textos con color fijo por inline style (no bastaba con la clase) */
+.dark-mode #appConfirmTitle { color: var(--pos-text-main) !important; }
+.dark-mode #appConfirmMessage { color: var(--pos-text-muted) !important; }
+
+/* Toasts (avisos flotantes de éxito/error) */
+.dark-mode .app-toast { background-color: var(--pos-card-bg) !important; box-shadow: 0 10px 30px rgba(0,0,0,.4) !important; }
+.dark-mode .app-toast-title { color: var(--pos-text-main) !important; }
+.dark-mode .app-toast-msg { color: var(--pos-text-muted) !important; }
+
+/* Pie de página del panel (barra vacía al final de cada pantalla) */
+.dark-mode .main-footer {
+    background-color: var(--pos-card-bg);
+    border-top-color: var(--pos-border);
+    color: var(--pos-text-muted);
+}
+
+/* Íconos de la barra superior (buscar, modo oscuro, idioma, notificaciones, usuario):
+   Bootstrap los pone casi negros al abrirlos/seleccionarlos. Los forzamos a un tono claro. */
+.dark-mode .main-header .navbar-nav .nav-link,
+.dark-mode .main-header .navbar-nav .nav-link:hover,
+.dark-mode .main-header .navbar-nav .nav-link:focus,
+.dark-mode .main-header .navbar-nav .show > .nav-link,
+.dark-mode .main-header .navbar-nav .active > .nav-link,
+.dark-mode .main-header .navbar-nav .nav-link.show,
+.dark-mode .main-header .navbar-nav .nav-link.active {
+    color: var(--pos-text-main) !important;
+}
+
+/* Cualquier caja que use las utilidades bg-white / bg-light de Bootstrap
+   (ej. el pie de las tarjetas de Sucursales) también debe oscurecerse */
+.dark-mode .bg-white {
+    background-color: var(--pos-card-bg) !important;
+}
+
+.dark-mode .bg-light {
+    background-color: #0f1a2e !important;
 }

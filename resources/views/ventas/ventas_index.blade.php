@@ -75,9 +75,9 @@
                         <tr>
                             <td>{{ $venta->folio }}</td>
                             <td>{{ $venta->created_at->format('d/m/Y H:i') }}</td>
-                            <td>{{ $venta->sucursal->nombre ?? '-' }}</td>
+                            <td>{{ $venta->sucursal->nombre_traducido ?? '-' }}</td>
                             <td>{{ $venta->cajero->name ?? '-' }}</td>
-                            <td>{{ $venta->metodoPago->nombre ?? '-' }}</td>
+                            <td>{{ $venta->metodoPago->nombre_traducido ?? '-' }}</td>
                             <td>${{ number_format($venta->total, 2) }}</td>
                             <td class="text-right text-nowrap">
                                 <a href="{{ route('ventas.show', $venta) }}" class="btn btn-sm btn-info">

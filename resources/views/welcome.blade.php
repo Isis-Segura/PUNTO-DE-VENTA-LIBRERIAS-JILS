@@ -16,6 +16,9 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
 
+    <!-- Modo oscuro -->
+    <link rel="stylesheet" href="{{ asset('css/dark-mode-home.css') }}?v={{ @filemtime(public_path('css/dark-mode-home.css')) }}">
+
     <!-- Vite Styles & Scripts (Bootstrap 5) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
@@ -254,6 +257,8 @@
 </head>
 <body>
 
+    <script src="{{ asset('js/dark-mode.js') }}?v={{ @filemtime(public_path('js/dark-mode.js')) }}"></script>
+
     <!-- Navegación Superior -->
     <header class="pos-navbar">
         <div class="container d-flex justify-content-between align-items-center">
@@ -276,6 +281,12 @@
                         </a>
                     @endforeach
                 </div>
+
+                <!-- Modo oscuro / claro -->
+                <a href="#" id="btn-dark-mode" class="js-dark-mode-btn dark-mode-toggle-btn"
+                   title="Modo oscuro" aria-label="Modo oscuro">
+                    <i class="fas fa-moon js-dark-mode-icon" id="icon-dark-mode"></i>
+                </a>
 
                 <!-- Botón de Acceso -->
                 @auth
@@ -413,10 +424,10 @@
     <footer class="pos-footer">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
             <div>
-                <strong>Librería JILS</strong> &bull; Proyecto Integrador &bull; Universidad de Colima
+                <strong>{{ __('Librería JILS') }}</strong> &bull; {{ __('Proyecto Integrador') }} &bull; {{ __('Universidad de Colima') }}
             </div>
             <div class="text-muted">
-                Facultad de Ingeniería Electromecánica &bull; Grupo 3ºE &bull; {{ date('Y') }}
+                {{ __('Facultad de Ingeniería Electromecánica') }} &bull; {{ __('Grupo 3ºE') }} &bull; {{ date('Y') }}
             </div>
         </div>
     </footer>

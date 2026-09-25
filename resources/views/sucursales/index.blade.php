@@ -137,7 +137,7 @@
                 $accent = $colores[$sucursal->id % count($colores)];
             @endphp
             <div class="col-lg-4 col-md-6 mb-4 js-search-item"
-                 data-search="{{ strtolower(($sucursal->nombre??'').' '.($sucursal->direccion??'').' '.($sucursal->telefono??'').' '.($sucursal->gerente->name??'')) }}">
+                 data-search="{{ strtolower(($sucursal->nombre_traducido??'').' '.($sucursal->direccion??'').' '.($sucursal->telefono??'').' '.($sucursal->gerente->name??'')) }}">
                 <div class="card sucursal-card {{ $sucursal->activa ? '' : 'is-inactiva' }}"
                      style="--suc-accent: {{ $accent }}; --suc-accent-2: {{ $accent }}cc;">
                     <div class="card-body">
@@ -147,7 +147,7 @@
                             </div>
                             <div>
                                 <a href="{{ route('sucursales.show', $sucursal) }}" class="text-dark">
-                                    <h5 class="mb-0 font-weight-bold">{{ $sucursal->nombre }}</h5>
+                                    <h5 class="mb-0 font-weight-bold">{{ $sucursal->nombre_traducido }}</h5>
                                 </a>
                                 @if ($sucursal->activa)
                                     <span class="badge badge-success">{{ __('Activa') }}</span>
