@@ -183,7 +183,7 @@ a:hover {
 }
 
 .main-sidebar::after {
-    content: "PDV JILS";
+    content: "JILS";
     position: absolute;
     bottom: 18px;
     left: 0;
@@ -853,3 +853,43 @@ td .btn-sm.btn-info:hover {
 .dark-mode .cat-chip.is-on { background-color: #1e2547; border-color: #6366f1; color: #c7d2fe; box-shadow: 0 0 0 1px #6366f1 inset; }
 .dark-mode .cat-counter { color: var(--pos-text-muted); }
 .dark-mode .cover-upload { background-color: #0f1a2e; border-color: var(--pos-border); }
+
+/* ---------- Ajustes finos de modo oscuro (segunda pasada) ---------- */
+
+/* Textos con color fijo por inline style (no bastaba con la clase) */
+.dark-mode #appConfirmTitle { color: var(--pos-text-main) !important; }
+.dark-mode #appConfirmMessage { color: var(--pos-text-muted) !important; }
+
+/* Toasts (avisos flotantes de éxito/error) */
+.dark-mode .app-toast { background-color: var(--pos-card-bg) !important; box-shadow: 0 10px 30px rgba(0,0,0,.4) !important; }
+.dark-mode .app-toast-title { color: var(--pos-text-main) !important; }
+.dark-mode .app-toast-msg { color: var(--pos-text-muted) !important; }
+
+/* Pie de página del panel (barra vacía al final de cada pantalla) */
+.dark-mode .main-footer {
+    background-color: var(--pos-card-bg);
+    border-top-color: var(--pos-border);
+    color: var(--pos-text-muted);
+}
+
+/* Íconos de la barra superior (buscar, modo oscuro, idioma, notificaciones, usuario):
+   Bootstrap los pone casi negros al abrirlos/seleccionarlos. Los forzamos a un tono claro. */
+.dark-mode .main-header .navbar-nav .nav-link,
+.dark-mode .main-header .navbar-nav .nav-link:hover,
+.dark-mode .main-header .navbar-nav .nav-link:focus,
+.dark-mode .main-header .navbar-nav .show > .nav-link,
+.dark-mode .main-header .navbar-nav .active > .nav-link,
+.dark-mode .main-header .navbar-nav .nav-link.show,
+.dark-mode .main-header .navbar-nav .nav-link.active {
+    color: var(--pos-text-main) !important;
+}
+
+/* Cualquier caja que use las utilidades bg-white / bg-light de Bootstrap
+   (ej. el pie de las tarjetas de Sucursales) también debe oscurecerse */
+.dark-mode .bg-white {
+    background-color: var(--pos-card-bg) !important;
+}
+
+.dark-mode .bg-light {
+    background-color: #0f1a2e !important;
+}

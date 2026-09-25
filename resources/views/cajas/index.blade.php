@@ -19,38 +19,15 @@
     @endif
 
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center flex-wrap" style="gap: .5rem;">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
             <span>{{ __('Listado de cajas') }}</span>
-            <div class="d-flex align-items-center flex-wrap" style="gap: .5rem;">
-                <form method="GET" action="{{ route('cajas.index') }}" class="form-inline" id="form-buscar-cajas">
-                    <div class="input-group input-group-sm">
-                        <input type="search"
-                               name="q"
-                               id="buscador-cajas"
-                               value="{{ request('q', request('adminlteSearch')) }}"
-                               class="form-control"
-                               placeholder="{{ __('Buscar por nombre o sucursal...') }}"
-                               style="min-width: 220px;">
-                        <div class="input-group-append">
-                            <button class="btn btn-default" type="submit" title="{{ __('Buscar') }}">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            @if (request()->filled('q') || request()->filled('adminlteSearch'))
-                                <a href="{{ route('cajas.index') }}" class="btn btn-default" title="{{ __('Limpiar') }}">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                </form>
-                <a href="{{ route('cajas.create') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> {{ __('Nueva caja') }}
-                </a>
-            </div>
+            <a href="{{ route('cajas.create') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> {{ __('Nueva caja') }}
+            </a>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped mb-0" id="tabla-cajas">
+            <table class="table table-striped mb-0">
                 <thead>
                     <tr>
                         <th>{{ __('Nombre') }}</th>
@@ -106,17 +83,24 @@
                             </td>
                         </tr>
                     @empty
-                        <tr id="fila-sin-resultados-servidor">
+                        <tr class="js-search-empty" style="display:none;">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fas fa-search mr-1"></i> {{ __('No existe ninguna caja con esa búsqueda.') }}
+                            </td>
+                        </tr>
+                        <tr>
                             <td colspan="5" class="text-center text-muted py-4">
                                 {{ __('No hay cajas registradas.') }}
                             </td>
                         </tr>
                     @endforelse
-                    <tr id="fila-sin-coincidencias" style="display: none;">
-                        <td colspan="5" class="text-center text-muted py-4">
-                            {{ __('No se encontraron cajas con ese criterio.') }}
-                        </td>
-                    </tr>
+                    @if ($cajas->count())
+                        <tr class="js-search-empty" style="display:none;">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fas fa-search mr-1"></i> {{ __('No existe ninguna caja con esa búsqueda.') }}
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -131,28 +115,29 @@
 
 @section('js')
 <script>
-(function () {
-    var input = document.getElementById('buscador-cajas');
-    var rows = document.querySelectorAll('#tabla-cajas tbody tr.js-search-item');
-    var emptyRow = document.getElementById('fila-sin-coincidencias');
-    if (!input || !rows.length) return;
-
-    function filtrar() {
-        var q = (input.value || '').trim().toLowerCase();
-        var visibles = 0;
-        rows.forEach(function (tr) {
-            var hay = !q || (tr.getAttribute('data-search') || '').indexOf(q) !== -1;
-            tr.style.display = hay ? '' : 'none';
-            if (hay) visibles++;
-        });
-        if (emptyRow) {
-            emptyRow.style.display = visibles === 0 ? '' : 'none';
-        }
-    }
-
-    input.addEventListener('input', filtrar);
-    // Si viene con valor del servidor, aplicar filtro visual también
-    if (input.value) filtrar();
+(function(){
+  function filtrar(texto){
+    var q=(texto||'').toString().trim().toLowerCase();
+    var items=document.querySelectorAll('tr.js-search-item');
+    var n=0;
+    items.forEach(function(el){
+      var ok=!q||(el.getAttribute('data-search')||'').indexOf(q)!==-1;
+      el.style.display=ok?'':'none';
+      if(ok)n++;
+    });
+    var empty=document.querySelector('tr.js-search-empty');
+    if(empty) empty.style.display=(items.length&&n===0)?'':'none';
+  }
+  document.addEventListener('input',function(e){
+    if(e.target&&(e.target.name==='q'||e.target.name==='adminlteSearch')) filtrar(e.target.value);
+  });
+  document.addEventListener('submit',function(e){
+    var f=e.target, inp=f&&f.querySelector&&f.querySelector('input[name="adminlteSearch"],input[name="q"]');
+    if(inp&&document.querySelector('tr.js-search-item')){ e.preventDefault(); filtrar(inp.value); }
+  });
+  var p=new URLSearchParams(location.search);
+  var ini=p.get('q')||p.get('adminlteSearch')||'';
+  if(ini) filtrar(ini);
 })();
 </script>
 @stop
