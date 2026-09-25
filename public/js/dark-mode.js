@@ -6,10 +6,10 @@
   }
 
   function apply(on) {
-    document.body.classList.toggle('dark-mode', !!on);
-    // Home / landing sin AdminLTE
-    document.documentElement.classList.toggle('theme-dark', !!on);
-    document.body.classList.toggle('theme-dark', !!on);
+    document.documentElement.classList.toggle('dark-mode', !!on);
+    if (document.body) {
+      document.body.classList.toggle('dark-mode', !!on);
+    }
 
     var icons = document.querySelectorAll('#icon-dark-mode, .js-dark-mode-icon');
     icons.forEach(function (icon) {
@@ -31,7 +31,7 @@
     apply(!isDark());
   }
 
-  // Aplicar cuanto antes (evita parpadeo)
+  // Aplicar cuanto antes (evita parpadeo de claro -> oscuro)
   apply(isDark());
 
   document.addEventListener('click', function (e) {

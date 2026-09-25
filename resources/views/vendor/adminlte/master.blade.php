@@ -102,6 +102,9 @@
 
 <body class="@yield('classes_body')" @yield('body_data')>
 
+    {{-- Aplicar modo oscuro cuanto antes, para evitar parpadeo --}}
+    <script src="{{ asset('js/dark-mode.js') }}?v={{ @filemtime(public_path('js/dark-mode.js')) }}"></script>
+
     {{-- Body Content --}}
     @yield('body')
 
