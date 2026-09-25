@@ -85,7 +85,7 @@ class CajaController extends Controller
 
         return redirect()
             ->route('cajas.index')
-            ->with('success', 'Caja creada correctamente.');
+            ->with('success', __('messages.cash_register_created'));
     }
 
     /**
@@ -132,7 +132,7 @@ class CajaController extends Controller
 
         return redirect()
             ->route('cajas.index')
-            ->with('success', 'Caja actualizada correctamente.');
+            ->with('success', __('messages.cash_register_updated'));
     }
 
     /**
@@ -146,7 +146,7 @@ class CajaController extends Controller
 
         return redirect()
             ->route('cajas.index')
-            ->with('success', 'Caja eliminada correctamente.');
+            ->with('success', __('messages.cash_register_deleted'));
     }
 
     // ------------------------------------------------------------------
@@ -168,7 +168,7 @@ class CajaController extends Controller
     {
         $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null && ! in_array($sucursalId, $ids, true)) {
-            abort(403, 'No tienes permiso sobre esa sucursal.');
+            abort(403, __('messages.branch_permission'));
         }
     }
 }

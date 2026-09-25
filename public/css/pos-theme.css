@@ -141,6 +141,42 @@ a:hover {
     background: linear-gradient(135deg, #475569, #334155);
 }
 
+/* ---- Colores menú: Cajas, Categorías, Géneros ---- */
+.pos-nav-cajas {
+    background: linear-gradient(135deg, #db2777, #be185d) !important;
+    color: #fff !important;
+}
+.pos-nav-categorias {
+    background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+    color: #fff !important;
+}
+.pos-nav-generos {
+    background: linear-gradient(135deg, #ca8a04, #a16207) !important;
+    color: #fff !important;
+}
+
+/* También sobre el enlace del sidebar */
+.nav-sidebar .nav-item > .nav-link.pos-nav-cajas,
+.nav-sidebar .nav-item > .nav-link.pos-nav-categorias,
+.nav-sidebar .nav-item > .nav-link.pos-nav-generos {
+    color: #fff !important;
+}
+
+/* Respaldo por URL (si la clase no llega al <a>) */
+.nav-sidebar a.nav-link[href*="cajas"] {
+    background: linear-gradient(135deg, #db2777, #be185d) !important;
+    color: #fff !important;
+}
+.nav-sidebar a.nav-link[href*="categorias"] {
+    background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+    color: #fff !important;
+}
+.nav-sidebar a.nav-link[href*="generos"] {
+    background: linear-gradient(135deg, #ca8a04, #a16207) !important;
+    color: #fff !important;
+}
+
+
 /* Texto decorativo al final (menos sensación de “hueco” azul) */
 .main-sidebar {
     position: relative;

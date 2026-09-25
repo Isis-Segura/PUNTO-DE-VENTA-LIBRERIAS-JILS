@@ -61,7 +61,7 @@ class SucursalController extends Controller
         $ids = auth()->user()->sucursalIdsPermitidas();
 
         if ($ids !== null && ! in_array($sucursal->id, $ids, true)) {
-            abort(403, 'No tienes permiso para ver esta sucursal.');
+            abort(403, __('messages.branch_view_permission'));
         }
 
         $query = Inventario::with(['producto.categoria'])
@@ -103,7 +103,7 @@ class SucursalController extends Controller
 
         return redirect()
             ->route('sucursales.index')
-            ->with('success', 'Sucursal creada correctamente.');
+            ->with('success', __('messages.branch_created'));
     }
 
     public function edit(Sucursal $sucursal)
@@ -137,20 +137,20 @@ class SucursalController extends Controller
 
         return redirect()
             ->route('sucursales.index')
-            ->with('success', 'Sucursal actualizada correctamente.');
+            ->with('success', __('messages.branch_updated'));
     }
 
     public function destroy(Sucursal $sucursal)
     {
         if ($sucursal->productos()->exists()) {
-            return back()->with('error', 'No puedes eliminar una sucursal que ya tiene productos registrados. Desactívala en su lugar.');
+            return back()->with('error', __('messages.branch_has_products'));
         }
 
         $sucursal->delete();
 
         return redirect()
             ->route('sucursales.index')
-            ->with('success', 'Sucursal eliminada correctamente.');
+            ->with('success', __('messages.branch_deleted'));
     }
 
     /**

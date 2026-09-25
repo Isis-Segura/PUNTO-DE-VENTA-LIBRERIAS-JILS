@@ -51,13 +51,15 @@ class GeneroController extends Controller
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', 'unique:generos,nombre'],
             'descripcion' => ['nullable', 'string', 'max:500'],
+            'nombre_en' => ['nullable', 'string', 'max:80'],
+            'descripcion_en' => ['nullable', 'string', 'max:500'],
         ]);
 
         Genero::create($data);
 
         return redirect()
             ->route('generos.index')
-            ->with('success', 'Género creada correctamente.');
+            ->with('success', __('messages.genre_created'));
     }
 
     /**
@@ -84,13 +86,15 @@ class GeneroController extends Controller
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', Rule::unique('generos', 'nombre')->ignore($genero->id)],
             'descripcion' => ['nullable', 'string', 'max:500'],
+            'nombre_en' => ['nullable', 'string', 'max:80'],
+            'descripcion_en' => ['nullable', 'string', 'max:500'],
         ]);
 
         $genero->update($data);
 
         return redirect()
             ->route('generos.index')
-            ->with('success', 'Género actualizada correctamente.');
+            ->with('success', __('messages.genre_updated'));
     }
 
     /**
@@ -100,13 +104,13 @@ class GeneroController extends Controller
     public function destroy(Genero $genero)
     {
         if ($genero->productos()->exists()) {
-            return back()->with('error', 'No puedes eliminar una género que ya tiene productos asignados.');
+            return back()->with('error', __('messages.genre_has_products'));
         }
 
         $genero->delete();
 
         return redirect()
             ->route('generos.index')
-            ->with('success', 'Género eliminada correctamente.');
+            ->with('success', __('messages.genre_deleted'));
     }
 }

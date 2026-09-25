@@ -260,8 +260,8 @@
             <a href="{{ url('/') }}" class="d-flex align-items-center gap-2 text-decoration-none">
                 <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo JILS" class="brand-logo">
                 <div>
-                    <div class="brand-title">Librería JILS</div>
-                    <div class="brand-subtitle">Punto de Venta &bull; Inventario</div>
+                    <div class="brand-title">{{ __('Librería JILS') }}</div>
+                    <div class="brand-subtitle">{{ __('Punto de Venta') }} &bull; {{ __('Inventario') }}</div>
                 </div>
             </a>
 
@@ -281,12 +281,12 @@
                 @auth
                     <a href="{{ auth()->user()->isAdmin() ? url('/admin') : url('/home') }}" class="btn-pos-primary py-2 px-3 fs-6">
                         <i class="fas fa-chart-line"></i>
-                        <span>Ir al Panel</span>
+                        <span>{{ __('Ir al Panel') }}</span>
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="btn-pos-primary py-2 px-3 fs-6">
                         <i class="fas fa-sign-in-alt"></i>
-                        <span>Iniciar Sesión</span>
+                        <span>{{ __('Iniciar Sesión') }}</span>
                     </a>
                 @endauth
             </div>
@@ -298,31 +298,30 @@
         <section class="pos-hero text-center">
             <div class="container">
                 <h1 class="hero-title">
-                    Control Integral de <span>Ventas e Inventario</span><br class="d-none d-md-block">
-                    para Librerías Multi-Sede
+                    {{ __('Control Integral de') }} <span>{{ __('Ventas e Inventario') }}</span><br class="d-none d-md-block">
+                    {{ __('para Librerías Multi-Sede') }}
                 </h1>
 
                 <p class="hero-description">
-                    Plataforma para la administración de cajas, cobro de tickets,
-                    control de existencias por sucursales y gestión de usuarios.
+                    {{ __('Plataforma para la administración de cajas, cobro de tickets, control de existencias por sucursales y gestión de usuarios.') }}
                 </p>
 
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
                     @auth
                         <a href="{{ auth()->user()->isAdmin() ? url('/admin') : url('/home') }}" class="btn-pos-primary">
                             <i class="fas fa-desktop"></i>
-                            <span>Ir al Panel de Trabajo</span>
+                            <span>{{ __('Ir al Panel de Trabajo') }}</span>
                         </a>
                     @else
                         <a href="{{ route('login') }}" class="btn-pos-primary">
                             <i class="fas fa-cash-register"></i>
-                            <span>Acceder al Punto de Venta</span>
+                            <span>{{ __('Acceder al Punto de Venta') }}</span>
                         </a>
                     @endauth
 
                     <a href="#modulos" class="btn-pos-outline">
                         <i class="fas fa-cubes"></i>
-                        <span>Ver Módulos</span>
+                        <span>{{ __('Ver Módulos') }}</span>
                     </a>
                 </div>
             </div>
@@ -332,8 +331,8 @@
         <section id="modulos" class="py-5">
             <div class="container">
                 <div class="text-center mb-5">
-                    <h2 class="fw-bold text-dark fs-3 mb-2">Módulos del Sistema</h2>
-                    <p class="text-muted">Operaciones centralizadas para agilizar ventas y catálogo.</p>
+                    <h2 class="fw-bold text-dark fs-3 mb-2">{{ __('Módulos del Sistema') }}</h2>
+                    <p class="text-muted">{{ __('Operaciones centralizadas para agilizar ventas y catálogo.') }}</p>
                 </div>
 
                 <div class="row g-4">
@@ -343,9 +342,9 @@
                             <div class="feature-icon-wrapper icon-blue">
                                 <i class="fas fa-cash-register"></i>
                             </div>
-                            <h3 class="feature-title">Punto de Venta</h3>
+                            <h3 class="feature-title">{{ __('Punto de Venta') }}</h3>
                             <p class="feature-desc">
-                                Registro rápido de ventas, cobros en efectivo o tarjeta y emisión de tickets.
+                                {{ __('Registro rápido de ventas, cobros en efectivo o tarjeta y emisión de tickets.') }}
                             </p>
                         </div>
                     </div>
@@ -356,9 +355,9 @@
                             <div class="feature-icon-wrapper icon-green">
                                 <i class="fas fa-boxes"></i>
                             </div>
-                            <h3 class="feature-title">Stock y Catálogo</h3>
+                            <h3 class="feature-title">{{ __('Stock y Catálogo') }}</h3>
                             <p class="feature-desc">
-                                Catálogo centralizado de libros y artículos con alertas de bajo inventario.
+                                {{ __('Catálogo centralizado de libros y artículos con alertas de bajo inventario.') }}
                             </p>
                         </div>
                     </div>
@@ -369,9 +368,9 @@
                             <div class="feature-icon-wrapper icon-amber">
                                 <i class="fas fa-store-alt"></i>
                             </div>
-                            <h3 class="feature-title">Multi-Sucursal</h3>
+                            <h3 class="feature-title">{{ __('Multi-Sucursal') }}</h3>
                             <p class="feature-desc">
-                                Administración de sedes con inventarios independientes y asignación de cajas.
+                                {{ __('Administración de sedes con inventarios independientes y asignación de cajas.') }}
                             </p>
                         </div>
                     </div>
@@ -382,9 +381,9 @@
                             <div class="feature-icon-wrapper icon-purple">
                                 <i class="fas fa-user-shield"></i>
                             </div>
-                            <h3 class="feature-title">Control de Acceso</h3>
+                            <h3 class="feature-title">{{ __('Control de Acceso') }}</h3>
                             <p class="feature-desc">
-                                Permisos para Administrador General, Gerentes de Sede y Cajeros.
+                                {{ __('Permisos para Administrador General, Gerentes de Sede y Cajeros.') }}
                             </p>
                         </div>
                     </div>
@@ -394,14 +393,14 @@
                 <div class="pos-info-banner mt-5">
                     <div class="row align-items-center">
                         <div class="col-lg-8 mb-3 mb-lg-0">
-                            <h3 class="fw-bold fs-4 mb-2">Operaciones en mostrador</h3>
+                            <h3 class="fw-bold fs-4 mb-2">{{ __('Operaciones en mostrador') }}</h3>
                             <p class="text-light opacity-75 mb-0">
-                                Inicia sesión con tus credenciales asignadas para acceder a tu módulo.
+                                {{ __('Inicia sesión con tus credenciales asignadas para acceder a tu módulo.') }}
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
                             <a href="{{ route('login') }}" class="btn btn-light fw-bold px-4 py-2 rounded-3 text-dark">
-                                <i class="fas fa-key me-1"></i> Iniciar Sesión
+                                <i class="fas fa-key me-1"></i> {{ __('Iniciar Sesión') }}
                             </a>
                         </div>
                     </div>
@@ -414,10 +413,10 @@
     <footer class="pos-footer">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
             <div>
-                <strong>Librería JILS</strong> &bull; Proyecto Integrador &bull; Universidad de Colima
+                <strong>{{ __('Librería JILS') }}</strong> &bull; {{ __('Proyecto Integrador') }} &bull; {{ __('Universidad de Colima') }}
             </div>
             <div class="text-muted">
-                Facultad de Ingeniería Electromecánica &bull; Grupo 3ºE &bull; {{ date('Y') }}
+                {{ __('Facultad de Ingeniería Electromecánica') }} &bull; {{ __('Grupo 3ºE') }} &bull; {{ date('Y') }}
             </div>
         </div>
     </footer>

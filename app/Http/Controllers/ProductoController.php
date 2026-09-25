@@ -9,6 +9,7 @@ use App\Models\Producto;
 use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductoController extends Controller
 {
@@ -75,7 +76,7 @@ class ProductoController extends Controller
 
         $rutaImagen = null;
         if ($request->hasFile('imagen')) {
-            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+            $rutaImagen = $this->guardarPortada($request->file('imagen'), $data['nombre']);
         }
 
         $producto = Producto::create([
@@ -99,7 +100,7 @@ class ProductoController extends Controller
             'stock_minimo' => $data['stock_minimo'],
         ]);
 
-        return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
+        return redirect()->route('productos.index')->with('success', __('messages.product_created'));
     }
 
     public function edit(Producto $producto)
@@ -150,15 +151,15 @@ class ProductoController extends Controller
         $rutaImagen = $producto->imagen;
 
         if ($request->boolean('quitar_imagen') && $rutaImagen) {
-            Storage::disk('public')->delete($rutaImagen);
+            Storage::disk('covers')->delete($rutaImagen);
             $rutaImagen = null;
         }
 
         if ($request->hasFile('imagen')) {
             if ($producto->imagen) {
-                Storage::disk('public')->delete($producto->imagen);
+                Storage::disk('covers')->delete($producto->imagen);
             }
-            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+            $rutaImagen = $this->guardarPortada($request->file('imagen'), $data['nombre']);
         }
 
         $producto->update([
@@ -184,7 +185,7 @@ class ProductoController extends Controller
             $producto->inventario->update($inv);
         }
 
-        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
+        return redirect()->route('productos.index')->with('success', __('messages.product_updated'));
     }
 
     public function destroy(Producto $producto)
@@ -192,17 +193,32 @@ class ProductoController extends Controller
         $this->verificarAccesoSucursal($producto->sucursal_id);
 
         if ($producto->detalleVentas()->exists()) {
-            return back()->with('error', 'No puedes eliminar un producto que ya tiene ventas registradas. Desactívalo en su lugar.');
+            return back()->with('error', __('messages.product_has_sales'));
         }
 
         if ($producto->imagen) {
-            Storage::disk('public')->delete($producto->imagen);
+            Storage::disk('covers')->delete($producto->imagen);
         }
 
         $producto->inventario()?->delete();
         $producto->delete();
 
-        return redirect()->route('productos.index')->with('success', 'Producto eliminado correctamente.');
+        return redirect()->route('productos.index')->with('success', __('messages.product_deleted'));
+    }
+
+    private function guardarPortada($imagen, string $nombreProducto): string
+    {
+        $base = Str::slug($nombreProducto) ?: 'portada';
+        $extension = strtolower($imagen->getClientOriginalExtension());
+        $nombre = $base.'.'.$extension;
+        $contador = 2;
+
+        while (Storage::disk('covers')->exists($nombre)) {
+            $nombre = $base.'-'.$contador.'.'.$extension;
+            $contador++;
+        }
+
+        return $imagen->storeAs('', $nombre, 'covers');
     }
 
     private function aplicarFiltroSucursal($query): void
@@ -228,7 +244,7 @@ class ProductoController extends Controller
     {
         $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null && ! in_array($sucursalId, $ids, true)) {
-            abort(403, 'No tienes permiso sobre esa sucursal.');
+            abort(403, __('messages.branch_permission'));
         }
     }
 }

@@ -72,7 +72,7 @@
 
     {{-- Custom Stylesheets (post AdminLTE) --}}
     {{-- Tema visual "POS JILS" (misma identidad que el login) --}}
-    <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}?v={{ @filemtime(public_path('css/pos-theme.css')) }}">
     @yield('adminlte_css')
 
     {{-- Favicon --}}

@@ -86,7 +86,7 @@ class VentaController extends Controller
         if (! $user->isAdmin() && ! $sucursal) {
             return redirect()
                 ->route('ventas.index')
-                ->with('error', 'No tienes una sucursal asignada. Pide al Administrador General que te asigne una.');
+                ->with('error', __('messages.no_branch'));
         }
 
         // Cajas activas de la sucursal seleccionada
@@ -132,7 +132,7 @@ class VentaController extends Controller
                 'nombre' => $p->nombre,
                 'precio' => (float) $p->precio,
                 'existencia' => $p->inventario?->cantidad ?? 0,
-                'imagen' => $p->imagen ? asset('storage/'.$p->imagen) : null,
+                'imagen' => $p->imagen ? asset('portadas/'.$p->imagen) : null,
             ]);
 
         return response()->json($productos);
@@ -159,18 +159,18 @@ class VentaController extends Controller
             ->where('activa', true)
             ->first();
         if (! $caja) {
-            return back()->withInput()->with('error', 'La caja seleccionada no es válida para esta sucursal.');
+            return back()->withInput()->with('error', __('messages.invalid_cash_register'));
         }
 
         $ids = auth()->user()->sucursalIdsPermitidas();
         if ($ids !== null && ! in_array((int) $data['sucursal_id'], $ids, true)) {
-            abort(403, 'No tienes permiso sobre esa sucursal.');
+            abort(403, __('messages.branch_permission'));
         }
 
         $esEfectivo = MetodoPago::whereKey($data['metodo_pago_id'])->value('nombre') === 'Efectivo';
 
         if ($esEfectivo && ! $request->filled('monto_recibido')) {
-            return back()->withInput()->with('error', 'Indica el monto en efectivo que entregó el cliente.');
+            return back()->withInput()->with('error', __('messages.cash_required'));
         }
 
         try {
@@ -188,7 +188,10 @@ class VentaController extends Controller
                         ->firstOrFail();
 
                     if ($inventario->cantidad < $item['cantidad']) {
-                        throw new \RuntimeException("No hay suficiente inventario de \"{$producto->nombre}\". Disponible: {$inventario->cantidad}.");
+                        throw new \RuntimeException(__('messages.insufficient_inventory', [
+                            'product' => $producto->nombre,
+                            'available' => $inventario->cantidad,
+                        ]));
                     }
 
                     $precioUnitario = (float) $producto->precio;
@@ -210,7 +213,7 @@ class VentaController extends Controller
                 $total = round($subtotal + $iva, 2);
 
                 if ($total > 999999.99) {
-                    throw new \RuntimeException('El total de la venta supera el máximo permitido ($999,999.99).');
+                    throw new \RuntimeException(__('messages.sale_limit'));
                 }
 
                 $montoRecibido = null;
@@ -220,7 +223,10 @@ class VentaController extends Controller
                     $montoRecibido = round((float) $data['monto_recibido'], 2);
 
                     if ($montoRecibido < $total) {
-                        throw new \RuntimeException('El monto en efectivo entregado ($'.number_format($montoRecibido, 2).') es menor al total de la venta ($'.number_format($total, 2).').');
+                        throw new \RuntimeException(__('messages.cash_below_total', [
+                            'received' => number_format($montoRecibido, 2),
+                            'total' => number_format($total, 2),
+                        ]));
                     }
 
                     $cambio = round($montoRecibido - $total, 2);
@@ -266,12 +272,12 @@ class VentaController extends Controller
         } catch (\Throwable $e) {
             report($e);
 
-            return back()->withInput()->with('error', __('Ocurrió un error al registrar la venta. Intenta de nuevo.'));
+            return back()->withInput()->with('error', __('messages.sale_error'));
         }
 
         return redirect()
             ->route('ventas.show', $venta)
-            ->with('success', 'Venta registrada correctamente.');
+            ->with('success', __('messages.sale_created'));
     }
 
     /**
@@ -334,7 +340,7 @@ class VentaController extends Controller
     public function destroy(Venta $venta)
     {
         if (! auth()->user()->isAdmin()) {
-            abort(403, __('Solo un administrador puede eliminar tickets del historial.'));
+            abort(403, __('messages.admin_delete_tickets'));
         }
 
         $venta->load('detalles');
@@ -356,7 +362,7 @@ class VentaController extends Controller
 
         return redirect()
             ->route('ventas.index')
-            ->with('success', __('Ticket eliminado. El inventario fue actualizado.'));
+            ->with('success', __('messages.ticket_deleted'));
     }
 
     private function resolverSucursalActiva(Request $request): ?Sucursal

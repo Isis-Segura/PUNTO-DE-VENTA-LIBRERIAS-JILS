@@ -89,17 +89,17 @@ class UsuarioController extends Controller
             $rolNombre = $rol->nombre ?? $rol->name ?? 'Usuario';
         }
 
-        $mensaje = 'Usuario creado correctamente.';
+        $mensaje = __('messages.user_created');
 
         try {
             Mail::to($usuario->email)->send(
                 new CredencialesUsuarioMail($usuario, $data['password'], $rolNombre)
             );
-            $mensaje .= ' Se envió un correo a '.$usuario->email.' con usuario, rol y contraseña.';
+            $mensaje .= __('messages.user_email_sent', ['email' => $usuario->email]);
         } catch (\Throwable $e) {
             report($e);
             // Mensaje corto para no romper la sesión / la vista
-            $mensaje .= ' El usuario se creó, pero el correo no se pudo enviar.';
+            $mensaje .= __('messages.user_email_failed');
         }
 
         return redirect()
@@ -142,7 +142,7 @@ class UsuarioController extends Controller
         // Un Gerente no puede ascenderse ni ascender a nadie a Administrador,
         // ni mover al usuario a una sucursal que no sea la suya.
         if (! auth()->user()->isAdmin() && (int) $data['role_id'] !== Role::where('slug', Role::CAJERO)->value('id')) {
-            abort(403, 'No tienes permiso para asignar ese rol.');
+            abort(403, __('messages.assign_role_permission'));
         }
 
         $usuario->name = $data['name'];
@@ -159,7 +159,7 @@ class UsuarioController extends Controller
 
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuario actualizado correctamente.');
+            ->with('success', __('messages.user_updated'));
     }
 
     /**
@@ -170,10 +170,10 @@ class UsuarioController extends Controller
         $this->verificarAccesoAUsuario($usuario);
 
         if ($usuario->id === auth()->id()) {
-            return back()->with('error', 'No puedes eliminar tu propio usuario.');
+            return back()->with('error', __('messages.cannot_delete_self'));
         }
 
-        $mensaje = 'Usuario eliminado correctamente.';
+        $mensaje = __('messages.user_deleted');
 
         // Si era Gerente: desactivar su(s) sucursal(es) y quitar el enlace de gerente
         if ($usuario->isGerente()) {
@@ -196,7 +196,7 @@ class UsuarioController extends Controller
 
             if ($sucursales->isNotEmpty()) {
                 $nombres = $sucursales->pluck('nombre')->implode(', ');
-                $mensaje .= ' La(s) sucursal(es) '.$nombres.' quedaron inactivas al quedarse sin gerente.';
+                $mensaje .= __('messages.branch_deactivated_without_manager', ['branches' => $nombres]);
             }
         }
 
@@ -262,7 +262,7 @@ class UsuarioController extends Controller
             && $usuario->sucursal_id === auth()->user()->sucursal_id;
 
         if (! $esCajeroDeSuSucursal) {
-            abort(403, 'No tienes permiso para administrar a este usuario.');
+            abort(403, __('messages.manage_user_permission'));
         }
     }
 
@@ -275,22 +275,22 @@ class UsuarioController extends Controller
         $rol = Role::find($roleId);
 
         if (! $rol) {
-            abort(422, 'Rol inválido.');
+            abort(422, __('messages.invalid_role'));
         }
 
         // Gerente y Cajero necesitan una sucursal asignada para poder operar
         // (buscar productos, vender, ver su inventario, etc.).
         if (in_array($rol->slug, [Role::GERENTE, Role::CAJERO], true) && ! $sucursalId) {
-            abort(422, 'Selecciona la sucursal a la que pertenecerá este usuario.');
+            abort(422, __('messages.branch_required_for_user'));
         }
 
         if (! auth()->user()->isAdmin()) {
             if ($rol->slug !== Role::CAJERO) {
-                abort(403, 'Solo el Administrador General puede asignar ese rol.');
+                abort(403, __('messages.admin_role_only'));
             }
 
             if ($sucursalId !== auth()->user()->sucursal_id) {
-                abort(403, 'Solo puedes asignar usuarios a tu propia sucursal.');
+                abort(403, __('messages.own_branch_only'));
             }
         }
     }

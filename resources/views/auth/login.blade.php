@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Librería JILS') }} - Acceso a Terminal POS</title>
+    <title>{{ config('app.name', 'Librería JILS') }} - {{ __('Acceso a Terminal POS') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}">
@@ -312,7 +312,7 @@
             <div class="card-topbar">
                 <a href="{{ url('/') }}" class="back-link">
                     <i class="fas fa-arrow-left"></i>
-                    <span>Volver al Inicio</span>
+                    <span>{{ __('Volver al Inicio') }}</span>
                 </a>
 
                 <div class="d-flex gap-1">
@@ -329,8 +329,8 @@
             <!-- Encabezado con Logo Oficial de Mostrador -->
             <div class="login-header">
                 <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo Librería JILS" class="login-logo">
-                <h1 class="login-title">Librería JILS</h1>
-                <p class="text-muted small mb-0">Punto de Venta</p>
+                <h1 class="login-title">{{ __('Librería JILS') }}</h1>
+                <p class="text-muted small mb-0">{{ __('Punto de Venta') }}</p>
             </div>
 
             <!-- Alertas de Error si fallan credenciales -->
@@ -351,7 +351,7 @@
 
                 <!-- Campo Correo -->
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo</label>
+                    <label for="email" class="form-label">{{ __('Correo') }}</label>
                     <div class="input-group-custom">
                         <i class="fas fa-envelope input-icon-left"></i>
                         <input
@@ -360,7 +360,7 @@
                             name="email"
                             value="{{ old('email') }}"
                             class="form-control-pos @error('email') is-invalid @enderror"
-                            placeholder="ejemplo@correo.com"
+                            placeholder="{{ __('ejemplo@correo.com') }}"
                             required
                             autofocus
                         >
@@ -369,7 +369,7 @@
 
                 <!-- Campo Contraseña -->
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
+                    <label for="password" class="form-label">{{ __('Contraseña') }}</label>
                     <div class="input-group-custom">
                         <i class="fas fa-lock input-icon-left"></i>
                         <input
@@ -380,7 +380,7 @@
                             placeholder="••••••••"
                             required
                         >
-                        <button type="button" class="input-toggle-right" id="togglePasswordBtn" title="Mostrar/ocultar contraseña" tabindex="-1">
+                        <button type="button" class="input-toggle-right" id="togglePasswordBtn" title="{{ __('Mostrar/ocultar contraseña') }}" tabindex="-1">
                             <i class="fas fa-eye" id="togglePasswordIcon"></i>
                         </button>
                     </div>
@@ -389,7 +389,7 @@
                 <!-- Botón de Envío -->
                 <button type="submit" class="btn-pos-submit">
                     <i class="fas fa-sign-in-alt"></i>
-                    <span>Iniciar Sesión</span>
+                    <span>{{ __('Iniciar Sesión') }}</span>
                 </button>
             </form>
         </div>

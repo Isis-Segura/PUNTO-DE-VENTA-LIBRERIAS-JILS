@@ -151,7 +151,7 @@
                 $existencia = $producto->inventario->cantidad ?? 0;
                 $stockMin = $producto->inventario->stock_minimo ?? 0;
                 $bajo = $producto->inventario && $existencia <= $stockMin;
-                $img = $producto->imagen ? asset('storage/'.$producto->imagen) : null;
+                $img = $producto->imagen ? asset('portadas/'.$producto->imagen) : null;
             @endphp
             <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
                 <div class="libro-card"
@@ -187,7 +187,7 @@
                     <div class="libro-body">
                         <h3 class="libro-titulo" title="{{ $producto->nombre }}">{{ $producto->nombre }}</h3>
                         <div class="libro-meta">
-                            {{ $producto->sucursal->nombre ?? '—' }}
+                            {{ $producto->sucursal->nombre_traducido ?? '—' }}
                             @if ($producto->categoria)
                                 · {{ $producto->categoria->nombre }}
                             @endif
@@ -199,7 +199,7 @@
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('productos.destroy', $producto) }}" method="POST"
-                                  onsubmit="return confirm('¿Eliminar este producto?');">
+                                  onsubmit="return confirm(@json(__('¿Eliminar este producto?')));">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">
