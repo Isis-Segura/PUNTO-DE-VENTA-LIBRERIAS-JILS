@@ -9,6 +9,7 @@ use App\Models\Producto;
 use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductoController extends Controller
 {
@@ -75,7 +76,7 @@ class ProductoController extends Controller
 
         $rutaImagen = null;
         if ($request->hasFile('imagen')) {
-            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+            $rutaImagen = $this->guardarPortada($request->file('imagen'), $data['nombre']);
         }
 
         $producto = Producto::create([
@@ -150,15 +151,15 @@ class ProductoController extends Controller
         $rutaImagen = $producto->imagen;
 
         if ($request->boolean('quitar_imagen') && $rutaImagen) {
-            Storage::disk('public')->delete($rutaImagen);
+            Storage::disk('covers')->delete($rutaImagen);
             $rutaImagen = null;
         }
 
         if ($request->hasFile('imagen')) {
             if ($producto->imagen) {
-                Storage::disk('public')->delete($producto->imagen);
+                Storage::disk('covers')->delete($producto->imagen);
             }
-            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+            $rutaImagen = $this->guardarPortada($request->file('imagen'), $data['nombre']);
         }
 
         $producto->update([
@@ -196,13 +197,28 @@ class ProductoController extends Controller
         }
 
         if ($producto->imagen) {
-            Storage::disk('public')->delete($producto->imagen);
+            Storage::disk('covers')->delete($producto->imagen);
         }
 
         $producto->inventario()?->delete();
         $producto->delete();
 
         return redirect()->route('productos.index')->with('success', __('messages.product_deleted'));
+    }
+
+    private function guardarPortada($imagen, string $nombreProducto): string
+    {
+        $base = Str::slug($nombreProducto) ?: 'portada';
+        $extension = strtolower($imagen->getClientOriginalExtension());
+        $nombre = $base.'.'.$extension;
+        $contador = 2;
+
+        while (Storage::disk('covers')->exists($nombre)) {
+            $nombre = $base.'-'.$contador.'.'.$extension;
+            $contador++;
+        }
+
+        return $imagen->storeAs('', $nombre, 'covers');
     }
 
     private function aplicarFiltroSucursal($query): void

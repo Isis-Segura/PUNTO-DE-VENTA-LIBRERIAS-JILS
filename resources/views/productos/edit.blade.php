@@ -142,7 +142,7 @@
                 <div class="cover-upload">
                     <div class="cover-preview">
                         @if ($producto->imagen)
-                            <img src="{{ asset('storage/'.$producto->imagen) }}" alt="" id="cover-img">
+                            <img src="{{ asset('portadas/'.$producto->imagen) }}" alt="" id="cover-img">
                             <i class="fas fa-book" id="cover-icon" style="display:none;"></i>
                         @else
                             <i class="fas fa-book" id="cover-icon"></i>

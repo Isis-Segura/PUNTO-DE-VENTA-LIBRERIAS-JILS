@@ -1,5 +1,5 @@
 
-                            <td>{{ $venta->caja->nombre ?? "—" }}</td>@extends('adminlte::page')
+                            <td>{{ $venta->caja->nombre_traducido ?? "—" }}</td>@extends('adminlte::page')
 
 @section('title', __('Ventas'))
 
@@ -62,9 +62,9 @@
                             $fecha = $venta->created_at;
                             $search = strtolower(implode(' ', array_filter([
                                 $venta->folio,
-                                $venta->sucursal->nombre ?? '',
+                                $venta->sucursal->nombre_traducido ?? '',
                                 $venta->cajero->name ?? '',
-                                $venta->metodoPago->nombre ?? '',
+                                $venta->metodoPago->nombre_traducido ?? '',
                                 // Fecha y hora (el buscador usa contains)
                                 $fecha?->format('d/m/Y H:i'),
                                 $fecha?->format('d/m/Y H'),
@@ -87,16 +87,16 @@
                         <tr class="js-search-item" data-search="{{ $search }}">
                             <td>{{ $venta->folio }}</td>
                             <td>{{ $fecha?->format('d/m/Y H:i') }}</td>
-                            <td>{{ $venta->sucursal->nombre ?? '—' }}</td>
+                            <td>{{ $venta->sucursal->nombre_traducido ?? '—' }}</td>
                             <td>{{ $venta->cajero->name ?? '—' }}</td>
-                            <td>{{ $venta->metodoPago->nombre ?? '—' }}</td>
+                            <td>{{ $venta->metodoPago->nombre_traducido ?? '—' }}</td>
                             <td>${{ number_format($venta->total, 2) }}</td>
                             <td class="text-right text-nowrap">
                                 <a href="{{ route('ventas.show', $venta) }}" class="btn btn-sm btn-info" title="{{ __('Ver ticket') }}">
                                     <i class="fas fa-receipt"></i> {{ __('Ver ticket') }}
                                 </a>
                                 @if (auth()->user()->isAdmin())
-                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline" data-confirm="¿Eliminar el ticket {{ $venta->folio }}? Se devolverá el stock al inventario." data-confirm-title="¿Eliminar ticket?" data-confirm-type="danger" data-confirm-ok="Sí, eliminar">
+                                    <form action="{{ route('ventas.destroy', $venta) }}" method="POST" class="d-inline" data-confirm="{{ __('¿Eliminar el ticket :folio? Se devolverá el stock al inventario.', ['folio' => $venta->folio]) }}" data-confirm-title="{{ __('¿Eliminar ticket?') }}" data-confirm-type="danger" data-confirm-ok="{{ __('Sí, eliminar') }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" title="{{ __('Eliminar') }}">

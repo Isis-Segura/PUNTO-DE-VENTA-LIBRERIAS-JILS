@@ -105,13 +105,13 @@
     <div class="recibo">
         <div class="centro">
             <div class="marca">{{ __('Librería JILS') }}</div>
-            <div class="sucursal">{{ $venta->sucursal->nombre }}</div>
+            <div class="sucursal">{{ $venta->sucursal->nombre_traducido }}</div>
             <p class="muted">{{ __('Recibo digital de venta') }}</p>
             <p class="muted">{{ __('Folio') }}: <strong>{{ $venta->folio }}</strong></p>
             <p class="muted">{{ $venta->created_at->format('d/m/Y H:i') }}</p>
             <p class="muted">{{ __('Atendió') }}: {{ $venta->cajero->name ?? '-' }}
             </p>
-            <p class="muted">{{ __('Caja') }}: {{ $venta->caja->nombre ?? '—' }}</p>
+            <p class="muted">{{ __('Caja') }}: {{ $venta->caja->nombre_traducido ?? '—' }}</p>
         </div>
 
         <hr class="sep">
@@ -157,7 +157,7 @@
             </tr>
             <tr>
                 <td class="label">{{ __('Método de pago') }}</td>
-                <td class="value">{{ $venta->metodoPago->nombre ?? '-' }}</td>
+                <td class="value">{{ $venta->metodoPago->nombre_traducido ?? '-' }}</td>
             </tr>
             @if ($venta->metodoPago && $venta->metodoPago->nombre === 'Efectivo' && ! is_null($venta->monto_recibido))
                 <tr>

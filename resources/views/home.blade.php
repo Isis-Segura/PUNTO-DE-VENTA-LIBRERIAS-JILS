@@ -5,7 +5,7 @@
 @section('content_header')
     <h1>{{ __('Dashboard') }}</h1>
     @if ($sucursal ?? null)
-        <p class="text-muted mb-0">{{ __('Información de tu sucursal') }}: <strong>{{ $sucursal->nombre }}</strong></p>
+        <p class="text-muted mb-0">{{ __('Información de tu sucursal') }}: <strong>{{ $sucursal->nombre_traducido }}</strong></p>
     @endif
 @stop
 

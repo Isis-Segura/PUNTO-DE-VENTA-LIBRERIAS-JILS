@@ -145,6 +145,22 @@ php artisan key:generate
 
 > En Windows, si el comando `cp` no funciona, copia manualmente `.env.example` y renómbralo como `.env`.
 
+### Imágenes de las portadas
+
+Las portadas que se suben desde el formulario de productos se guardan directamente en:
+
+```text
+public/portadas
+```
+
+La carpeta forma parte del proyecto y las imágenes se sirven con URLs como:
+
+```bash
+/portadas/nombre-del-archivo.jpg
+```
+
+Al estar dentro de `public`, las imágenes se pueden subir a Git junto con el resto del proyecto y estarán disponibles después de clonar el repositorio. No es necesario ejecutar `php artisan storage:link`.
+
 ## Tecnologías utilizadas
 
 | Tecnología | Uso |

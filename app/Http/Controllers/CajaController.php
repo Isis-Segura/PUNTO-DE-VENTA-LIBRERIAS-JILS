@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 /**
  * Gestión de cajas por sucursal.
  * Solo Administrador General y Gerentes (limitados a su sucursal).
- * Cumple el requerimiento del protocolo: "Registrar nuevas cajas" y "Eliminar cajas".
  */
 class CajaController extends Controller
 {
@@ -26,12 +25,15 @@ class CajaController extends Controller
             $query->whereIn('sucursal_id', $ids);
         }
 
-        // Búsqueda opcional
+        // Búsqueda: nombre, descripción o sucursal
         if ($request->filled('q') || $request->filled('adminlteSearch')) {
             $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
             $query->where(function ($sub) use ($q) {
                 $sub->where('nombre', 'like', "%{$q}%")
-                    ->orWhere('descripcion', 'like', "%{$q}%");
+                    ->orWhere('descripcion', 'like', "%{$q}%")
+                    ->orWhereHas('sucursal', function ($s) use ($q) {
+                        $s->where('nombre', 'like', "%{$q}%");
+                    });
             });
         }
 
@@ -46,9 +48,6 @@ class CajaController extends Controller
         return view('cajas.index', compact('cajas', 'sucursales'));
     }
 
-    /**
-     * Formulario para registrar una nueva caja.
-     */
     public function create()
     {
         $sucursales = $this->sucursalesVisibles();
@@ -56,9 +55,6 @@ class CajaController extends Controller
         return view('cajas.create', compact('sucursales'));
     }
 
-    /**
-     * Guarda la nueva caja.
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -70,7 +66,6 @@ class CajaController extends Controller
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
 
-        // Validar nombre único dentro de la sucursal
         $existe = Caja::where('sucursal_id', $data['sucursal_id'])
             ->where('nombre', $data['nombre'])
             ->exists();
@@ -78,7 +73,7 @@ class CajaController extends Controller
         if ($existe) {
             return back()
                 ->withInput()
-                ->withErrors(['nombre' => 'Ya existe una caja con ese nombre en la sucursal seleccionada.']);
+                ->with('error', __('Ya existe una caja con ese nombre en la sucursal seleccionada.'));
         }
 
         Caja::create($data);
@@ -88,21 +83,14 @@ class CajaController extends Controller
             ->with('success', __('messages.cash_register_created'));
     }
 
-    /**
-     * Formulario de edición.
-     */
     public function edit(Caja $caja)
     {
         $this->verificarAccesoSucursal($caja->sucursal_id);
-
         $sucursales = $this->sucursalesVisibles();
 
         return view('cajas.edit', compact('caja', 'sucursales'));
     }
 
-    /**
-     * Actualiza una caja existente.
-     */
     public function update(Request $request, Caja $caja)
     {
         $this->verificarAccesoSucursal($caja->sucursal_id);
@@ -116,7 +104,6 @@ class CajaController extends Controller
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
 
-        // Validar nombre único (excepto la propia caja)
         $existe = Caja::where('sucursal_id', $data['sucursal_id'])
             ->where('nombre', $data['nombre'])
             ->where('id', '!=', $caja->id)
@@ -125,7 +112,7 @@ class CajaController extends Controller
         if ($existe) {
             return back()
                 ->withInput()
-                ->withErrors(['nombre' => 'Ya existe una caja con ese nombre en la sucursal seleccionada.']);
+                ->with('error', __('Ya existe una caja con ese nombre en la sucursal seleccionada.'));
         }
 
         $caja->update($data);
@@ -135,23 +122,15 @@ class CajaController extends Controller
             ->with('success', __('messages.cash_register_updated'));
     }
 
-    /**
-     * Elimina una caja.
-     */
     public function destroy(Caja $caja)
     {
         $this->verificarAccesoSucursal($caja->sucursal_id);
-
         $caja->delete();
 
         return redirect()
             ->route('cajas.index')
             ->with('success', __('messages.cash_register_deleted'));
     }
-
-    // ------------------------------------------------------------------
-    // Helpers de acceso (igual patrón que ProductoController)
-    // ------------------------------------------------------------------
 
     private function sucursalesVisibles()
     {

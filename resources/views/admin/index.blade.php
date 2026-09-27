@@ -198,7 +198,7 @@
                     @forelse ($ventasRecientes as $venta)
                         <tr>
                             <td>{{ $venta->folio }}</td>
-                            <td>{{ $venta->sucursal->nombre ?? '-' }}</td>
+                            <td>{{ $venta->sucursal->nombre_traducido ?? '-' }}</td>
                             <td>{{ $venta->cajero->name ?? '-' }}</td>
                             <td>{{ $venta->created_at->format('d/m/Y H:i') }}</td>
                             <td class="text-right font-weight-bold">${{ number_format($venta->total, 2) }}</td>

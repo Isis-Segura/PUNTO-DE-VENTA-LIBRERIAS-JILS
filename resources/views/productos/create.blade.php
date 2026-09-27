@@ -146,7 +146,7 @@
                         <button type="button" class="btn btn-outline-primary btn-sm" id="btn-pick-cover">
                             <i class="fas fa-image"></i> {{ __('Elegir imagen') }}
                         </button>
-                        <div class="small text-muted mt-2">JPG, PNG o WEBP. Máx. 4 MB.</div>
+                        <div class="small text-muted mt-2">{{ __('JPG, PNG o WEBP. Máx. 4 MB.') }}</div>
                     </div>
                 </div>
             </div>

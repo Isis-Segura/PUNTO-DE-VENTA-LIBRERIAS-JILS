@@ -396,7 +396,7 @@ return [
             'text' => 'Géneros',
             'url' => 'generos',
             'icon' => 'fas fa-fw fa-tags',
-            'classes' => 'pos-nav-item pos-nav-categorias text-white',
+            'classes' => 'pos-nav-item pos-nav-generos text-white',
             'can' => 'es-admin-o-gerente',
         ],
 
