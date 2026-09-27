@@ -77,9 +77,9 @@ Route::middleware(['auth', 'role:admin,gerente,cajero'])->group(function () {
     Route::post('ventas', [VentaController::class, 'store'])->name('ventas.store');
     Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
     Route::get('ventas/{venta}/recibo-digital', [VentaController::class, 'reciboDigital'])->name('ventas.recibo-digital');
+    Route::post('ventas/simular-pago-tarjeta', [VentaController::class, 'simularPagoTarjeta'])
+        ->name('ventas.simular-pago-tarjeta');
 });
-Route::post('ventas/simular-pago-tarjeta', [VentaController::class, 'simularPagoTarjeta'])
-    ->name('ventas.simular-pago-tarjeta');
 
 // Solo el Administrador puede borrar tickets del historial
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -90,31 +90,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('mi-cuenta/contrasena', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
     Route::put('mi-cuenta/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('mi-cuenta/contrasena', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
-    Route::put('mi-cuenta/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::post('mi-cuenta/contrasena/ayuda', [ProfileController::class, 'requestPasswordHelp'])->name('profile.password.help');
 });
 
+// Solicitudes de cambio de contraseña: solo el Administrador puede verlas, atenderlas y eliminarlas
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('solicitudes-contrasena', [PasswordResetRequestController::class, 'index'])->name('password-requests.index');
     Route::post('solicitudes-contrasena/{passwordResetRequest}/atender', [PasswordResetRequestController::class, 'attend'])->name('password-requests.attend');
+    Route::delete('solicitudes-contrasena/{passwordResetRequest}', [PasswordResetRequestController::class, 'destroy'])->name('password-requests.destroy');
 });
-
-#Solicitudes de cambio de contraseña: solo el Administrador puede verlas y atenderlas
-Route::middleware('auth')->group(function () {
-    Route::get('mi-cuenta/contrasena', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
-    Route::put('mi-cuenta/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-    Route::post('mi-cuenta/contrasena/ayuda', [ProfileController::class, 'requestPasswordHelp'])->name('profile.password.help');
-});
-
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('solicitudes-contrasena', [PasswordResetRequestController::class, 'index'])->name('password-requests.index');
-    Route::post('solicitudes-contrasena/{passwordResetRequest}/atender', [PasswordResetRequestController::class, 'attend'])->name('password-requests.attend');
-});
-
 
 // Cajas: Admin y Gerente (el gerente solo ve las de su sucursal)
 // Requerido por el protocolo: "Registrar nuevas cajas" / "Eliminar cajas"
@@ -126,6 +110,3 @@ Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
 Route::middleware(['auth', 'role:admin,gerente'])->group(function () {
     Route::resource('generos', GeneroController::class);
 });
-
-Route::delete('admin/solicitudes-contrasena/{passwordResetRequest}', [PasswordResetRequestController::class, 'destroy'])
-    ->name('admin.password-requests.destroy');
