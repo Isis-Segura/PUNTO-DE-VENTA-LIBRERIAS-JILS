@@ -57,7 +57,7 @@ class CategoriaController extends Controller
 
         return redirect()
             ->route('categorias.index')
-            ->with('success', 'Categoría creada correctamente.');
+            ->with('success', __('messages.category_created'));
     }
 
     /**
@@ -90,7 +90,7 @@ class CategoriaController extends Controller
 
         return redirect()
             ->route('categorias.index')
-            ->with('success', 'Categoría actualizada correctamente.');
+            ->with('success', __('messages.category_updated'));
     }
 
     /**
@@ -100,13 +100,13 @@ class CategoriaController extends Controller
     public function destroy(Categoria $categoria)
     {
         if ($categoria->productos()->exists()) {
-            return back()->with('error', 'No puedes eliminar una categoría que ya tiene productos asignados.');
+            return back()->with('error', __('messages.category_has_products'));
         }
 
         $categoria->delete();
 
         return redirect()
             ->route('categorias.index')
-            ->with('success', 'Categoría eliminada correctamente.');
+            ->with('success', __('messages.category_deleted'));
     }
 }

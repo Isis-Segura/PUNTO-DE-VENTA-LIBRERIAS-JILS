@@ -16,7 +16,7 @@ class EnsureUserHasRole
         $user = $request->user();
 
         if (! $user || ! $user->role || ! in_array($user->role->slug, $roles, true)) {
-            abort(403, 'No tienes permisos para acceder a esta sección.');
+            abort(403, __('messages.section_permission'));
         }
 
         return $next($request);

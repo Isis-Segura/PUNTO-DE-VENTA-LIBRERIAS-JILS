@@ -128,7 +128,7 @@
                         <label class="cat-chip">
                             <input type="checkbox" name="genero_ids[]" value="{{ $g->id }}" class="cat-check"
                                    {{ in_array($g->id, $selected) ? 'checked' : '' }}>
-                            <span>{{ $g->nombre }}</span>
+                            <span>{{ $g->nombre_traducido }}</span>
                         </label>
                     @empty
                         <span class="text-muted">{{ __('No hay géneros. Créalos en el menú Géneros.') }}</span>
@@ -142,7 +142,7 @@
                 <div class="cover-upload">
                     <div class="cover-preview">
                         @if ($producto->imagen)
-                            <img src="{{ asset('storage/'.$producto->imagen) }}" alt="" id="cover-img">
+                            <img src="{{ asset('portadas/'.$producto->imagen) }}" alt="" id="cover-img">
                             <i class="fas fa-book" id="cover-icon" style="display:none;"></i>
                         @else
                             <i class="fas fa-book" id="cover-icon"></i>

@@ -26,7 +26,7 @@ class EnsureUserIsActive
 
             return redirect()
                 ->route('login')
-                ->with('error', 'Tu cuenta ha sido desactivada. Contacta al Administrador General.');
+                ->with('error', __('messages.active_account'));
         }
 
         return $next($request);

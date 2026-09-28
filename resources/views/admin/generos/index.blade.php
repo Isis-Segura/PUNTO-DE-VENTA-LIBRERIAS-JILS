@@ -40,8 +40,8 @@
                 <tbody>
                     @forelse ($generos as $genero)
                         <tr class="js-search-item" data-search="{{ strtolower(($genero->nombre??'').' '.($genero->descripcion??'')) }}">
-                            <td>{{ $genero->nombre }}</td>
-                            <td>{{ $genero->descripcion ?? '—' }}</td>
+                            <td>{{ $genero->nombre_traducido }}</td>
+                            <td>{{ $genero->descripcion_traducida ?? '—' }}</td>
                             <td>{{ $genero->productos_count }}</td>
                             <td class="text-right">
                                 <a href="{{ route('generos.edit', $genero) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Librería JILS') }} - Acceso a Terminal POS</title>
+    <title>{{ config('app.name', 'Librería JILS') }} - {{ __('Acceso a Terminal POS') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}">
@@ -302,9 +302,110 @@
             border-radius: 50%;
             background-color: var(--pos-green-success);
         }
+
+        /* ---------- Modo oscuro ---------- */
+        .dark-mode-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            border: 1px solid var(--pos-border);
+            color: var(--pos-text-muted);
+            background: #f8fafc;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .dark-mode-toggle-btn:hover {
+            background: #e2e8f0;
+            color: var(--pos-text-main);
+        }
+
+        .dark-mode {
+            --pos-bg: #0b1220;
+            --pos-card-bg: #131c2e;
+            --pos-border: #2b3a55;
+            --pos-border-focus: #3b82f6;
+            --pos-blue-light: #1e3a5f;
+            --pos-text-main: #e6ebf5;
+            --pos-text-muted: #94a3b8;
+        }
+
+        .dark-mode body {
+            background-image:
+                radial-gradient(#1e293b 1px, transparent 1px),
+                linear-gradient(to bottom, #0b1220 0%, #0b1220 180px);
+        }
+
+        .dark-mode .pos-login-card {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.35);
+        }
+
+        .dark-mode .card-topbar {
+            border-bottom-color: var(--pos-border);
+        }
+
+        .dark-mode .lang-pill,
+        .dark-mode .dark-mode-toggle-btn {
+            background: #0f1a2e;
+            border-color: var(--pos-border);
+            color: var(--pos-text-muted);
+        }
+
+        .dark-mode .lang-pill.active {
+            background: var(--pos-blue-light);
+            color: #93c5fd;
+            border-color: #3b5a8a;
+        }
+
+        .dark-mode .lang-pill:hover:not(.active),
+        .dark-mode .dark-mode-toggle-btn:hover {
+            background: #1c2740;
+            color: var(--pos-text-main);
+        }
+
+        .dark-mode .login-logo {
+            border-color: var(--pos-border);
+        }
+
+        .dark-mode .pos-terminal-badge {
+            background: var(--pos-blue-light);
+            color: #93c5fd;
+            border-color: #3b5a8a;
+        }
+
+        .dark-mode .form-label {
+            color: #cbd5e1;
+        }
+
+        .dark-mode .form-control-pos {
+            background-color: #0f1a2e;
+            color: var(--pos-text-main);
+        }
+
+        .dark-mode .form-control-pos:focus {
+            background-color: #0f1a2e;
+        }
+
+        .dark-mode .form-control-pos.is-invalid {
+            background-color: #2a1414;
+        }
+
+        .dark-mode .form-check-label {
+            color: var(--pos-text-muted);
+        }
+
+        .dark-mode .terminal-status-footer {
+            border-top-color: var(--pos-border);
+            color: var(--pos-text-muted);
+        }
     </style>
 </head>
 <body>
+
+    <script src="{{ asset('js/dark-mode.js') }}?v={{ @filemtime(public_path('js/dark-mode.js')) }}"></script>
 
     <div class="pos-login-wrapper">
         <div class="pos-login-card">
@@ -312,10 +413,10 @@
             <div class="card-topbar">
                 <a href="{{ url('/') }}" class="back-link">
                     <i class="fas fa-arrow-left"></i>
-                    <span>Volver al Inicio</span>
+                    <span>{{ __('Volver al Inicio') }}</span>
                 </a>
 
-                <div class="d-flex gap-1">
+                <div class="d-flex align-items-center gap-1">
                     @foreach (config('idiomas.disponibles', ['es' => 'Español', 'en' => 'English']) as $codigo => $nombre)
                         <a href="{{ url('/lang/'.$codigo) }}"
                            class="lang-pill {{ app()->getLocale() === $codigo ? 'active' : '' }}"
@@ -323,14 +424,19 @@
                             {{ strtoupper($codigo) }}
                         </a>
                     @endforeach
+
+                    <a href="#" id="btn-dark-mode" class="js-dark-mode-btn dark-mode-toggle-btn"
+                       title="Modo oscuro" aria-label="Modo oscuro">
+                        <i class="fas fa-moon js-dark-mode-icon" id="icon-dark-mode"></i>
+                    </a>
                 </div>
             </div>
 
             <!-- Encabezado con Logo Oficial de Mostrador -->
             <div class="login-header">
                 <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo Librería JILS" class="login-logo">
-                <h1 class="login-title">Librería JILS</h1>
-                <p class="text-muted small mb-0">Punto de Venta</p>
+                <h1 class="login-title">{{ __('Librería JILS') }}</h1>
+                <p class="text-muted small mb-0">{{ __('Punto de Venta') }}</p>
             </div>
 
             <!-- Alertas de Error si fallan credenciales -->
@@ -351,7 +457,7 @@
 
                 <!-- Campo Correo -->
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo</label>
+                    <label for="email" class="form-label">{{ __('Correo') }}</label>
                     <div class="input-group-custom">
                         <i class="fas fa-envelope input-icon-left"></i>
                         <input
@@ -360,7 +466,7 @@
                             name="email"
                             value="{{ old('email') }}"
                             class="form-control-pos @error('email') is-invalid @enderror"
-                            placeholder="ejemplo@correo.com"
+                            placeholder="{{ __('ejemplo@correo.com') }}"
                             required
                             autofocus
                         >
@@ -369,7 +475,7 @@
 
                 <!-- Campo Contraseña -->
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
+                    <label for="password" class="form-label">{{ __('Contraseña') }}</label>
                     <div class="input-group-custom">
                         <i class="fas fa-lock input-icon-left"></i>
                         <input
@@ -380,7 +486,7 @@
                             placeholder="••••••••"
                             required
                         >
-                        <button type="button" class="input-toggle-right" id="togglePasswordBtn" title="Mostrar/ocultar contraseña" tabindex="-1">
+                        <button type="button" class="input-toggle-right" id="togglePasswordBtn" title="{{ __('Mostrar/ocultar contraseña') }}" tabindex="-1">
                             <i class="fas fa-eye" id="togglePasswordIcon"></i>
                         </button>
                     </div>
@@ -389,7 +495,7 @@
                 <!-- Botón de Envío -->
                 <button type="submit" class="btn-pos-submit">
                     <i class="fas fa-sign-in-alt"></i>
-                    <span>Iniciar Sesión</span>
+                    <span>{{ __('Iniciar Sesión') }}</span>
                 </button>
             </form>
         </div>

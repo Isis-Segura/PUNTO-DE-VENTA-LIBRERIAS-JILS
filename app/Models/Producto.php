@@ -72,14 +72,14 @@ class Producto extends Model
             return null;
         }
 
-        return asset('storage/'.$this->imagen);
+        return asset('portadas/'.$this->imagen);
     }
 
     public function getGenerosListaAttribute(): string
     {
         $nombres = $this->relationLoaded('generos')
-            ? $this->generos->pluck('nombre')
-            : $this->generos()->pluck('nombre');
+            ? $this->generos->map->nombre_traducido
+            : $this->generos()->get()->map->nombre_traducido;
 
         return $nombres->filter()->implode(', ') ?: '—';
     }

@@ -1,44 +1,164 @@
-/* Modo oscuro — landing / home público */
-html.theme-dark body,
-body.theme-dark {
-  background: #0f172a !important;
-  color: #e2e8f0 !important;
+/* =====================================================================
+   MODO OSCURO — página de inicio pública (welcome.blade.php)
+   Activado agregando la clase "dark-mode" en <html>/<body> (ver dark-mode.js)
+   ===================================================================== */
+
+.dark-mode {
+    --pos-dark: #e6ebf5;
+    --pos-blue: #60a5fa;
+    --pos-blue-hover: #93c5fd;
+    --pos-blue-light: #1e3a5f;
+    --pos-green: #34d399;
+    --pos-green-light: #0f2e26;
+    --pos-bg: #0b1220;
+    --pos-card-border: #2b3a55;
+    --pos-text-main: #e6ebf5;
+    --pos-text-muted: #94a3b8;
 }
-html.theme-dark .navbar,
-body.theme-dark .navbar,
-html.theme-dark header,
-body.theme-dark header {
-  background: #1e293b !important;
-  border-color: #334155 !important;
+
+.dark-mode body {
+    background-color: var(--pos-bg);
+    color: var(--pos-text-main);
 }
-html.theme-dark h1,
-html.theme-dark h2,
-html.theme-dark h3,
-body.theme-dark h1,
-body.theme-dark h2,
-body.theme-dark h3 {
-  color: #f8fafc !important;
+
+/* Navbar */
+.dark-mode .pos-navbar {
+    background-color: #101a2c;
+    border-bottom-color: var(--pos-card-border);
 }
-html.theme-dark p,
-body.theme-dark p {
-  color: #94a3b8 !important;
+
+.dark-mode .brand-logo {
+    border-color: var(--pos-card-border);
 }
-html.theme-dark .card,
-body.theme-dark .card,
-html.theme-dark [class*="module"],
-body.theme-dark .bg-white {
-  background: #1e293b !important;
-  color: #e2e8f0 !important;
-  border-color: #334155 !important;
+
+.dark-mode .brand-title {
+    color: var(--pos-text-main);
 }
-html.theme-dark .btn-outline-primary,
-body.theme-dark .btn-outline-primary {
-  color: #93c5fd;
-  border-color: #3b82f6;
+
+/* Selector de idioma */
+.dark-mode .lang-badge {
+    background-color: #131c2e;
+    border-color: var(--pos-card-border);
+    color: var(--pos-text-muted);
 }
-html.theme-dark .btn-light,
-body.theme-dark .btn-light {
-  background: #334155;
-  color: #e2e8f0;
-  border-color: #475569;
+
+.dark-mode .lang-badge.active {
+    background-color: var(--pos-blue-light);
+    color: #bfdbfe;
+    border-color: #3b5a8a;
+}
+
+.dark-mode .lang-badge:hover:not(.active) {
+    background-color: #1c2740;
+    color: var(--pos-text-main);
+}
+
+/* Botón de modo oscuro (mismo estilo que los badges de idioma) */
+.dark-mode-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--pos-card-border);
+    color: var(--pos-text-muted);
+    background-color: #ffffff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.dark-mode-toggle-btn:hover {
+    background-color: #f1f5f9;
+    color: var(--pos-dark);
+}
+
+.dark-mode .dark-mode-toggle-btn {
+    background-color: #131c2e;
+    border-color: var(--pos-card-border);
+    color: #fde68a;
+}
+
+.dark-mode .dark-mode-toggle-btn:hover {
+    background-color: #1c2740;
+}
+
+/* Hero */
+.dark-mode .pos-hero {
+    background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+    border-bottom-color: var(--pos-card-border);
+}
+
+.dark-mode .hero-title {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .hero-title span {
+    color: var(--pos-blue-hover);
+}
+
+.dark-mode .hero-description {
+    color: var(--pos-text-muted);
+}
+
+.dark-mode .btn-pos-outline {
+    background-color: #131c2e;
+    color: var(--pos-text-main);
+    border-color: var(--pos-card-border);
+}
+
+.dark-mode .btn-pos-outline:hover {
+    background-color: #1c2740;
+    border-color: #475569;
+    color: var(--pos-text-main);
+}
+
+/* Módulos del sistema */
+.dark-mode #modulos h2.text-dark,
+.dark-mode #modulos h2 {
+    color: var(--pos-text-main) !important;
+}
+
+.dark-mode #modulos .text-muted {
+    color: var(--pos-text-muted) !important;
+}
+
+.dark-mode .feature-card {
+    background-color: #131c2e;
+    border-color: var(--pos-card-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.dark-mode .feature-card:hover {
+    border-color: #475569;
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.45);
+}
+
+.dark-mode .feature-title {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .feature-desc {
+    color: var(--pos-text-muted);
+}
+
+.dark-mode .icon-blue { background-color: var(--pos-blue-light); color: #93c5fd; }
+.dark-mode .icon-green { background-color: var(--pos-green-light); color: #6ee7b7; }
+.dark-mode .icon-amber { background-color: #3a2a0d; color: #fbbf24; }
+.dark-mode .icon-purple { background-color: #2c1f47; color: #c4b5fd; }
+
+/* Banner de acceso: ya es oscuro por diseño, solo afinamos el borde */
+.dark-mode .pos-info-banner {
+    border-color: #1e293b;
+}
+
+/* Footer */
+.dark-mode .pos-footer {
+    background-color: #101a2c;
+    border-top-color: var(--pos-card-border);
+    color: var(--pos-text-muted);
+}
+
+.dark-mode .pos-footer .text-muted {
+    color: var(--pos-text-muted) !important;
 }

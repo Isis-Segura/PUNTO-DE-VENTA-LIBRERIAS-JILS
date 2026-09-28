@@ -20,6 +20,11 @@ class Caja extends Model
         'activa' => 'boolean',
     ];
 
+    public function getNombreTraducidoAttribute(): string
+    {
+        return __($this->nombre);
+    }
+
     public function sucursal(): BelongsTo
     {
         return $this->belongsTo(Sucursal::class);

@@ -57,7 +57,7 @@ class ProfileController extends Controller
 
         return redirect()
             ->route('profile.password.edit')
-            ->with('success', 'Tu contraseña se actualizó correctamente.');
+            ->with('success', __('messages.password_updated'));
     }
 
     /**
@@ -70,7 +70,7 @@ class ProfileController extends Controller
         $existe = PasswordResetRequest::where('user_id', $user->id)->pending()->exists();
 
         if ($existe) {
-            return back()->with('info', 'Ya tienes una solicitud pendiente. Un administrador te ayudará pronto.');
+            return back()->with('info', __('messages.password_pending'));
         }
 
         PasswordResetRequest::create([
@@ -78,6 +78,6 @@ class ProfileController extends Controller
             'status' => 'pending',
         ]);
 
-        return back()->with('success', 'Se avisó a los administradores. Te ayudarán a restablecer el acceso.');
+        return back()->with('success', __('messages.password_help_sent'));
     }
 }

@@ -42,10 +42,10 @@
                 </thead>
                 <tbody>
                     @forelse ($usuarios as $usuario)
-                        <tr class="js-search-item" data-search="{{ strtolower(($usuario->name??'').' '.($usuario->email??'').' '.($usuario->role->nombre??'').' '.($usuario->sucursal->nombre??'')) }}">
+                        <tr class="js-search-item" data-search="{{ strtolower(($usuario->name??'').' '.($usuario->email??'').' '.($usuario->role->nombre_traducido??'').' '.($usuario->sucursal->nombre_traducido??'')) }}">
                             <td>{{ $usuario->name }}</td>
                             <td>{{ $usuario->email }}</td>
-                            <td>{{ $usuario->role->nombre ?? __('Sin rol') }}</td>
+                            <td>{{ $usuario->role->nombre_traducido ?? __('Sin rol') }}</td>
                             <td>{{ $usuario->sucursal->nombre ?? __('—') }}</td>
                             <td>
                                 @if ($usuario->activo)

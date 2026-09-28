@@ -11,6 +11,11 @@ class MetodoPago extends Model
 
     protected $fillable = ['nombre'];
 
+    public function getNombreTraducidoAttribute(): string
+    {
+        return __($this->nombre);
+    }
+
     public function ventas(): HasMany
     {
         return $this->hasMany(Venta::class);

@@ -16,6 +16,11 @@ class Role extends Model
     public const GERENTE = 'gerente';
     public const CAJERO = 'cajero';
 
+    public function getNombreTraducidoAttribute(): string
+    {
+        return __($this->nombre);
+    }
+
     public function usuarios(): HasMany
     {
         return $this->hasMany(User::class);

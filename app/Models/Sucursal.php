@@ -23,6 +23,11 @@ class Sucursal extends Model
         'activa' => 'boolean',
     ];
 
+    public function getNombreTraducidoAttribute(): string
+    {
+        return __($this->nombre);
+    }
+
     public function gerente(): BelongsTo
     {
         return $this->belongsTo(User::class, 'gerente_id');

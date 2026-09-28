@@ -16,13 +16,13 @@
         <div class="recibo" id="ticket-recibo">
             <div class="centro">
                 <p class="titulo">{{ __('Librería JILS') }}</p>
-                <p class="subtitulo">{{ $venta->sucursal->nombre }}</p>
+                <p class="subtitulo">{{ $venta->sucursal->nombre_traducido }}</p>
                 <p class="muted">{{ __('Recibo de venta') }}</p>
                 <p class="muted">{{ __('Folio') }}: <strong>{{ $venta->folio }}</strong></p>
                 <p class="muted">{{ $venta->created_at->format('d/m/Y H:i') }}</p>
                 <p class="muted">{{ __('Atendió') }}: {{ $venta->cajero->name ?? '-' }}
                 </p>
-                <p class="muted">{{ __('Caja') }}: {{ $venta->caja->nombre ?? '—' }}</p>
+                <p class="muted">{{ __('Caja') }}: {{ $venta->caja->nombre_traducido ?? '—' }}</p>
             </div>
 
             <hr class="dash">
@@ -62,7 +62,7 @@
             </div>
             <div class="fila-total">
                 <span>{{ __('Método de pago') }}</span>
-                <span>{{ $venta->metodoPago->nombre ?? '-' }}</span>
+                <span>{{ $venta->metodoPago->nombre_traducido ?? '-' }}</span>
             </div>
 
             @if ($venta->metodoPago && $venta->metodoPago->nombre === 'Efectivo' && ! is_null($venta->monto_recibido))
@@ -78,7 +78,7 @@
 
             <div class="pie">
                 <p>{{ __('¡Gracias por su compra!') }}</p>
-                <p class="brand">PDV JILS</p>
+                <p class="brand">{{ __('PDV JILS') }}</p>
             </div>
         </div>
 
