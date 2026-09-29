@@ -1,19 +1,19 @@
 /* =====================================================================
    MODO OSCURO — página de inicio pública (welcome.blade.php)
-   Activado agregando la clase "dark-mode" en <html>/<body> (ver dark-mode.js)
+   Paleta: Coffee / Vino Tinto (Librería JILS)
    ===================================================================== */
 
 .dark-mode {
-    --pos-dark: #e6ebf5;
-    --pos-blue: #60a5fa;
-    --pos-blue-hover: #93c5fd;
-    --pos-blue-light: #1e3a5f;
-    --pos-green: #34d399;
-    --pos-green-light: #0f2e26;
-    --pos-bg: #0b1220;
-    --pos-card-border: #2b3a55;
-    --pos-text-main: #e6ebf5;
-    --pos-text-muted: #94a3b8;
+    --pos-dark: #E8D8C4;
+    --pos-blue: #C7B7A3;
+    --pos-blue-hover: #E8D8C4;
+    --pos-blue-light: #561C24;
+    --pos-green: #6D2932;
+    --pos-green-light: #3A151A;
+    --pos-bg: #140608;               /* Fondo vino oscuro profundo */
+    --pos-card-border: #561C24;      /* Borde vino principal */
+    --pos-text-main: #E8D8C4;       /* Texto crema legible */
+    --pos-text-muted: #C7B7A3;      /* Texto secundario arena */
 }
 
 .dark-mode body {
@@ -23,7 +23,7 @@
 
 /* Navbar */
 .dark-mode .pos-navbar {
-    background-color: #101a2c;
+    background-color: #1A080A;
     border-bottom-color: var(--pos-card-border);
 }
 
@@ -37,19 +37,19 @@
 
 /* Selector de idioma */
 .dark-mode .lang-badge {
-    background-color: #131c2e;
+    background-color: #240C0E;
     border-color: var(--pos-card-border);
     color: var(--pos-text-muted);
 }
 
 .dark-mode .lang-badge.active {
-    background-color: var(--pos-blue-light);
-    color: #bfdbfe;
-    border-color: #3b5a8a;
+    background-color: #561C24;
+    color: #E8D8C4;
+    border-color: #6D2932;
 }
 
 .dark-mode .lang-badge:hover:not(.active) {
-    background-color: #1c2740;
+    background-color: #381216;
     color: var(--pos-text-main);
 }
 
@@ -74,18 +74,18 @@
 }
 
 .dark-mode .dark-mode-toggle-btn {
-    background-color: #131c2e;
+    background-color: #240C0E;
     border-color: var(--pos-card-border);
-    color: #fde68a;
+    color: #E8D8C4;
 }
 
 .dark-mode .dark-mode-toggle-btn:hover {
-    background-color: #1c2740;
+    background-color: #381216;
 }
 
 /* Hero */
 .dark-mode .pos-hero {
-    background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+    background: linear-gradient(180deg, #140608 0%, #240C0E 100%);
     border-bottom-color: var(--pos-card-border);
 }
 
@@ -94,7 +94,7 @@
 }
 
 .dark-mode .hero-title span {
-    color: var(--pos-blue-hover);
+    color: #C7B7A3;
 }
 
 .dark-mode .hero-description {
@@ -102,15 +102,15 @@
 }
 
 .dark-mode .btn-pos-outline {
-    background-color: #131c2e;
+    background-color: #240C0E;
     color: var(--pos-text-main);
     border-color: var(--pos-card-border);
 }
 
 .dark-mode .btn-pos-outline:hover {
-    background-color: #1c2740;
-    border-color: #475569;
-    color: var(--pos-text-main);
+    background-color: #561C24;
+    border-color: #6D2932;
+    color: #E8D8C4;
 }
 
 /* Módulos del sistema */
@@ -124,14 +124,14 @@
 }
 
 .dark-mode .feature-card {
-    background-color: #131c2e;
+    background-color: #240C0E;
     border-color: var(--pos-card-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 .dark-mode .feature-card:hover {
-    border-color: #475569;
-    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.45);
+    border-color: #6D2932;
+    box-shadow: 0 12px 24px -8px rgba(86, 28, 36, 0.5);
 }
 
 .dark-mode .feature-title {
@@ -142,19 +142,21 @@
     color: var(--pos-text-muted);
 }
 
-.dark-mode .icon-blue { background-color: var(--pos-blue-light); color: #93c5fd; }
-.dark-mode .icon-green { background-color: var(--pos-green-light); color: #6ee7b7; }
-.dark-mode .icon-amber { background-color: #3a2a0d; color: #fbbf24; }
-.dark-mode .icon-purple { background-color: #2c1f47; color: #c4b5fd; }
+/* Iconos de los módulos */
+.dark-mode .icon-blue   { background-color: #561C24; color: #E8D8C4; }
+.dark-mode .icon-green  { background-color: #6D2932; color: #E8D8C4; }
+.dark-mode .icon-amber  { background-color: #3A151A; color: #C7B7A3; }
+.dark-mode .icon-purple { background-color: #2B0F13; color: #E8D8C4; }
 
-/* Banner de acceso: ya es oscuro por diseño, solo afinamos el borde */
+/* Banner de acceso */
 .dark-mode .pos-info-banner {
-    border-color: #1e293b;
+    border-color: #561C24;
+    background-color: #1A080A;
 }
 
 /* Footer */
 .dark-mode .pos-footer {
-    background-color: #101a2c;
+    background-color: #140608;
     border-top-color: var(--pos-card-border);
     color: var(--pos-text-muted);
 }

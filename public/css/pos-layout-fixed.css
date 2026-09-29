@@ -1,5 +1,6 @@
 /* =====================================================================
    LAYOUT FIJO — menú y navbar no se estiran; solo el contenido hace scroll
+   Y barras de desplazamiento personalizadas tono Vino Tinto
    ===================================================================== */
 
 html,
@@ -49,4 +50,25 @@ body.layout-fixed .main-footer {
 body.sidebar-mini.sidebar-collapse.layout-fixed .content-wrapper,
 body.sidebar-mini.sidebar-collapse.layout-fixed .main-header {
     margin-left: 4.6rem;
+}
+
+/* =====================================================================
+   ESTILO DE SCROLLBAR TEMA LIBRERÍA (Vino & Arena)
+   ===================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #140608;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #561C24;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6D2932;
 }
