@@ -1,224 +1,185 @@
 /* =====================================================================
-   PALETA LIBRERÍA (COFFEE / VINO TINTO) — MODO CLARO (DÍA)
-   Archivo: public/css/pos-theme.css
+   PÁGINA PRINCIPAL / LANDING PAGE — MODO CLARO (PALETA COFFEE)
    ===================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 :root {
-    --vino-primario: #561C24;
-    --vino-hover: #6D2932;
-    --vino-oscuro: #2A0C10;
-    --arena-taupe: #C7B7A3;
-    --crema-marfil: #E8D8C4;
-    --fondo-papel: #FAF7F2;
-    --blanco-card: #FFFFFF;
+    --vino-primario: #561C24; /* Color principal */
+    --vino-hover: #6D2932;    /* Tono secundario / Hover */
+    --arena-taupe: #C7B7A3;   /* Bordes y detalles */
+    --crema-marfil: #E8D8C4;  /* Fondos suaves y texto en oscuro */
+    --fondo-papel: #FAF7F2;   /* Fondo general de la página */
+    --texto-oscuro: #2A0C10;  /* Encabezados y títulos */
 }
 
-/* --- ESTRUCTURA GENERAL Y FONDO --- */
+/* 1. FONDO Y TEXTO GENERAL DE LA PÁGINA */
 body, 
-.wrapper, 
-.content-wrapper {
+.bg-light,
+.min-h-screen {
     background-color: var(--fondo-papel) !important;
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
-    color: var(--vino-oscuro) !important;
+    color: var(--texto-oscuro) !important;
 }
 
-h1, h2, h3, h4, h5, h6, .content-header h1 {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-weight: 800 !important;
-    color: var(--vino-oscuro) !important;
+/* 2. BARRA SUPERIOR (NAVBAR) */
+header, 
+nav, 
+.navbar {
+    background-color: #FFFFFF !important;
+    border-bottom: 1px solid var(--arena-taupe) !important;
 }
 
-a {
+/* Subtítulo debajo del Logo "PUNTO DE VENTA • INVENTARIO" */
+header span, 
+header small, 
+.logo-subtitle {
+    color: var(--vino-hover) !important;
+    font-weight: 700 !important;
+}
+
+/* 3. BOTONES DE IDIOMA Y MODO OSCURO (ES / EN / 🌙) */
+.lang-btn, 
+.theme-toggle-btn,
+header .border,
+header button:not(.btn-primary) {
+    background-color: #FFFFFF !important;
+    border-color: var(--arena-taupe) !important;
     color: var(--vino-primario) !important;
 }
 
-a:hover {
-    color: var(--vino-hover) !important;
-}
-
-/* --- BARRA SUPERIOR (NAVBAR) --- */
-.main-header.navbar,
-nav.main-header {
-    background-color: #F5EFE6 !important;
-    border-bottom: 1px solid var(--arena-taupe) !important;
-}
-
-.main-header .nav-link,
-.main-header .nav-link i {
-    color: var(--vino-oscuro) !important;
-}
-
-.main-header .nav-link:hover {
-    color: var(--vino-hover) !important;
-}
-
-/* --- MENÚ LATERAL (SIDEBAR) --- */
-.main-sidebar,
-aside.main-sidebar {
-    background-color: var(--vino-oscuro) !important;
-    border-right: 1px solid var(--vino-primario) !important;
-}
-
-/* Encabezado Logo / Marca en Sidebar */
-.brand-link {
-    background-color: #1A080A !important;
-    border-bottom: 1px solid var(--vino-primario) !important;
-}
-
-.brand-text {
-    color: var(--crema-marfil) !important;
-    font-weight: 800 !important;
-}
-
-/* Ítems y Enlaces del Menú */
-.nav-sidebar .nav-link {
-    color: var(--crema-marfil) !important;
-    border-radius: 10px !important;
-    margin: 2px 8px !important;
-    transition: all 0.2s ease !important;
-}
-
-.nav-sidebar .nav-link:hover {
+/* Botón de idioma activo (ES) */
+.lang-btn.active,
+.lang-btn-active {
     background-color: var(--vino-primario) !important;
-    color: #FFFFFF !important;
-}
-
-/* Enlace Activo (Módulo seleccionado) */
-.nav-sidebar .nav-link.active,
-.nav-pills .nav-link.active {
-    background-color: var(--vino-hover) !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(86, 28, 36, 0.4) !important;
-}
-
-.nav-sidebar .nav-icon {
     color: var(--crema-marfil) !important;
+    border-color: var(--vino-primario) !important;
 }
 
-/* --- TARJETAS (CARDS) Y PANELES --- */
-.card {
-    background-color: var(--blanco-card) !important;
-    border: 1px solid var(--arena-taupe) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 15px rgba(86, 28, 36, 0.05) !important;
+/* 4. SECCIÓN HERO (TÍTULO Y TEXTOS) */
+/* Reemplazar el azul del texto destacado "Ventas e Inventario" */
+h1 span, 
+.text-primary, 
+.hero-title span, 
+span.text-blue-600, 
+span.text-indigo-600 {
+    color: var(--vino-primario) !important;
 }
 
-.card-header {
-    background-color: #F5EFE6 !important;
-    border-bottom: 1px solid var(--arena-taupe) !important;
-    color: var(--vino-oscuro) !important;
-    font-weight: 800 !important;
+h1, .hero-title {
+    color: var(--texto-oscuro) !important;
 }
 
-/* --- BOTONES --- */
+p.hero-subtitle, 
+.text-gray-600, 
+.text-slate-600 {
+    color: var(--vino-hover) !important;
+}
+
+/* 5. BOTONES PRINCIPALES DE ACCIÓN */
+/* Botón "Iniciar Sesión" y "Acceder al Punto de Venta" */
 .btn-primary, 
-.btn-indigo,
-a.btn-primary {
+a.bg-blue-600, 
+button.bg-blue-600,
+.hero-btn-primary {
     background-color: var(--vino-primario) !important;
     border-color: var(--vino-primario) !important;
     color: var(--crema-marfil) !important;
     font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(86, 28, 36, 0.25) !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .btn-primary:hover, 
-.btn-primary:focus {
+a.bg-blue-600:hover, 
+button.bg-blue-600:hover,
+.hero-btn-primary:hover {
     background-color: var(--vino-hover) !important;
     border-color: var(--vino-hover) !important;
     color: #FFFFFF !important;
 }
 
-.btn-success {
-    background-color: #3E5C46 !important; /* Verde Bosque */
-    border-color: #3E5C46 !important;
+/* Botón secundario "Ver Módulos" */
+.btn-outline-secondary, 
+.hero-btn-secondary,
+a.border-gray-300 {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid var(--arena-taupe) !important;
+    color: var(--texto-oscuro) !important;
+    font-weight: 600 !important;
+}
+
+.btn-outline-secondary:hover, 
+.hero-btn-secondary:hover {
+    background-color: var(--crema-marfil) !important;
+    border-color: var(--arena-taupe) !important;
+    color: var(--vino-primario) !important;
+}
+
+/* 6. TARJETAS DE MÓDULOS DEL SISTEMA */
+.card, 
+.module-card {
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--arena-taupe) !important;
+    box-shadow: 0 4px 12px rgba(86, 28, 36, 0.05) !important;
+}
+/* =====================================================================
+   SOBREESCRITURA DE TAILWIND PARA MODO CLARO (PALETA COFFEE)
+   ===================================================================== */
+
+/* 1. CAMBIAR EL FONDO GENERAL DE LA PÁGINA (Pasa de azul/gris claro a Crema/Papel) */
+body, 
+.bg-slate-50, 
+.bg-gray-50, 
+.bg-gray-100, 
+.bg-slate-100 {
+    background-color: #FAF7F2 !important;
+}
+
+/* 2. CAMBIAR TODOS LOS TEXTOS AZULES A VINO TINTO */
+/* Afecta a "Ventas e Inventario" y títulos */
+.text-blue-600, 
+.text-blue-700, 
+.text-indigo-600, 
+.text-indigo-700 {
+    color: #561C24 !important;
+}
+
+/* Subtítulos y textos secundarios */
+.text-slate-600, 
+.text-gray-600 {
+    color: #6D2932 !important;
+}
+
+/* 3. CAMBIAR TODOS LOS BOTONES AZULES A VINO TINTO */
+/* Afecta a "Iniciar Sesión" y "Acceder al Punto de Venta" */
+.bg-blue-600, 
+.bg-blue-700, 
+.bg-indigo-600, 
+.bg-indigo-700,
+a.bg-blue-600,
+button.bg-blue-600 {
+    background-color: #561C24 !important;
+    color: #E8D8C4 !important;
+}
+
+/* Estado Hover (al pasar el mouse por encima) */
+.bg-blue-600:hover, 
+.bg-blue-700:hover, 
+.bg-indigo-600:hover, 
+.bg-indigo-700:hover,
+a.bg-blue-600:hover,
+button.bg-blue-600:hover {
+    background-color: #6D2932 !important;
     color: #FFFFFF !important;
 }
 
-.btn-outline-primary {
-    color: var(--vino-primario) !important;
-    border-color: var(--vino-primario) !important;
+/* 4. BORDES Y BOTONES SECUNDARIOS ("Ver Módulos") */
+.border-gray-200, 
+.border-gray-300, 
+.border-slate-200 {
+    border-color: #C7B7A3 !important;
 }
 
-.btn-outline-primary:hover {
-    background-color: var(--vino-primario) !important;
-    color: var(--crema-marfil) !important;
-}
-
-/* --- FORMULARIOS E INPUTS --- */
-.form-control,
-.custom-select,
-select.form-control {
-    background-color: var(--blanco-card) !important;
-    border: 1.5px solid var(--arena-taupe) !important;
-    border-radius: 8px !important;
-    color: var(--vino-oscuro) !important;
-}
-
-.form-control:focus,
-.custom-select:focus {
-    border-color: var(--vino-primario) !important;
-    box-shadow: 0 0 0 3px rgba(86, 28, 36, 0.15) !important;
-}
-
-label {
-    color: var(--vino-oscuro) !important;
-    font-weight: 700 !important;
-}
-
-/* --- TABLAS --- */
-.table {
-    color: var(--vino-oscuro) !important;
-}
-
-.table thead th {
-    background-color: var(--crema-marfil) !important;
-    color: var(--vino-primario) !important;
-    border-bottom: 2px solid var(--arena-taupe) !important;
-    font-weight: 800 !important;
-}
-
-.table td, .table th {
-    border-top: 1px solid var(--arena-taupe) !important;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(232, 216, 196, 0.2) !important;
-}
-
-.table-hover tbody tr:hover {
-    background-color: rgba(199, 183, 163, 0.3) !important;
-}
-
-/* --- ETIQUETAS Y BADGES --- */
-.badge-primary {
-    background-color: var(--vino-primario) !important;
-    color: var(--crema-marfil) !important;
-}
-
-.badge-success {
-    background-color: #E2EFE0 !important;
-    color: #2A4731 !important;
-}
-
-.badge-warning {
-    background-color: var(--crema-marfil) !important;
-    color: var(--vino-oscuro) !important;
-}
-
-.badge-danger {
-    background-color: #FADBD8 !important;
-    color: #78281F !important;
-}
-
-/* --- CAJAS DE MÉTRICAS (SMALL BOX / INFO BOX) --- */
-.small-box, .info-box {
-    background-color: var(--blanco-card) !important;
-    border: 1px solid var(--arena-taupe) !important;
-    border-radius: 12px !important;
-}
-
-.bg-info, .bg-primary {
-    background-color: var(--vino-primario) !important;
-    color: var(--crema-marfil) !important;
+/* 5. TARJETAS DE ABAJO (Módulos del Sistema) */
+.bg-white {
+    background-color: #FFFFFF !important;
+    border-color: #C7B7A3 !important;
 }
