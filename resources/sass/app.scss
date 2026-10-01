@@ -6,3 +6,105 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+/* =====================================================================
+   TEMA GLOBAL COFFEE / VINO TINTO (PDV JILS)
+   ===================================================================== */
+
+/* 1. Forzar fondo oscuro unificado en TODO el Sidebar (elimina fondo blanco interno) */
+aside.main-sidebar,
+.main-sidebar,
+.main-sidebar .sidebar,
+.main-sidebar .nav-sidebar,
+.main-sidebar ul,
+.main-sidebar div {
+    background-color: #1A0608 !important;
+}
+
+/* Border lateral */
+aside.main-sidebar {
+    border-right: 1px solid #3D1217 !important;
+}
+
+/* Header del logo PDV JILS */
+.brand-link, .sidebar-brand {
+    background-color: #120405 !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #3D1217 !important;
+}
+
+/* Etiqueta "Menu" */
+.nav-header {
+    color: #A08276 !important;
+    background-color: transparent !important;
+}
+
+/* 2. Opciones inactivas del menú (Sucursales, Cajas, Productos, etc.) */
+.nav-sidebar .nav-link,
+.sidebar a {
+    color: #E8D8C4 !important; /* Texto crema legible sobre fondo vino oscuro */
+    background-color: transparent !important;
+    border-radius: 8px !important;
+    margin: 2px 8px !important;
+    font-weight: 600 !important;
+}
+
+.nav-sidebar .nav-link i,
+.sidebar a i {
+    color: #C7B7A3 !important;
+}
+
+/* Hover sobre opciones */
+.nav-sidebar .nav-link:hover,
+.sidebar a:hover {
+    background-color: #561C24 !important;
+    color: #ffffff !important;
+}
+
+/* 3. Opción activa (Sucursales, Punto de venta, etc.) */
+.nav-sidebar .nav-link.active,
+.sidebar a.active,
+.sidebar .active > a {
+    background-color: #561C24 !important; /* Tono vino seleccionado */
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* =====================================================================
+   FIX MODO OSCURO (Evita contenedores grises sobre grises)
+   ===================================================================== */
+body.dark-mode, .dark-mode {
+    background-color: #121212 !important;
+}
+
+body.dark-mode .content-wrapper,
+.dark-mode .content-wrapper {
+    background-color: #18181b !important;
+}
+
+body.dark-mode .card,
+.dark-mode .card,
+body.dark-mode .pos-prod-card,
+.dark-mode .pos-prod-card,
+body.dark-mode .bg-white,
+.dark-mode .bg-white {
+    background-color: #27272a !important;
+    color: #ffffff !important;
+    border-color: #3f3f46 !important;
+}
+
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6,
+body.dark-mode label, body.dark-mode span, body.dark-mode strong,
+body.dark-mode p, body.dark-mode div {
+    color: #f4f4f5 !important;
+}
+
+body.dark-mode .form-control,
+.dark-mode .form-control,
+body.dark-mode select,
+.dark-mode select {
+    background-color: #18181b !important;
+    color: #ffffff !important;
+    border: 1px solid #52525b !important;
+}

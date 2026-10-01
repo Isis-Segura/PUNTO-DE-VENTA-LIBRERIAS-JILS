@@ -215,9 +215,77 @@
 
 @section('css')
 <style>
+/* =====================================================================
+   CORRECCIÓN DEL SIDEBAR Y TEMA COFFEE / VINO TINTO
+   ===================================================================== */
+
+/* Fondo del Sidebar completo */
+aside, .main-sidebar, .sidebar, [class*="sidebar-"] {
+    background-color: #1A0608 !important;
+    border-right: 1px solid #3D1217 !important;
+}
+
+/* Reset de fondos blancos en listas del Sidebar */
+.sidebar ul, .sidebar li, aside ul, aside li {
+    background-color: transparent !important;
+    list-style: none !important;
+}
+
+/* Corrección de enlaces/botones del Sidebar (quita los cuadros azules) */
+aside a, aside .nav-link, .sidebar a, .sidebar .nav-link {
+    background-color: transparent !important;
+    color: #E8D8C4 !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.65rem 1rem !important;
+    margin-bottom: 0.35rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+/* Estado Hover del Menú */
+aside a:hover, aside .nav-link:hover, .sidebar a:hover, .sidebar .nav-link:hover {
+    background-color: #561C24 !important;
+    color: #ffffff !important;
+}
+
+/* Opción Activa (Punto de Venta) */
+aside a.active, aside .nav-link.active, .sidebar a.active, .sidebar .nav-link.active,
+aside .active > a, .sidebar .active > a {
+    background-color: #561C24 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* Banner de Información (Cambia el Cian feo por Crema/Vino) */
+.alert-info, .bg-info, [class*="bg-info"] {
+    background-color: #F5EFE6 !important;
+    color: #561C24 !important;
+    border: 1px solid #C7B7A3 !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+}
+
+/* Botones Principales */
+.btn-primary, button.btn-primary {
+    background-color: #561C24 !important;
+    border-color: #561C24 !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover {
+    background-color: #6D2932 !important;
+    border-color: #6D2932 !important;
+}
 
 
-/* Modal pago tarjeta — mismo lenguaje visual que formularios del sistema */
+/* =====================================================================
+   ESTILOS EXISTENTES DEL POS Y MODAL DE PAGO
+   ===================================================================== */
 .card-pago-tarjeta {
     border: none;
     border-radius: 14px;
