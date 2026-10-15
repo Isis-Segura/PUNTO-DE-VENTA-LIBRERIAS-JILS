@@ -25,5 +25,9 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
+# Asegurar permisos para el usuario www-data de Apache
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Iniciar Apache en primer plano
 exec apache2-foreground
