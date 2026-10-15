@@ -23,7 +23,7 @@ class InitialUsersSeeder extends Seeder
                 'role_id' => 1,
                 'name' => 'Administrador General',
                 'email' => 'admin@pi.com',
-                'password' => '$2y$12$TXVXhuiewnjhsJP3BE6F5eGFzq9ZACMiEtuEJjaGM9ERHR1sA5J32',
+                'password' => \Illuminate\Support\Facades\Hash::make('admin1234'),
                 'activo' => 1,
             ],
             [
