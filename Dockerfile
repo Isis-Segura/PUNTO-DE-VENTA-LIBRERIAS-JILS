@@ -17,6 +17,7 @@ FROM php:8.4-apache
 
 # Instalar dependencias del sistema y extensiones de PHP requeridas por Laravel
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
