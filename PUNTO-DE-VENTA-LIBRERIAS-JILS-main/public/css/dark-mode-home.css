@@ -1,0 +1,166 @@
+/* =====================================================================
+   MODO OSCURO — página de inicio pública (welcome.blade.php)
+   Paleta: Coffee / Vino Tinto (Librería JILS)
+   ===================================================================== */
+
+.dark-mode {
+    --pos-dark: #E8D8C4;
+    --pos-blue: #C7B7A3;
+    --pos-blue-hover: #E8D8C4;
+    --pos-blue-light: #561C24;
+    --pos-green: #6D2932;
+    --pos-green-light: #3A151A;
+    --pos-bg: #140608;               /* Fondo vino oscuro profundo */
+    --pos-card-border: #561C24;      /* Borde vino principal */
+    --pos-text-main: #E8D8C4;       /* Texto crema legible */
+    --pos-text-muted: #C7B7A3;      /* Texto secundario arena */
+}
+
+.dark-mode body {
+    background-color: var(--pos-bg);
+    color: var(--pos-text-main);
+}
+
+/* Navbar */
+.dark-mode .pos-navbar {
+    background-color: #1A080A;
+    border-bottom-color: var(--pos-card-border);
+}
+
+.dark-mode .brand-logo {
+    border-color: var(--pos-card-border);
+}
+
+.dark-mode .brand-title {
+    color: var(--pos-text-main);
+}
+
+/* Selector de idioma */
+.dark-mode .lang-badge {
+    background-color: #240C0E;
+    border-color: var(--pos-card-border);
+    color: var(--pos-text-muted);
+}
+
+.dark-mode .lang-badge.active {
+    background-color: #561C24;
+    color: #E8D8C4;
+    border-color: #6D2932;
+}
+
+.dark-mode .lang-badge:hover:not(.active) {
+    background-color: #381216;
+    color: var(--pos-text-main);
+}
+
+/* Botón de modo oscuro (mismo estilo que los badges de idioma) */
+.dark-mode-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--pos-card-border);
+    color: var(--pos-text-muted);
+    background-color: #ffffff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.dark-mode-toggle-btn:hover {
+    background-color: #f1f5f9;
+    color: var(--pos-dark);
+}
+
+.dark-mode .dark-mode-toggle-btn {
+    background-color: #240C0E;
+    border-color: var(--pos-card-border);
+    color: #E8D8C4;
+}
+
+.dark-mode .dark-mode-toggle-btn:hover {
+    background-color: #381216;
+}
+
+/* Hero */
+.dark-mode .pos-hero {
+    background: linear-gradient(180deg, #140608 0%, #240C0E 100%);
+    border-bottom-color: var(--pos-card-border);
+}
+
+.dark-mode .hero-title {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .hero-title span {
+    color: #C7B7A3;
+}
+
+.dark-mode .hero-description {
+    color: var(--pos-text-muted);
+}
+
+.dark-mode .btn-pos-outline {
+    background-color: #240C0E;
+    color: var(--pos-text-main);
+    border-color: var(--pos-card-border);
+}
+
+.dark-mode .btn-pos-outline:hover {
+    background-color: #561C24;
+    border-color: #6D2932;
+    color: #E8D8C4;
+}
+
+/* Módulos del sistema */
+.dark-mode #modulos h2.text-dark,
+.dark-mode #modulos h2 {
+    color: var(--pos-text-main) !important;
+}
+
+.dark-mode #modulos .text-muted {
+    color: var(--pos-text-muted) !important;
+}
+
+.dark-mode .feature-card {
+    background-color: #240C0E;
+    border-color: var(--pos-card-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.dark-mode .feature-card:hover {
+    border-color: #6D2932;
+    box-shadow: 0 12px 24px -8px rgba(86, 28, 36, 0.5);
+}
+
+.dark-mode .feature-title {
+    color: var(--pos-text-main);
+}
+
+.dark-mode .feature-desc {
+    color: var(--pos-text-muted);
+}
+
+/* Iconos de los módulos */
+.dark-mode .icon-blue   { background-color: #561C24; color: #E8D8C4; }
+.dark-mode .icon-green  { background-color: #6D2932; color: #E8D8C4; }
+.dark-mode .icon-amber  { background-color: #3A151A; color: #C7B7A3; }
+.dark-mode .icon-purple { background-color: #2B0F13; color: #E8D8C4; }
+
+/* Banner de acceso */
+.dark-mode .pos-info-banner {
+    border-color: #561C24;
+    background-color: #1A080A;
+}
+
+/* Footer */
+.dark-mode .pos-footer {
+    background-color: #140608;
+    border-top-color: var(--pos-card-border);
+    color: var(--pos-text-muted);
+}
+
+.dark-mode .pos-footer .text-muted {
+    color: var(--pos-text-muted) !important;
+}
