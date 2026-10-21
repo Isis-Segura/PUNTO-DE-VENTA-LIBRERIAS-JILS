@@ -38,7 +38,7 @@
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px;">
-                                    <div style="font-size:12px;color:#64748b;text-transform:uppercase;">{{ __('Contraseña temporal') }}</div>
+                                    <div style="font-size:12px;color:#64748b;text-transform:uppercase;">{{ __('Contraseña') }}</div>
                                     <div style="font-size:16px;font-weight:600;font-family:Consolas,monospace;">{{ $passwordPlano }}</div>
                                 </td>
                             </tr>
