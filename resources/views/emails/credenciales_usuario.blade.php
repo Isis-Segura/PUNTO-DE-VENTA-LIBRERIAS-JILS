@@ -20,9 +20,12 @@
                         <p style="margin:0 0 12px;font-size:15px;">{{ __('Hola') }} <strong>{{ $usuario->name }}</strong>,</p>
                         <p style="margin:0 0 18px;font-size:15px;line-height:1.5;color:#334155;">
                             {{ __('Un administrador te registró en el sistema de punto de venta') }}
-                            <strong>{{ __('PDV JILS') }} / {{ __('Librería JILS') }}</strong>. {{ __('Estos son tus datos de acceso:') }}
+                            <strong>{{ __('PDV JILS') }} / {{ __('Librería JILS') }}</strong>.
                         </p>
 
+                        <p style="margin:0 0 12px;font-size:15px;line-height:1.5;color:#334155;">
+                            {{ __('Estos son tus datos de acceso:') }}
+                        </p>
                         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:18px;">
                             <tr>
                                 <td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;">
