@@ -266,7 +266,7 @@
     "Un administrador te registró en el sistema de punto de venta": "An administrator registered you in the point-of-sale system",
     "Estos son tus datos de acceso:": "Here are your login details:",
     "Usuario / correo": "Username / email",
-    "Contraseña temporal": "Temporary password",
+    "Contraseña": "Password",
     "Punto de Venta": "Point of Sale",
     "Mostrar/ocultar contraseña": "Show/hide password"
     ,"Registro rápido de ventas, cobros en efectivo o tarjeta y emisión de tickets.": "Fast sales registration, cash or card payments, and ticket issuance.",
@@ -356,5 +356,10 @@
     "Proyecto Integrador": "Capstone Project",
     "Universidad de Colima": "University of Colima",
     "Facultad de Ingeniería Electromecánica": "School of Electromechanical Engineering",
-    "Grupo 3ºE": "Group 3E"
+    "Grupo 3ºE": "Group 3E",
+    "Pendiente de términos": "Pending terms",
+    "Reenviar correo de bienvenida": "Resend welcome email",
+    "¿Reenviar el correo de bienvenida a este usuario?": "Resend the welcome email to this user?",
+    "Confirmar reenvío": "Confirm resend",
+    "Sí, reenviar": "Yes, resend"
 }

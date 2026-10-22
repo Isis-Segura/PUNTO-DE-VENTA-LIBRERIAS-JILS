@@ -20,7 +20,7 @@
        1. MODO OSCURO CÁLIDO (IGUAL AL LOGIN Y AL INICIO)
        --------------------------------------------------------------------- */
     body.dark-mode {
-        background-color: #5f2e37 !important;
+        background-color: #1F0E11 !important;
         color: #F5EFE6 !important;
     }
 
@@ -100,7 +100,7 @@
     body:not(.dark-mode) h1, body:not(.dark-mode) h2, body:not(.dark-mode) h3, 
     body:not(.dark-mode) h4, body:not(.dark-mode) h5, body:not(.dark-mode) h6,
     body:not(.dark-mode) .card-title {
-        color: #4d1c23 !important;
+        color: #2A0C10 !important;
     }
 
     /* ---------------------------------------------------------------------
@@ -116,12 +116,12 @@
     }
 
     .main-sidebar {
-        background-color: #630916 !important;
+        background-color: #180B0D !important;
         border-right: 1px solid #3D1C21 !important;
     }
 
     .brand-link {
-        background-color: #6f0011 !important;
+        background-color: #120507 !important;
         color: #ffffff !important;
         border-bottom: 1px solid #3D1C21 !important;
     }

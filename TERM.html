@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Términos y condiciones — Librería JILS</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px 12px;
+      display: grid;
+      place-items: center;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .card {
+      width: min(100%, 640px);
+      overflow: hidden;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, .08);
+    }
+
+    .card-head {
+      padding: 20px 28px;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      color: #fff;
+    }
+
+    .card-head small {
+      display: block;
+      font-size: 13px;
+      letter-spacing: .06em;
+      opacity: .9;
+      text-transform: uppercase;
+    }
+
+    .card-head h1 {
+      margin: 4px 0 0;
+      font-size: 22px;
+    }
+
+    .card-body {
+      padding: 28px;
+      color: #334155;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .terminos h2 {
+      margin: 0 0 12px;
+      color: #0f172a;
+      font-size: 18px;
+    }
+
+    .terminos p {
+      margin: 0 0 12px;
+    }
+
+    .terminos ul {
+      margin: 0 0 20px;
+      padding-left: 22px;
+    }
+
+    .terminos li + li {
+      margin-top: 6px;
+    }
+
+    .decision {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .decision button {
+      flex: 1 1 180px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      transition: background-color .2s ease, transform .2s ease;
+    }
+
+    .decision button:hover {
+      transform: translateY(-1px);
+    }
+
+    .decision button:focus-visible {
+      outline: 3px solid #0f172a;
+      outline-offset: 3px;
+    }
+
+    #accept {
+      background: #2563eb;
+    }
+
+    #accept:hover,
+    #accept[aria-pressed="true"] {
+      background: #1d4ed8;
+    }
+
+    #reject {
+      background: #64748b;
+    }
+
+    #reject:hover,
+    #reject[aria-pressed="true"] {
+      background: #475569;
+    }
+
+    #status {
+      min-height: 48px;
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+
+    #status[data-choice="accepted"] {
+      border-color: #a7f3d0;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    #status[data-choice="rejected"] {
+      border-color: #fecaca;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .foot {
+      margin: 14px auto 0;
+      color: #94a3b8;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .card-head,
+      .card-body {
+        padding: 22px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <header class="card-head">
+      <small>Librería JILS</small>
+      <h1>Términos y condiciones</h1>
+    </header>
+
+    <section class="card-body terminos" aria-labelledby="terms-title">
+      <h2 id="terms-title">Sistema POS Librería JILS</h2>
+      <p>Al aceptar estos términos, usted confirma que:</p>
+
+      <ul>
+        <li>Ha sido autorizado por un administrador de Librería JILS para usar este sistema.</li>
+        <li>Recibirá su usuario, contraseña y rol, los cuales son personales e intransferibles.</li>
+        <li>No compartirá sus credenciales con nadie.</li>
+        <li>Usará el sistema únicamente para las funciones de su rol (ventas, inventario, etc.).</li>
+        <li>Es responsable de todas las acciones realizadas con su cuenta.</li>
+        <li>Cualquier uso indebido puede resultar en la suspensión de su acceso.</li>
+      </ul>
+
+      <p><strong>Seleccione una opción para indicar su decisión:</strong></p>
+      <div class="decision">
+        <button id="accept" type="button" aria-pressed="false">Aceptar términos</button>
+        <button id="reject" type="button" aria-pressed="false">Rechazar términos</button>
+      </div>
+      <p id="status" role="status" aria-live="polite">Su decisión se mostrará aquí. Esta página no la envía al sistema.</p>
+    </section>
+  </main>
+
+  <footer class="foot">Librería JILS · PDV JILS</footer>
+
+  <script>
+    const acceptButton = document.getElementById("accept");
+    const rejectButton = document.getElementById("reject");
+    const status = document.getElementById("status");
+
+    function selectDecision(choice) {
+      const accepted = choice === "accepted";
+      acceptButton.setAttribute("aria-pressed", String(accepted));
+      rejectButton.setAttribute("aria-pressed", String(!accepted));
+      status.dataset.choice = choice;
+      status.textContent = accepted
+        ? "Has aceptado los términos y condiciones en esta página. Esta decisión no se ha enviado al sistema."
+        : "Has rechazado los términos y condiciones en esta página. Esta decisión no se ha enviado al sistema.";
+    }
+
+    acceptButton.addEventListener("click", () => selectDecision("accepted"));
+    rejectButton.addEventListener("click", () => selectDecision("rejected"));
+  </script>
+</body>
+</html>

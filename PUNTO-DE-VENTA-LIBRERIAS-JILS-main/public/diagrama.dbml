@@ -1,6 +1,0 @@
-
-Table Categorias {
-  id int [pk, increment]
-  nombre varchar(100) [not null]
-  descripcion text
-}
