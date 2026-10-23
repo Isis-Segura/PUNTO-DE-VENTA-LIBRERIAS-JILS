@@ -56,15 +56,6 @@ services:
       SESSION_DRIVER: database
       CACHE_STORE: database
       QUEUE_CONNECTION: sync
-      # Correo: los valores se leen del archivo .env (junto a este docker-compose.yml).
-      # Si no se definen, el correo solo se escribe en storage/logs/laravel.log (no se envía).
-      MAIL_MAILER: ${MAIL_MAILER:-log}
-      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
-      MAIL_PORT: ${MAIL_PORT:-587}
-      MAIL_USERNAME: ${MAIL_USERNAME:-}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
-      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
-      MAIL_FROM_NAME: "Libreria JILS"
     depends_on:
       db:
         condition: service_healthy
