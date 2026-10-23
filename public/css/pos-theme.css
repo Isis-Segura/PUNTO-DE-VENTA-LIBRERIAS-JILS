@@ -1,4 +1,6 @@
-/* PÁGINA PRINCIPAL MODO CLARO  */
+/* =====================================================================
+   PÁGINA PRINCIPAL / LANDING PAGE — MODO CLARO (PALETA COFFEE)
+   ===================================================================== */
 
 :root {
     --vino-primario: #561C24; /* Color principal */
@@ -9,7 +11,7 @@
     --texto-oscuro: #2A0C10;  /* Encabezados y títulos */
 }
 
-/* FONDO Y TEXTO GENERAL DE LA PÁGINA */
+/* 1. FONDO Y TEXTO GENERAL DE LA PÁGINA */
 body, 
 .bg-light,
 .min-h-screen {
@@ -17,13 +19,15 @@ body,
     color: var(--texto-oscuro) !important;
 }
 
-/* BARRA SUPERIOR (NAVBAR) */
+/* 2. BARRA SUPERIOR (NAVBAR) */
 header, 
 nav, 
 .navbar {
     background-color: #FFFFFF !important;
     border-bottom: 1px solid var(--arena-taupe) !important;
 }
+
+/* Subtítulo debajo del Logo "PUNTO DE VENTA • INVENTARIO" */
 header span, 
 header small, 
 .logo-subtitle {
@@ -31,7 +35,7 @@ header small,
     font-weight: 700 !important;
 }
 
-/*BOTONES DE IDIOMA Y MODOS*/
+/* 3. BOTONES DE IDIOMA Y MODO OSCURO (ES / EN / 🌙) */
 .lang-btn, 
 .theme-toggle-btn,
 header .border,
@@ -49,6 +53,8 @@ header button:not(.btn-primary) {
     border-color: var(--vino-primario) !important;
 }
 
+/* 4. SECCIÓN HERO (TÍTULO Y TEXTOS) */
+/* Reemplazar el azul del texto destacado "Ventas e Inventario" */
 h1 span, 
 .text-primary, 
 .hero-title span, 
@@ -67,7 +73,8 @@ p.hero-subtitle,
     color: var(--vino-hover) !important;
 }
 
-
+/* 5. BOTONES PRINCIPALES DE ACCIÓN */
+/* Botón "Iniciar Sesión" y "Acceder al Punto de Venta" */
 .btn-primary, 
 a.bg-blue-600, 
 button.bg-blue-600,
@@ -113,6 +120,11 @@ a.border-gray-300 {
     border: 1px solid var(--arena-taupe) !important;
     box-shadow: 0 4px 12px rgba(86, 28, 36, 0.05) !important;
 }
+/* =====================================================================
+   SOBREESCRITURA DE TAILWIND PARA MODO CLARO (PALETA COFFEE)
+   ===================================================================== */
+
+/* 1. CAMBIAR EL FONDO GENERAL DE LA PÁGINA (Pasa de azul/gris claro a Crema/Papel) */
 body, 
 .bg-slate-50, 
 .bg-gray-50, 
@@ -121,6 +133,8 @@ body,
     background-color: #FAF7F2 !important;
 }
 
+/* 2. CAMBIAR TODOS LOS TEXTOS AZULES A VINO TINTO */
+/* Afecta a "Ventas e Inventario" y títulos */
 .text-blue-600, 
 .text-blue-700, 
 .text-indigo-600, 
@@ -134,6 +148,8 @@ body,
     color: #6D2932 !important;
 }
 
+/* 3. CAMBIAR TODOS LOS BOTONES AZULES A VINO TINTO */
+/* Afecta a "Iniciar Sesión" y "Acceder al Punto de Venta" */
 .bg-blue-600, 
 .bg-blue-700, 
 .bg-indigo-600, 
@@ -144,6 +160,7 @@ button.bg-blue-600 {
     color: #E8D8C4 !important;
 }
 
+/* Estado Hover (al pasar el mouse por encima) */
 .bg-blue-600:hover, 
 .bg-blue-700:hover, 
 .bg-indigo-600:hover, 
@@ -154,13 +171,14 @@ button.bg-blue-600:hover {
     color: #FFFFFF !important;
 }
 
-/*BORDES Y BOTONES SECUNDARIOS */
+/* 4. BORDES Y BOTONES SECUNDARIOS ("Ver Módulos") */
 .border-gray-200, 
 .border-gray-300, 
 .border-slate-200 {
     border-color: #C7B7A3 !important;
 }
 
+/* 5. TARJETAS DE ABAJO (Módulos del Sistema) */
 .bg-white {
     background-color: #FFFFFF !important;
     border-color: #C7B7A3 !important;

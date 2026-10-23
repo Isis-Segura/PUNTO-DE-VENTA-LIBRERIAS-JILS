@@ -21,11 +21,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => EnsureUserHasRole::class,
         ]);
 
-        // Render (y cualquier hosting con proxy) termina el HTTPS antes de llegar a
-        // Apache. Sin esto Laravel cree que la petición es http:// y el enlace
-        // firmado del correo de términos (https://...) se rechaza como inválido.
-        $middleware->trustProxies(at: '*');
-
         // Aplica el idioma guardado en sesión a todas las peticiones web.
         // EnsureUserIsActive no hace nada si no hay usuario logeado, así que
         // es seguro dejarlo en el grupo 'web' completo (invitados y logeados).

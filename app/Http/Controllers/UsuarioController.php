@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TerminosCondicionesMail;
+use App\Mail\CredencialesUsuarioMail;
 
 use Illuminate\Validation\Rule;
 
@@ -73,13 +73,6 @@ class UsuarioController extends Controller
 
         $this->autorizarRolYSucursal($data['role_id'], $data['sucursal_id'] ?? null);
 
-        // Flujo de alta:
-        //  1) Aquí solo se envía un correo de BIENVENIDA con un enlace a la página de
-        //     términos y condiciones (no lleva usuario, contraseña ni rol).
-        //  2) Cuando el usuario acepta en esa página (TerminosController), ahí mismo
-        //     ve su correo, rol y contraseña.
-        // La contraseña inicial se guarda CIFRADA (no en texto plano) para poder
-        // mostrarla; se borra sola cuando el usuario cambia su contraseña (User::booted).
         $usuario = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -87,21 +80,26 @@ class UsuarioController extends Controller
             'role_id' => $data['role_id'],
             'sucursal_id' => $data['sucursal_id'] ?? null,
             'activo' => true,
-            'terminos_aceptados_at' => null,
-            'credenciales_pendientes' => $data['password'],
         ]);
+
+        $usuario->load('role');
+        $rol = $usuario->role;
+        $rolNombre = 'Usuario';
+        if ($rol) {
+            $rolNombre = $rol->nombre ?? $rol->name ?? 'Usuario';
+        }
 
         $mensaje = __('messages.user_created');
 
         try {
             Mail::to($usuario->email)->send(
-                new TerminosCondicionesMail($usuario, $usuario->urlAceptarTerminos())
+                new CredencialesUsuarioMail($usuario, $data['password'], $rolNombre)
             );
-            $mensaje .= __('messages.user_terms_email_sent', ['email' => $usuario->email]);
+            $mensaje .= __('messages.user_email_sent', ['email' => $usuario->email]);
         } catch (\Throwable $e) {
             report($e);
             // Mensaje corto para no romper la sesión / la vista
-            $mensaje .= __('messages.user_terms_email_failed');
+            $mensaje .= __('messages.user_email_failed');
         }
 
         return redirect()
@@ -155,13 +153,6 @@ class UsuarioController extends Controller
 
         if (! empty($data['password'])) {
             $usuario->password = Hash::make($data['password']);
-
-            // Si la página de términos todavía va a mostrar la contraseña inicial
-            // (no ha aceptado, o aceptó y no la ha cambiado), debe mostrar la nueva
-            // y no la que se capturó al registrarlo.
-            if (! $usuario->haAceptadoTerminos() || $usuario->tieneCredencialesIniciales()) {
-                $usuario->credenciales_pendientes = $data['password'];
-            }
         }
 
         $usuario->save();
@@ -169,32 +160,6 @@ class UsuarioController extends Controller
         return redirect()
             ->route('admin.usuarios.index')
             ->with('success', __('messages.user_updated'));
-    }
-
-    /**
-     * Reenvía el correo de bienvenida (con un enlace nuevo a la página de términos)
-     * por si el correo falló, se perdió o el enlace ya venció. Solo se puede mientras
-     * el usuario NO haya aceptado los términos.
-     */
-    public function reenviarTerminos(User $usuario)
-    {
-        $this->verificarAccesoAUsuario($usuario);
-
-        if ($usuario->haAceptadoTerminos()) {
-            return back()->with('error', __('messages.welcome_nothing_to_resend'));
-        }
-
-        try {
-            Mail::to($usuario->email)->send(
-                new TerminosCondicionesMail($usuario, $usuario->urlAceptarTerminos())
-            );
-        } catch (\Throwable $e) {
-            report($e);
-
-            return back()->with('error', __('messages.terms_resend_failed'));
-        }
-
-        return back()->with('success', __('messages.terms_resent', ['email' => $usuario->email]));
     }
 
     /**
