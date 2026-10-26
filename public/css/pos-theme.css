@@ -3,12 +3,58 @@
    ===================================================================== */
 
 :root {
-    --vino-primario: #561C24; /* Color principal */
-    --vino-hover: #6D2932;    /* Tono secundario / Hover */
-    --arena-taupe: #C7B7A3;   /* Bordes y detalles */
-    --crema-marfil: #E8D8C4;  /* Fondos suaves y texto en oscuro */
-    --fondo-papel: #FAF7F2;   /* Fondo general de la página */
-    --texto-oscuro: #2A0C10;  /* Encabezados y títulos */
+    /* Paleta central: cambia estos valores para actualizar el tema. */
+    --pos-primary: #471c56;
+    --pos-primary-hover: #60296d;
+    --pos-primary-highlight: #e9f597;
+    --pos-primary-button: #491c56;
+    --pos-primary-button-hover: #62296d;
+    --pos-primary-action: #4f1c56;
+    --pos-primary-action-hover: #b12eed;
+    --pos-primary-border: #d29add;
+    --pos-selection: #461c56;
+    --pos-sidebar: #6a327e;
+    --pos-sidebar-border: #371c3d;
+    --pos-sidebar-brand: #2e123d;
+    --pos-sidebar-hover: #4a1c56;
+    --pos-sidebar-active: #4c1c56;
+    --pos-dashboard-primary: #501c56;
+    --pos-dashboard-success: #fad2a5;
+    --pos-dashboard-neutral: #7776a0;
+    --pos-warning: #d906c4;
+    --pos-warning-border: #ce06d9;
+    --pos-danger: #6b1b99;
+    --pos-danger-border: #7c1b99;
+    --pos-paper: #FAF7F2;
+    --pos-content-light: #F9F6F0;
+    --pos-surface: #FFFFFF;
+    --pos-border: #f6d0fc;
+    --pos-cream: #e4c5e7;
+    --pos-text: #220c2a;
+    --pos-title: #260c2a;
+    --pos-navbar-text: #30123d;
+    --pos-dark-page: #32163a;
+    --pos-dark-content: #371f48;
+    --pos-dark-card: #2f1a32;
+    --pos-dark-border: #47284d;
+    --pos-dark-navbar: #843892;
+    --pos-dark-muted: #D6C2B4;
+    --pos-dark-input: #261317;
+    --pos-dark-input-border: #4D282E;
+    --pos-dark-pagination: #321A1E;
+    --pos-dark-pagination-hover: #4D282E;
+    --pos-light-pagination-hover: #F5EFE6;
+    --pos-old-wine: #561C24;
+    --pos-old-wine-hover: #3D1217;
+    --pos-old-wine-border: #8C2D3A;
+    --pos-white: #ffffff;
+
+    --vino-primario: var(--pos-primary);
+    --vino-hover: var(--pos-primary-hover);
+    --arena-taupe: var(--pos-border);
+    --crema-marfil: var(--pos-cream);
+    --fondo-papel: var(--pos-paper);
+    --texto-oscuro: var(--pos-text);
 }
 
 /* 1. FONDO Y TEXTO GENERAL DE LA PÁGINA */
@@ -23,7 +69,7 @@ body,
 header, 
 nav, 
 .navbar {
-    background-color: #FFFFFF !important;
+    background-color: var(--pos-surface) !important;
     border-bottom: 1px solid var(--arena-taupe) !important;
 }
 
@@ -40,7 +86,7 @@ header small,
 .theme-toggle-btn,
 header .border,
 header button:not(.btn-primary) {
-    background-color: #FFFFFF !important;
+    background-color: var(--pos-surface) !important;
     border-color: var(--arena-taupe) !important;
     color: var(--vino-primario) !important;
 }
@@ -83,7 +129,7 @@ button.bg-blue-600,
     border-color: var(--vino-primario) !important;
     color: var(--crema-marfil) !important;
     font-weight: 700 !important;
-    box-shadow: 0 4px 14px rgba(86, 28, 36, 0.25) !important;
+    box-shadow: 0 4px 14px rgba(63, 28, 86, 0.25) !important;
     transition: all 0.2s ease-in-out !important;
 }
 
@@ -93,14 +139,14 @@ button.bg-blue-600:hover,
 .hero-btn-primary:hover {
     background-color: var(--vino-hover) !important;
     border-color: var(--vino-hover) !important;
-    color: #FFFFFF !important;
+    color: var(--pos-white) !important;
 }
 
 /* Botón secundario "Ver Módulos" */
 .btn-outline-secondary, 
 .hero-btn-secondary,
 a.border-gray-300 {
-    background-color: #FFFFFF !important;
+    background-color: var(--pos-surface) !important;
     border: 1.5px solid var(--arena-taupe) !important;
     color: var(--texto-oscuro) !important;
     font-weight: 600 !important;
@@ -116,7 +162,7 @@ a.border-gray-300 {
 /* 6. TARJETAS DE MÓDULOS DEL SISTEMA */
 .card, 
 .module-card {
-    background-color: #FFFFFF !important;
+    background-color: var(--pos-surface) !important;
     border: 1px solid var(--arena-taupe) !important;
     box-shadow: 0 4px 12px rgba(86, 28, 36, 0.05) !important;
 }
@@ -130,7 +176,7 @@ body,
 .bg-gray-50, 
 .bg-gray-100, 
 .bg-slate-100 {
-    background-color: #FAF7F2 !important;
+    background-color: var(--pos-paper) !important;
 }
 
 /* 2. CAMBIAR TODOS LOS TEXTOS AZULES A VINO TINTO */
@@ -139,13 +185,13 @@ body,
 .text-blue-700, 
 .text-indigo-600, 
 .text-indigo-700 {
-    color: #561C24 !important;
+    color: var(--pos-primary-highlight) !important;
 }
 
 /* Subtítulos y textos secundarios */
 .text-slate-600, 
 .text-gray-600 {
-    color: #6D2932 !important;
+    color: var(--pos-primary-hover) !important;
 }
 
 /* 3. CAMBIAR TODOS LOS BOTONES AZULES A VINO TINTO */
@@ -156,8 +202,8 @@ body,
 .bg-indigo-700,
 a.bg-blue-600,
 button.bg-blue-600 {
-    background-color: #561C24 !important;
-    color: #E8D8C4 !important;
+    background-color: var(--pos-primary-button) !important;
+    color: var(--pos-cream) !important;
 }
 
 /* Estado Hover (al pasar el mouse por encima) */
@@ -167,19 +213,19 @@ button.bg-blue-600 {
 .bg-indigo-700:hover,
 a.bg-blue-600:hover,
 button.bg-blue-600:hover {
-    background-color: #6D2932 !important;
-    color: #FFFFFF !important;
+    background-color: var(--pos-primary-button-hover) !important;
+    color: var(--pos-white) !important;
 }
 
 /* 4. BORDES Y BOTONES SECUNDARIOS ("Ver Módulos") */
 .border-gray-200, 
 .border-gray-300, 
 .border-slate-200 {
-    border-color: #C7B7A3 !important;
+    border-color: var(--pos-border) !important;
 }
 
 /* 5. TARJETAS DE ABAJO (Módulos del Sistema) */
 .bg-white {
-    background-color: #FFFFFF !important;
-    border-color: #C7B7A3 !important;
+    background-color: var(--pos-surface) !important;
+    border-color: var(--pos-border) !important;
 }

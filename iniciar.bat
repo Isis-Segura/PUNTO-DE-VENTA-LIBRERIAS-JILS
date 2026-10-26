@@ -6,6 +6,12 @@ echo ==============================================
 echo.
 
 docker compose up -d
+if errorlevel 1 (
+    echo.
+    echo Error al iniciar el proyecto.
+    pause
+    exit /b 1
+)
 
 echo.
 echo ==============================================

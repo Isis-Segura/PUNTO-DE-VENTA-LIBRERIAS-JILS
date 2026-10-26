@@ -29,12 +29,31 @@ services:
       db:
         condition: service_healthy
 
+  vite:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+        - .:/app
+        - vite_node_modules:/app/node_modules
+    ports:
+        - "127.0.0.1:5173:5173"
+    healthcheck:
+        test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5173/@vite/client"]
+        interval: 3s
+        timeout: 3s
+        retries: 30
+        start_period: 10s
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: libreria_app
     restart: unless-stopped
+    volumes:
+      - ./public/css:/var/www/html/public/css
+      - ./resources/views:/var/www/html/resources/views
     ports:
       - "8000:10000"
     environment:
@@ -68,6 +87,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      vite:
+        condition: service_healthy
 
 volumes:
   db_data:
+  vite_node_modules:
