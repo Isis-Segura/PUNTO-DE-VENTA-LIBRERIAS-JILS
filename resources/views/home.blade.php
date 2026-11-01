@@ -38,7 +38,7 @@
         }
         .rank-badge {
             width: 26px; height: 26px; border-radius: 50%;
-            background: #6f5cf0; color: #fff; font-size: .75rem;
+            background: #f05c5c; color: #fff; font-size: .75rem;
             display: inline-flex; align-items: center; justify-content: center;
             font-weight: 700;
         }

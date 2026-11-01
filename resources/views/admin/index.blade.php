@@ -21,7 +21,7 @@
         .stat-box small { opacity: .9; }
         .stat-sucursales { background: linear-gradient(135deg, #6f5cf0, #8f7bff); }
         .stat-productos { background: linear-gradient(135deg, #0d9488, #14b8a6); }
-        .stat-usuarios { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+        .stat-usuarios { background: linear-gradient(135deg, #c9c1b9, #c9c1b9); }
         .stat-alertas { background: linear-gradient(135deg, #dc3545, #f0656f); }
         .stat-ventashoy { background: linear-gradient(135deg, #21b573, #3ed58c); }
         .stat-ventasmes { background: linear-gradient(135deg, #e0762a, #f0975a); }
@@ -38,7 +38,7 @@
         }
         .rank-badge {
             width: 26px; height: 26px; border-radius: 50%;
-            background: #6f5cf0; color: #fff; font-size: .75rem;
+            background: #f05c5c; color: #fff; font-size: .75rem;
             display: inline-flex; align-items: center; justify-content: center;
             font-weight: 700;
         }
