@@ -4,7 +4,7 @@
 
 :root {
     /* Paleta central: actualizada con los valores extraídos de la interfaz. */
-    --pos-primary: #3a4c5d;        /* Azul oscuro (antes vino) */
+    --pos-primary: #3a5d50;        /* Azul oscuro (antes vino) */
     --pos-primary-hover: #2a6d6c;  /* Verde-azulado (hover y acentos) */
     --pos-primary-highlight: #2a6d6c;
     --pos-primary-button: #3a4c5d;
