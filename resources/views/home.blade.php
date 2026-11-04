@@ -21,10 +21,10 @@
         .stat-box .stat-icon { font-size: 1.7rem; opacity: .85; }
         .stat-box h3 { margin: .15rem 0 0; font-weight: 700; }
         .stat-box small { opacity: .9; }
-        .stat-ventashoy { background: linear-gradient(135deg, #21b573, #3ed58c); }
-        .stat-ventasmes { background: linear-gradient(135deg, #e0762a, #f0975a); }
-        .stat-productos { background: linear-gradient(135deg, #0d9488, #14b8a6); }
-        .stat-alertas { background: linear-gradient(135deg, #dc3545, #f0656f); }
+        .stat-ventashoy { background: linear-gradient(135deg, #9c21b5, #b43ed5); }
+        .stat-ventasmes { background: linear-gradient(135deg, #a820ba, #de5af0); }
+        .stat-productos { background: linear-gradient(135deg, #6b0d94, #59205f); }
+        .stat-alertas { background: linear-gradient(135deg, #602073, #e065f0); }
 
         .panel-card {
             border: none;
@@ -38,7 +38,7 @@
         }
         .rank-badge {
             width: 26px; height: 26px; border-radius: 50%;
-            background: #6f5cf0; color: #fff; font-size: .75rem;
+            background: #f05c5c; color: #fff; font-size: .75rem;
             display: inline-flex; align-items: center; justify-content: center;
             font-weight: 700;
         }

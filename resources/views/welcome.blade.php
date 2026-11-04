@@ -18,22 +18,24 @@
 
     <!-- Modo oscuro -->
     <link rel="stylesheet" href="{{ asset('css/dark-mode-home.css') }}?v={{ @filemtime(public_path('css/dark-mode-home.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}?v={{ @filemtime(public_path('css/pos-theme.css')) }}">
 
     <!-- Vite Styles & Scripts (Bootstrap 5) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script type="module" src="http://localhost:5173/@@vite/client"></script>
 
 <style>
     :root {
-        --pos-dark: #2A0C10;
-        --pos-blue: #561C24;
-        --pos-blue-hover: #6D2932;
-        --pos-blue-light: #E8D8C4;
-        --pos-green: #3E5C46;
-        --pos-green-light: #E2EFE0;
-        --pos-bg: #FAF7F2;
-        --pos-card-border: #C7B7A3;
-        --pos-text-main: #2A0C10;
-        --pos-text-muted: #6D2932;
+        --pos-dark: var(--pos-text);
+        --pos-blue: var(--pos-primary);
+        --pos-blue-hover: var(--pos-primary-hover);
+        --pos-blue-light: var(--pos-cream);
+        --pos-green: var(--pos-dashboard-success);
+        --pos-green-light: var(--pos-cream);
+        --pos-bg: var(--pos-paper);
+        --pos-card-border: var(--pos-border);
+        --pos-text-main: var(--pos-text);
+        --pos-text-muted: var(--pos-primary-hover);
     }
 
     body {
@@ -216,7 +218,7 @@
 
     .icon-blue { background: var(--pos-blue-light); color: var(--pos-blue); }
     .icon-green { background: var(--pos-green-light); color: var(--pos-green); }
-    .icon-amber { background: #F5EFE6; color: #6D2932; }
+    .icon-amber { background: #F5EFE6; color: #66296d; }
     .icon-purple { background: var(--pos-blue-light); color: var(--pos-blue-hover); }
 
     .feature-title {
@@ -236,11 +238,11 @@
 
     /* Banner de Acceso */
     .pos-info-banner {
-        background: #2A0C10;
+        background: #2a0c2a;
         border-radius: 16px;
         padding: 2.25rem;
         color: #E8D8C4;
-        border: 1px solid #561C24;
+        border: 1px solid #2d142d;
         box-shadow: 0 10px 25px -5px rgba(42, 12, 16, 0.3);
     }
 

@@ -30,7 +30,7 @@ aside.main-sidebar {
 .brand-link, .sidebar-brand {
     background-color: #120405 !important;
     color: #ffffff !important;
-    border-bottom: 1px solid #3D1217 !important;
+    border-bottom: 1px solid #3d123c !important;
 }
 
 /* Etiqueta "Menu" */
@@ -57,7 +57,7 @@ aside.main-sidebar {
 /* Hover sobre opciones */
 .nav-sidebar .nav-link:hover,
 .sidebar a:hover {
-    background-color: #561C24 !important;
+    background-color: #4b1c56 !important;
     color: #ffffff !important;
 }
 
@@ -65,7 +65,7 @@ aside.main-sidebar {
 .nav-sidebar .nav-link.active,
 .sidebar a.active,
 .sidebar .active > a {
-    background-color: #561C24 !important; /* Tono vino seleccionado */
+    background-color: #4b1c56 !important; /* Tono vino seleccionado */
     color: #ffffff !important;
     font-weight: 700 !important;
 }
@@ -79,7 +79,7 @@ body.dark-mode, .dark-mode {
 
 body.dark-mode .content-wrapper,
 .dark-mode .content-wrapper {
-    background-color: #18181b !important;
+    background-color: #8c3c8c !important;
 }
 
 body.dark-mode .card,

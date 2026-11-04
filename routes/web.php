@@ -7,7 +7,6 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\TerminosController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -22,14 +21,6 @@ Route::get('/', function () {
 // El registro público queda desactivado: los usuarios (Gerentes, Cajeros) los crea
 // el Administrador General desde el módulo de Usuarios, no se auto-registran.
 Auth::routes(['register' => false]);
-
-// Aceptación de Términos y Condiciones (botón "Acepto" del correo que recibe un
-// usuario recién registrado). Es público, pero solo funciona con el enlace
-// firmado y vigente ("signed"). Al aceptar se envía el correo con las credenciales.
-Route::get('terminos/{usuario}', [TerminosController::class, 'show'])
-    ->middleware('signed')->name('terminos.show');
-Route::post('terminos/{usuario}', [TerminosController::class, 'accept'])
-    ->middleware(['signed', 'throttle:10,1'])->name('terminos.accept');
 
 // Cambiar el idioma de la interfaz (ej. /lang/en, /lang/es)
 Route::get('/lang/{locale}', [App\Http\Controllers\LocaleController::class, 'switch'])->name('lang.switch');
@@ -49,8 +40,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // (el propio controlador limita el alcance del Gerente).
 Route::middleware(['auth', 'role:admin,gerente'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('usuarios', UsuarioController::class);
-    Route::post('usuarios/{usuario}/reenviar-terminos', [UsuarioController::class, 'reenviarTerminos'])
-        ->name('usuarios.reenviar-terminos');
 });
 
 // Sucursales: el Administrador General las crea/edita/elimina.

@@ -19,12 +19,12 @@
         .stat-box .stat-icon { font-size: 1.7rem; opacity: .85; }
         .stat-box h3 { margin: .15rem 0 0; font-weight: 700; }
         .stat-box small { opacity: .9; }
-        .stat-sucursales { background: linear-gradient(135deg, #6f5cf0, #8f7bff); }
-        .stat-productos { background: linear-gradient(135deg, #0d9488, #14b8a6); }
-        .stat-usuarios { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-        .stat-alertas { background: linear-gradient(135deg, #dc3545, #f0656f); }
-        .stat-ventashoy { background: linear-gradient(135deg, #21b573, #3ed58c); }
-        .stat-ventasmes { background: linear-gradient(135deg, #e0762a, #f0975a); }
+        .stat-sucursales { background: linear-gradient(135deg, #5f77aa, #5f77aa); }
+        .stat-productos { background: linear-gradient(135deg, #3a4c5d, #3a4c5d); }
+        .stat-usuarios { background: linear-gradient(135deg, #c9c1b9, #c9c1b9); }
+        .stat-alertas { background: linear-gradient(135deg, #9a5858, #9a5858); }
+        .stat-ventashoy { background: linear-gradient(135deg, #c9c1b9, #c9c1b9); }
+        .stat-ventasmes { background: linear-gradient(135deg, #c9c1b9, #c9c1b9); }
 
         .panel-card {
             border: none;
@@ -38,7 +38,7 @@
         }
         .rank-badge {
             width: 26px; height: 26px; border-radius: 50%;
-            background: #6f5cf0; color: #fff; font-size: .75rem;
+            background: #f05c5c; color: #fff; font-size: .75rem;
             display: inline-flex; align-items: center; justify-content: center;
             font-weight: 700;
         }

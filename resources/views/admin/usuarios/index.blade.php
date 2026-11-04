@@ -48,25 +48,13 @@
                             <td>{{ $usuario->role->nombre_traducido ?? __('Sin rol') }}</td>
                             <td>{{ $usuario->sucursal->nombre ?? __('—') }}</td>
                             <td>
-                                {{-- Mientras no acepte los términos solo se ve "Pendiente"; al aceptar pasa a "Activo". --}}
-                                @if ($usuario->activo && ! $usuario->haAceptadoTerminos())
-                                    <span class="badge badge-warning">{{ __('Pendiente de términos') }}</span>
-                                @elseif ($usuario->activo)
+                                @if ($usuario->activo)
                                     <span class="badge badge-success">{{ __('Activo') }}</span>
                                 @else
                                     <span class="badge badge-secondary">{{ __('Inactivo') }}</span>
                                 @endif
                             </td>
                             <td class="text-right">
-                                {{-- El reenvío solo existe mientras el usuario no haya aceptado los términos. --}}
-                                @unless ($usuario->haAceptadoTerminos())
-                                    <form action="{{ route('admin.usuarios.reenviar-terminos', $usuario) }}" method="POST" class="d-inline" data-confirm="{{ __('¿Reenviar el correo de bienvenida a este usuario?') }}" data-confirm-title="{{ __('Confirmar reenvío') }}" data-confirm-type="primary" data-confirm-ok="{{ __('Sí, reenviar') }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-info" title="{{ __('Reenviar correo de bienvenida') }}">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                    </form>
-                                @endunless
                                 <a href="{{ route('admin.usuarios.edit', $usuario) }}" class="btn btn-sm btn-warning" data-confirm="{{ __('¿Deseas editar este registro?') }}" data-confirm-title="{{ __('Confirmar edición') }}" data-confirm-type="warning" data-confirm-ok="{{ __('Sí, editar') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>

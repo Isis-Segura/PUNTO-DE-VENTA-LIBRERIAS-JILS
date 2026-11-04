@@ -133,7 +133,7 @@
     <div class="row">
         @forelse ($sucursales as $sucursal)
             @php
-                $colores = ['#6f5cf0', '#0d9488', '#e0762a', '#2563eb', '#c0247a', '#059669'];
+                $colores = ['#f05c5c', '#0d9488', '#e0762a', '#2563eb', '#c0247a', '#059669'];
                 $accent = $colores[$sucursal->id % count($colores)];
             @endphp
             <div class="col-lg-4 col-md-6 mb-4 js-search-item"

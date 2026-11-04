@@ -1,14 +1,51 @@
 /* =====================================================================
-   PÁGINA PRINCIPAL / LANDING PAGE — MODO CLARO (PALETA COFFEE)
+   PÁGINA PRINCIPAL / LANDING PAGE — NUEVA PALETA (ESTILO LIBRERÍA)
    ===================================================================== */
 
 :root {
-    --vino-primario: #561C24; /* Color principal */
-    --vino-hover: #6D2932;    /* Tono secundario / Hover */
-    --arena-taupe: #C7B7A3;   /* Bordes y detalles */
-    --crema-marfil: #E8D8C4;  /* Fondos suaves y texto en oscuro */
-    --fondo-papel: #FAF7F2;   /* Fondo general de la página */
-    --texto-oscuro: #2A0C10;  /* Encabezados y títulos */
+    /* Paleta central: actualizada con los valores extraídos de la interfaz. */
+    --pos-primary: #3a5d50;        /* Azul oscuro (antes vino) */
+    --pos-primary-hover: #2a6d6c;  /* Verde-azulado (hover y acentos) */
+    --pos-primary-highlight: #2a6d6c;
+    --pos-primary-button: #3a4c5d;
+    --pos-primary-button-hover: #1d2d2c;
+    --pos-primary-action: #2a6d6c;
+    --pos-primary-action-hover: #1d2d2c;
+    --pos-primary-border: #c9c1b9;
+    --pos-selection: #3a4c5d;
+    --pos-sidebar: #3b5c59;
+    --pos-sidebar-border: #314c4a;
+    --pos-sidebar-brand: #314c4a;
+    --pos-sidebar-hover: #2a6d6c;
+    --pos-sidebar-active: #2a6d6c;
+    --pos-dashboard-primary: #3a4c5d;
+    --pos-dashboard-success: #2a6d6c;
+    --pos-dashboard-neutral: #c9c1b9;
+    --pos-warning: #a5a5a5;
+    --pos-warning-border: #c9c1b9;
+    --pos-danger: #fee4e4;         
+    --pos-danger-border: #7f1d1d;  
+    --pos-paper: #f3f0ec;          /* Crema claro (fondo principal) */
+    --pos-content-light: #F5F3EF;
+    --pos-surface: #F5F3EF;        /* Blanco puro para tarjetas */
+    --pos-border: #c9c1b9;         /* Beige-marrón claro */
+    --pos-cream: #f5f3ef;          /* Header y acentos claros */
+    --pos-text: #1f1f1f;           /* Gris oscuro/Negro */
+    --pos-title: #1d2d2c;
+    --pos-navbar-text: #1f1f1f;
+    --pos-dark-page: #1d2d2c;
+    --pos-dark-content: #2a6d6c;
+    --pos-dark-card: #3a4c5d;
+    --pos-dark-border: #1f1f1f;
+    --pos-white: #ffffff;
+
+    /* Variables de alias renombradas para coincidir con el nuevo estilo */
+    --azul-primario: var(--pos-primary);
+    --teal-hover: var(--pos-primary-hover);
+    --beige-borde: var(--pos-border);
+    --crema-claro: var(--pos-cream);
+    --fondo-papel: var(--pos-paper);
+    --texto-oscuro: var(--pos-text);
 }
 
 /* 1. FONDO Y TEXTO GENERAL DE LA PÁGINA */
@@ -23,15 +60,15 @@ body,
 header, 
 nav, 
 .navbar {
-    background-color: #FFFFFF !important;
-    border-bottom: 1px solid var(--arena-taupe) !important;
+    background-color: var(--pos-surface) !important;
+    border-bottom: 1px solid var(--beige-borde) !important;
 }
 
 /* Subtítulo debajo del Logo "PUNTO DE VENTA • INVENTARIO" */
 header span, 
 header small, 
 .logo-subtitle {
-    color: var(--vino-hover) !important;
+    color: var(--teal-hover) !important;
     font-weight: 700 !important;
 }
 
@@ -40,27 +77,26 @@ header small,
 .theme-toggle-btn,
 header .border,
 header button:not(.btn-primary) {
-    background-color: #FFFFFF !important;
-    border-color: var(--arena-taupe) !important;
-    color: var(--vino-primario) !important;
+    background-color: var(--pos-surface) !important;
+    border-color: var(--beige-borde) !important;
+    color: var(--azul-primario) !important;
 }
 
 /* Botón de idioma activo (ES) */
 .lang-btn.active,
 .lang-btn-active {
-    background-color: var(--vino-primario) !important;
-    color: var(--crema-marfil) !important;
-    border-color: var(--vino-primario) !important;
+    background-color: var(--azul-primario) !important;
+    color: var(--crema-claro) !important;
+    border-color: var(--azul-primario) !important;
 }
 
 /* 4. SECCIÓN HERO (TÍTULO Y TEXTOS) */
-/* Reemplazar el azul del texto destacado "Ventas e Inventario" */
 h1 span, 
 .text-primary, 
 .hero-title span, 
 span.text-blue-600, 
 span.text-indigo-600 {
-    color: var(--vino-primario) !important;
+    color: var(--azul-primario) !important;
 }
 
 h1, .hero-title {
@@ -70,20 +106,19 @@ h1, .hero-title {
 p.hero-subtitle, 
 .text-gray-600, 
 .text-slate-600 {
-    color: var(--vino-hover) !important;
+    color: var(--teal-hover) !important;
 }
 
 /* 5. BOTONES PRINCIPALES DE ACCIÓN */
-/* Botón "Iniciar Sesión" y "Acceder al Punto de Venta" */
 .btn-primary, 
 a.bg-blue-600, 
 button.bg-blue-600,
 .hero-btn-primary {
-    background-color: var(--vino-primario) !important;
-    border-color: var(--vino-primario) !important;
-    color: var(--crema-marfil) !important;
+    background-color: var(--azul-primario) !important;
+    border-color: var(--azul-primario) !important;
+    color: var(--crema-claro) !important;
     font-weight: 700 !important;
-    box-shadow: 0 4px 14px rgba(86, 28, 36, 0.25) !important;
+    box-shadow: 0 4px 14px rgba(58, 76, 93, 0.25) !important;
     transition: all 0.2s ease-in-out !important;
 }
 
@@ -91,95 +126,92 @@ button.bg-blue-600,
 a.bg-blue-600:hover, 
 button.bg-blue-600:hover,
 .hero-btn-primary:hover {
-    background-color: var(--vino-hover) !important;
-    border-color: var(--vino-hover) !important;
-    color: #FFFFFF !important;
+    background-color: var(--teal-hover) !important;
+    border-color: var(--teal-hover) !important;
+    color: var(--pos-white) !important;
 }
 
 /* Botón secundario "Ver Módulos" */
 .btn-outline-secondary, 
 .hero-btn-secondary,
 a.border-gray-300 {
-    background-color: #FFFFFF !important;
-    border: 1.5px solid var(--arena-taupe) !important;
+    background-color: var(--pos-surface) !important;
+    border: 1.5px solid var(--beige-borde) !important;
     color: var(--texto-oscuro) !important;
     font-weight: 600 !important;
 }
 
 .btn-outline-secondary:hover, 
 .hero-btn-secondary:hover {
-    background-color: var(--crema-marfil) !important;
-    border-color: var(--arena-taupe) !important;
-    color: var(--vino-primario) !important;
+    background-color: var(--crema-claro) !important;
+    border-color: var(--beige-borde) !important;
+    color: var(--azul-primario) !important;
 }
 
 /* 6. TARJETAS DE MÓDULOS DEL SISTEMA */
 .card, 
 .module-card {
-    background-color: #FFFFFF !important;
-    border: 1px solid var(--arena-taupe) !important;
-    box-shadow: 0 4px 12px rgba(86, 28, 36, 0.05) !important;
+    background-color: var(--pos-surface) !important;
+    border: 1px solid var(--beige-borde) !important;
+    box-shadow: 0 4px 12px rgba(29, 45, 44, 0.05) !important;
 }
+
 /* =====================================================================
-   SOBREESCRITURA DE TAILWIND PARA MODO CLARO (PALETA COFFEE)
+   SOBREESCRITURA DE TAILWIND 
    ===================================================================== */
 
-/* 1. CAMBIAR EL FONDO GENERAL DE LA PÁGINA (Pasa de azul/gris claro a Crema/Papel) */
+/* 1. CAMBIAR EL FONDO GENERAL DE LA PÁGINA */
 body, 
 .bg-slate-50, 
 .bg-gray-50, 
 .bg-gray-100, 
 .bg-slate-100 {
-    background-color: #FAF7F2 !important;
+    background-color: var(--pos-paper) !important;
 }
 
-/* 2. CAMBIAR TODOS LOS TEXTOS AZULES A VINO TINTO */
-/* Afecta a "Ventas e Inventario" y títulos */
+/* 2. CAMBIAR TODOS LOS TEXTOS DE ACENTO */
 .text-blue-600, 
 .text-blue-700, 
 .text-indigo-600, 
 .text-indigo-700 {
-    color: #561C24 !important;
+    color: var(--pos-primary-highlight) !important;
 }
 
-/* Subtítulos y textos secundarios */
 .text-slate-600, 
 .text-gray-600 {
-    color: #6D2932 !important;
+    color: var(--pos-primary-hover) !important;
 }
 
-/* 3. CAMBIAR TODOS LOS BOTONES AZULES A VINO TINTO */
-/* Afecta a "Iniciar Sesión" y "Acceder al Punto de Venta" */
+/* 3. CAMBIAR TODOS LOS BOTONES */
 .bg-blue-600, 
 .bg-blue-700, 
 .bg-indigo-600, 
 .bg-indigo-700,
 a.bg-blue-600,
 button.bg-blue-600 {
-    background-color: #561C24 !important;
-    color: #E8D8C4 !important;
+    background-color: var(--pos-primary-button) !important;
+    color: var(--pos-cream) !important;
 }
 
-/* Estado Hover (al pasar el mouse por encima) */
 .bg-blue-600:hover, 
 .bg-blue-700:hover, 
 .bg-indigo-600:hover, 
 .bg-indigo-700:hover,
 a.bg-blue-600:hover,
 button.bg-blue-600:hover {
-    background-color: #6D2932 !important;
-    color: #FFFFFF !important;
+    background-color: var(--pos-primary-button-hover) !important;
+    color: var(--pos-white) !important;
 }
 
-/* 4. BORDES Y BOTONES SECUNDARIOS ("Ver Módulos") */
+/* 4. BORDES Y BOTONES SECUNDARIOS */
 .border-gray-200, 
 .border-gray-300, 
 .border-slate-200 {
-    border-color: #C7B7A3 !important;
+    border-color: var(--pos-border) !important;
 }
 
 /* 5. TARJETAS DE ABAJO (Módulos del Sistema) */
 .bg-white {
-    background-color: #FFFFFF !important;
-    border-color: #C7B7A3 !important;
+    background-color: var(--pos-surface) !important;
+    border-color: var(--pos-border) !important;
 }

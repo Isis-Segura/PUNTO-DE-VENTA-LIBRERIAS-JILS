@@ -75,6 +75,10 @@
     <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}?v={{ @filemtime(public_path('css/pos-theme.css')) }}">
     @yield('adminlte_css')
 
+    @if(app()->environment('local'))
+        <script type="module" src="http://localhost:5173/@@vite/client"></script>
+    @endif
+
     {{-- Favicon --}}
     @if(config('adminlte.use_ico_only'))
         <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />

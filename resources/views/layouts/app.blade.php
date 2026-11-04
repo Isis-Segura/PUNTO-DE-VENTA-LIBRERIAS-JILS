@@ -21,15 +21,15 @@
            LAYOUT PRINCIPAL & SIDEBAR — MODO COFFEE VINO TINTO
            ===================================================================== */
         :root {
-            --pos-dark: #1A0608;
-            --pos-sidebar-bg: #2A0C10;
-            --pos-primary: #561C24;
-            --pos-primary-hover: #6D2932;
+            --pos-dark: #977dff;
+            --pos-sidebar-bg: #ae8a8f;
+            --pos-primary: #81474f;
+            --pos-primary-hover: #5d296d;
             --pos-light-bg: #FAF7F2;
             --pos-accent-light: #F5EFE6;
             --pos-border: #C7B7A3;
-            --pos-text-main: #2A0C10;
-            --pos-text-muted: #6D2932;
+            --pos-text-main: #9753c7;
+            --pos-text-muted: #46296d;
             --pos-text-light: #E8D8C4;
         }
 
