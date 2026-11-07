@@ -2,12 +2,12 @@
 {{-- Modal de confirmación propio de PDV JILS (no usa el confirm() del navegador) --}}
 <div class="modal fade" id="appConfirmModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 420px;">
-        <div class="modal-content" style="border: none; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(15,23,42,.2);">
+        <div class="modal-content" style="border: 1px solid var(--ui-border); border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(29, 45, 44,.2);">
             <div class="modal-body text-center px-4 pt-4 pb-3">
-                <div id="appConfirmIcon" class="mb-3" style="font-size: 2.4rem; color: #dc2626;">
+                <div id="appConfirmIcon" class="mb-3" style="font-size: 2.4rem; color: var(--ui-danger-icon, #9b3b3b);">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <h5 id="appConfirmTitle" class="font-weight-bold mb-2" style="color:#0f172a;">{{ __('Confirmar acción') }}</h5>
+                <h5 id="appConfirmTitle" class="font-weight-bold mb-2" style="color: var(--ui-title);">{{ __('Confirmar acción') }}</h5>
                 <p id="appConfirmMessage" class="text-muted mb-0" style="font-size: .95rem; line-height: 1.5;"></p>
             </div>
             <div class="modal-footer justify-content-center border-0 pt-0 pb-4 px-4" style="gap: .5rem;">
@@ -43,15 +43,15 @@
         var okBtn = document.getElementById('appConfirmOk');
         if (type === 'warning') {
             icon.innerHTML = '<i class="fas fa-edit"></i>';
-            icon.style.color = '#d97706';
+            icon.style.color = 'var(--ui-warn-icon, #8a5a12)';
             okBtn.className = 'btn btn-warning px-4';
         } else if (type === 'primary') {
             icon.innerHTML = '<i class="fas fa-question-circle"></i>';
-            icon.style.color = '#2563eb';
+            icon.style.color = 'var(--ui-body)';
             okBtn.className = 'btn btn-primary px-4';
         } else {
             icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            icon.style.color = '#dc2626';
+            icon.style.color = 'var(--ui-danger-icon, #9b3b3b)';
             okBtn.className = 'btn btn-danger px-4';
         }
 

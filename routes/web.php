@@ -48,7 +48,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // Gerente puede dar de alta/editar/eliminar cajeros de su propia sucursal
 // (el propio controlador limita el alcance del Gerente).
 Route::middleware(['auth', 'role:admin,gerente'])->prefix('admin')->name('admin.')->group(function () {
+    // Debe ir antes del resource: si no, "bajas" se tomaría como un {usuario}.
+    Route::get('usuarios/bajas', [UsuarioController::class, 'bajas'])->name('usuarios.bajas');
     Route::resource('usuarios', UsuarioController::class);
+    Route::post('usuarios/{usuario}/reactivar', [UsuarioController::class, 'reactivar'])
+        ->name('usuarios.reactivar');
     Route::post('usuarios/{usuario}/reenviar-terminos', [UsuarioController::class, 'reenviarTerminos'])
         ->name('usuarios.reenviar-terminos');
 });

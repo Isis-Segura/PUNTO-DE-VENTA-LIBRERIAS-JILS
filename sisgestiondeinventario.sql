@@ -2,10 +2,10 @@
 -- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 19-10-2026 a las 16:47:58
--- Versión del servidor: 8.4.7
--- Versión de PHP: 8.3.28
+-- Servidor: db:3306
+-- Tiempo de generación: 27-10-2026 a las 01:05:47
+-- Versión del servidor: 8.4.11
+-- Versión de PHP: 8.3.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,14 +27,11 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `cache`
 --
 
-DROP TABLE IF EXISTS `cache`;
-CREATE TABLE IF NOT EXISTS `cache` (
+CREATE TABLE `cache` (
   `key` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `value` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `expiration` bigint NOT NULL,
-  PRIMARY KEY (`key`),
-  KEY `cache_expiration_index` (`expiration`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `expiration` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `cache`
@@ -42,7 +39,9 @@ CREATE TABLE IF NOT EXISTS `cache` (
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 ('laravel-cache-isegura@ucol.mx|127.0.0.1:timer', 'i:1791922876;', 1791922876),
-('laravel-cache-isegura@ucol.mx|127.0.0.1', 'i:3;', 1791922876);
+('laravel-cache-isegura@ucol.mx|127.0.0.1', 'i:3;', 1791922876),
+('libreria-jils-cache-356a192b7913b04c54574d18c28d46e6395428ab:timer', 'i:1793030088;', 1793030088),
+('libreria-jils-cache-356a192b7913b04c54574d18c28d46e6395428ab', 'i:1;', 1793030088);
 
 -- --------------------------------------------------------
 
@@ -50,14 +49,11 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 -- Estructura de tabla para la tabla `cache_locks`
 --
 
-DROP TABLE IF EXISTS `cache_locks`;
-CREATE TABLE IF NOT EXISTS `cache_locks` (
+CREATE TABLE `cache_locks` (
   `key` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `owner` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `expiration` bigint NOT NULL,
-  PRIMARY KEY (`key`),
-  KEY `cache_locks_expiration_index` (`expiration`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `expiration` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -65,18 +61,15 @@ CREATE TABLE IF NOT EXISTS `cache_locks` (
 -- Estructura de tabla para la tabla `cajas`
 --
 
-DROP TABLE IF EXISTS `cajas`;
-CREATE TABLE IF NOT EXISTS `cajas` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `cajas` (
+  `id` bigint UNSIGNED NOT NULL,
   `sucursal_id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `descripcion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `activa` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `cajas_sucursal_id_nombre_unique` (`sucursal_id`,`nombre`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `cajas`
@@ -94,15 +87,13 @@ INSERT INTO `cajas` (`id`, `sucursal_id`, `nombre`, `descripcion`, `activa`, `cr
 -- Estructura de tabla para la tabla `categorias`
 --
 
-DROP TABLE IF EXISTS `categorias`;
-CREATE TABLE IF NOT EXISTS `categorias` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `categorias` (
+  `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `descripcion` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=310 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `categorias`
@@ -117,36 +108,19 @@ INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `created_at`, `updated_
 -- Estructura de tabla para la tabla `categoria_producto`
 --
 
-DROP TABLE IF EXISTS `categoria_producto`;
-CREATE TABLE IF NOT EXISTS `categoria_producto` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `categoria_producto` (
+  `id` bigint UNSIGNED NOT NULL,
   `producto_id` bigint UNSIGNED NOT NULL,
   `categoria_id` bigint UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `categoria_producto_producto_id_categoria_id_unique` (`producto_id`,`categoria_id`),
-  KEY `categoria_producto_categoria_id_foreign` (`categoria_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `categoria_producto`
 --
 
-INSERT INTO `categoria_producto` (`id`, `producto_id`, `categoria_id`, `created_at`, `updated_at`) VALUES
-(1, 8, 301, '2026-09-16 07:01:10', '2026-09-16 07:01:10'),
-(2, 9, 302, '2026-09-16 07:01:10', '2026-09-16 07:01:10'),
-(3, 10, 305, '2026-09-16 09:28:07', '2026-09-16 09:28:07'),
-(4, 10, 303, '2026-09-16 09:28:07', '2026-09-16 09:28:07'),
-(5, 10, 304, '2026-09-16 09:28:07', '2026-09-16 09:28:07'),
-(6, 10, 306, '2026-09-16 09:28:07', '2026-09-16 09:28:07'),
-(7, 11, 305, '2026-09-16 09:28:48', '2026-09-16 09:28:48'),
-(8, 11, 301, '2026-09-16 09:28:48', '2026-09-16 09:28:48'),
-(9, 11, 306, '2026-09-16 09:28:48', '2026-09-16 09:28:48'),
-(10, 12, 305, '2026-09-16 09:30:21', '2026-09-16 09:30:21'),
-(11, 12, 303, '2026-09-16 09:30:21', '2026-09-16 09:30:21'),
-(12, 12, 304, '2026-09-16 09:30:21', '2026-09-16 09:30:21'),
-(13, 12, 306, '2026-09-16 09:30:21', '2026-09-16 09:30:21');
+-- datos huerfanos eliminados
 
 -- --------------------------------------------------------
 
@@ -154,20 +128,16 @@ INSERT INTO `categoria_producto` (`id`, `producto_id`, `categoria_id`, `created_
 -- Estructura de tabla para la tabla `detalle_ventas`
 --
 
-DROP TABLE IF EXISTS `detalle_ventas`;
-CREATE TABLE IF NOT EXISTS `detalle_ventas` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `detalle_ventas` (
+  `id` bigint UNSIGNED NOT NULL,
   `venta_id` bigint UNSIGNED NOT NULL,
   `producto_id` bigint UNSIGNED NOT NULL,
   `cantidad` int UNSIGNED NOT NULL,
   `precio_unitario` decimal(10,2) NOT NULL,
   `subtotal` decimal(10,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `detalle_ventas_venta_id_foreign` (`venta_id`),
-  KEY `detalle_ventas_producto_id_foreign` (`producto_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `detalle_ventas`
@@ -185,19 +155,15 @@ INSERT INTO `detalle_ventas` (`id`, `venta_id`, `producto_id`, `cantidad`, `prec
 -- Estructura de tabla para la tabla `failed_jobs`
 --
 
-DROP TABLE IF EXISTS `failed_jobs`;
-CREATE TABLE IF NOT EXISTS `failed_jobs` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `failed_jobs` (
+  `id` bigint UNSIGNED NOT NULL,
   `uuid` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `connection` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `queue` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `payload` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `exception` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
-  KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -205,18 +171,15 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 -- Estructura de tabla para la tabla `generos`
 --
 
-DROP TABLE IF EXISTS `generos`;
-CREATE TABLE IF NOT EXISTS `generos` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `generos` (
+  `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `nombre_en` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `descripcion` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `descripcion_en` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `generos_nombre_unique` (`nombre`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `generos`
@@ -242,17 +205,13 @@ INSERT INTO `generos` (`id`, `nombre`, `nombre_en`, `descripcion`, `descripcion_
 -- Estructura de tabla para la tabla `genero_producto`
 --
 
-DROP TABLE IF EXISTS `genero_producto`;
-CREATE TABLE IF NOT EXISTS `genero_producto` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `genero_producto` (
+  `id` bigint UNSIGNED NOT NULL,
   `producto_id` bigint UNSIGNED NOT NULL,
   `genero_id` bigint UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `genero_producto_producto_id_genero_id_unique` (`producto_id`,`genero_id`),
-  KEY `genero_producto_genero_id_foreign` (`genero_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `genero_producto`
@@ -379,17 +338,14 @@ INSERT INTO `genero_producto` (`id`, `producto_id`, `genero_id`, `created_at`, `
 -- Estructura de tabla para la tabla `inventarios`
 --
 
-DROP TABLE IF EXISTS `inventarios`;
-CREATE TABLE IF NOT EXISTS `inventarios` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `inventarios` (
+  `id` bigint UNSIGNED NOT NULL,
   `producto_id` bigint UNSIGNED NOT NULL,
   `cantidad` int UNSIGNED NOT NULL DEFAULT '0',
   `stock_minimo` int UNSIGNED NOT NULL DEFAULT '5',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `inventarios_producto_id_unique` (`producto_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `inventarios`
@@ -432,18 +388,15 @@ INSERT INTO `inventarios` (`id`, `producto_id`, `cantidad`, `stock_minimo`, `cre
 -- Estructura de tabla para la tabla `jobs`
 --
 
-DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE IF NOT EXISTS `jobs` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
   `queue` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `payload` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `attempts` smallint UNSIGNED NOT NULL,
   `reserved_at` int UNSIGNED DEFAULT NULL,
   `available_at` int UNSIGNED NOT NULL,
-  `created_at` int UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `jobs_queue_index` (`queue`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `created_at` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -451,8 +404,7 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 -- Estructura de tabla para la tabla `job_batches`
 --
 
-DROP TABLE IF EXISTS `job_batches`;
-CREATE TABLE IF NOT EXISTS `job_batches` (
+CREATE TABLE `job_batches` (
   `id` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `name` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `total_jobs` int NOT NULL,
@@ -462,9 +414,8 @@ CREATE TABLE IF NOT EXISTS `job_batches` (
   `options` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `cancelled_at` int DEFAULT NULL,
   `created_at` int NOT NULL,
-  `finished_at` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `finished_at` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -472,14 +423,12 @@ CREATE TABLE IF NOT EXISTS `job_batches` (
 -- Estructura de tabla para la tabla `metodos_pago`
 --
 
-DROP TABLE IF EXISTS `metodos_pago`;
-CREATE TABLE IF NOT EXISTS `metodos_pago` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `metodos_pago` (
+  `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `metodos_pago`
@@ -495,13 +444,11 @@ INSERT INTO `metodos_pago` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
 -- Estructura de tabla para la tabla `migrations`
 --
 
-DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE IF NOT EXISTS `migrations` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `migrations` (
+  `id` int UNSIGNED NOT NULL,
   `migration` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `batch` int NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `batch` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `migrations`
@@ -528,7 +475,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (21, '2026_09_16_100000_add_generos_autor_editorial', 9),
 (22, '2026_09_21_220000_create_cajas_table', 10),
 (23, '2026_09_21_230000_add_caja_id_to_ventas_table', 11),
-(24, '2026_09_22_120000_add_english_translations_to_generos_table', 12);
+(24, '2026_09_22_120000_add_english_translations_to_generos_table', 12),
+(25, '2026_10_21_120000_add_terminos_to_users_table', 13),
+(26, '2026_10_22_120000_add_fechas_to_users_and_create_usuarios_bajas', 14);
 
 -- --------------------------------------------------------
 
@@ -536,19 +485,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- Estructura de tabla para la tabla `password_reset_requests`
 --
 
-DROP TABLE IF EXISTS `password_reset_requests`;
-CREATE TABLE IF NOT EXISTS `password_reset_requests` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `password_reset_requests` (
+  `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `status` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'pending',
   `attended_by` bigint UNSIGNED DEFAULT NULL,
   `attended_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `password_reset_requests_user_id_foreign` (`user_id`),
-  KEY `password_reset_requests_attended_by_foreign` (`attended_by`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `password_reset_requests`
@@ -565,13 +510,11 @@ INSERT INTO `password_reset_requests` (`id`, `user_id`, `status`, `attended_by`,
 -- Estructura de tabla para la tabla `password_reset_tokens`
 --
 
-DROP TABLE IF EXISTS `password_reset_tokens`;
-CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
+CREATE TABLE `password_reset_tokens` (
   `email` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `token` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `password_reset_tokens`
@@ -586,9 +529,8 @@ INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
 -- Estructura de tabla para la tabla `productos`
 --
 
-DROP TABLE IF EXISTS `productos`;
-CREATE TABLE IF NOT EXISTS `productos` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `productos` (
+  `id` bigint UNSIGNED NOT NULL,
   `sucursal_id` bigint UNSIGNED NOT NULL,
   `categoria_id` bigint UNSIGNED DEFAULT NULL,
   `nombre` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -600,11 +542,8 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `imagen` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `productos_sucursal_id_foreign` (`sucursal_id`),
-  KEY `productos_categoria_id_foreign` (`categoria_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
@@ -647,16 +586,13 @@ INSERT INTO `productos` (`id`, `sucursal_id`, `categoria_id`, `nombre`, `descrip
 -- Estructura de tabla para la tabla `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
-CREATE TABLE IF NOT EXISTS `roles` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `roles` (
+  `id` bigint UNSIGNED NOT NULL,
   `slug` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `nombre` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `roles_slug_unique` (`slug`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `roles`
@@ -673,25 +609,26 @@ INSERT INTO `roles` (`id`, `slug`, `nombre`, `created_at`, `updated_at`) VALUES
 -- Estructura de tabla para la tabla `sessions`
 --
 
-DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE IF NOT EXISTS `sessions` (
+CREATE TABLE `sessions` (
   `id` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `user_id` bigint UNSIGNED DEFAULT NULL,
   `ip_address` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `user_agent` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `payload` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `last_activity` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sessions_user_id_index` (`user_id`),
-  KEY `sessions_last_activity_index` (`last_activity`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `last_activity` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `sessions`
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('JqLzTDZr2sRNHGuEFgspoS0GlgM5gKTkD1P9DPJj', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJjM0VCbzU2VXF0SFl2Wkd5WlhjNERNVmRVS2F5TGhlOWNmYXc5SXRaIiwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJfcHJldmlvdXMiOnsidXJsIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjgwMDAiLCJyb3V0ZSI6bnVsbH0sInVybCI6eyJpbnRlbmRlZCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9hZG1pbiJ9LCJsb2NhbGUiOiJlbiJ9', 1792428137);
+('zqbRxcpEJorgsFO3HtkZaEMNTWJgVHhBAnfEQmGc', 1, '172.18.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJBcHZVWmJTQ0hQekMzbHE0a1RpZ01UNW1mbUY3NEhtRFdZNmNoQmxvIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9hZG1pblwvdXN1YXJpb3MiLCJyb3V0ZSI6ImFkbWluLnVzdWFyaW9zLmluZGV4In0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjEsImF1dGgiOnsicGFzc3dvcmRfY29uZmlybWVkX2F0IjoxNzkzMDI4OTIwfX0=', 1793030037),
+('lk4lL7GvIZ20WP8MeMxM2tHitW2E6sp0t1uCcwkI', 1, '172.18.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJxdkNPeXdDaW41RVhVUjFMWUt6aXdQcFQ5MjZTZ2QySktjWnBzRWJqIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9hZG1pblwvdXN1YXJpb3MiLCJyb3V0ZSI6ImFkbWluLnVzdWFyaW9zLmluZGV4In0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjEsImF1dGgiOnsicGFzc3dvcmRfY29uZmlybWVkX2F0IjoxNzkzMDU5OTE2fX0=', 1793061789),
+('LF1Me1lYt1myG7F24LBNZ97KBntDevaosW8RtaYo', 1, '172.18.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJ6RjRIa29yUFRYdm1kbGRnQnNMU0twdlkyOWFTa0tXV2RXODZvaUJqIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9hZG1pbiIsInJvdXRlIjoiYWRtaW4uaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI6MSwiYXV0aCI6eyJwYXNzd29yZF9jb25maXJtZWRfYXQiOjE3OTI5NTQ2NTJ9fQ==', 1792954652),
+('s2vJLoiQvmj9eZ2cBEFA9vy1xYPWNtRSIxKS2yNa', 1, '172.18.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJheHRNRmpoektlVjBTV2s5NDRhRFBPc2dtZDAwc0JEeVdqRkw5VHhHIiwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJfcHJldmlvdXMiOnsidXJsIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjgwMDBcL2FkbWluIiwicm91dGUiOiJhZG1pbi5pbmRleCJ9LCJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI6MSwiYXV0aCI6eyJwYXNzd29yZF9jb25maXJtZWRfYXQiOjE3OTI2ODcyMTF9fQ==', 1792691166),
+('FR9DlgY2PQYmkB08stG8Hf9OOb6xwGKPRLyrtUcZ', 1, '172.18.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiI0aWtzMXZKWEVWUzZaSWNWNnF1VWtadkJjMUZnV3Q2ZTMxNUw5R2prIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC90ZXJtaW5vc1wvNDY/ZXhwaXJlcz0xNzk1MjI2OTM3JnNpZ25hdHVyZT02YWExNDU1ZDM0NDJjZWE3MzZiYWM5NjA5NjFlZjkxNDljNDkzMzk0MzM0ZGM1OGUyNzU0ODMyODIxM2MwYzA2Iiwicm91dGUiOiJ0ZXJtaW5vcy5zaG93In0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjEsImF1dGgiOnsicGFzc3dvcmRfY29uZmlybWVkX2F0IjoxNzkyNjk5MjYxfX0=', 1792709478),
+('lFNfWEkpIUyeCKwiOXSL2olPwAvv1HR5cFNCsz0E', NULL, '172.18.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiI2RmhmTHh4Z2FNYzBGMURzbm4xRzExYlBPRjJFQUZ6S2lzTDNrNDB6IiwidXJsIjp7ImludGVuZGVkIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjgwMDBcL3ZlbnRhc1wvcG9zIn0sIl9wcmV2aW91cyI6eyJ1cmwiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvbG9naW4iLCJyb3V0ZSI6ImxvZ2luIn0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfX0=', 1792722371);
 
 -- --------------------------------------------------------
 
@@ -699,9 +636,8 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 -- Estructura de tabla para la tabla `sucursales`
 --
 
-DROP TABLE IF EXISTS `sucursales`;
-CREATE TABLE IF NOT EXISTS `sucursales` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sucursales` (
+  `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `direccion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `telefono` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
@@ -709,10 +645,8 @@ CREATE TABLE IF NOT EXISTS `sucursales` (
   `activa` tinyint(1) NOT NULL DEFAULT '1',
   `gerente_id` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sucursales_gerente_id_foreign` (`gerente_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `sucursales`
@@ -720,8 +654,9 @@ CREATE TABLE IF NOT EXISTS `sucursales` (
 
 INSERT INTO `sucursales` (`id`, `nombre`, `direccion`, `telefono`, `contacto`, `activa`, `gerente_id`, `created_at`, `updated_at`) VALUES
 (1, 'Plaza del Sol GDL', 'Av. Adolfo López Mateos Sur 2375, Cd del Sol, 45050 Zapopan, Jal.', '3141039048', 'tempest@gmail.com', 1, NULL, '2026-09-03 06:09:44', '2026-09-29 23:16:13'),
-(2, 'Manzanillo Centro', 'Av. Principal #123', '3121234567', 'centro@sispuntodeventa.com', 1, NULL, '2026-09-03 06:30:26', '2026-09-29 23:15:09'),
-(3, 'Zentralia Colima', 'P.º Miguel de la Madrid Hurtado 301, 28018 Colima, Col.', '3123236006', 'rimuru@gmail.com', 1, NULL, '2026-09-14 02:50:40', '2026-09-29 23:15:20');
+(2, 'Manzanillo Centro', 'Av. Principal #123', '3121234567', 'centro@sispuntodeventa.com', 0, NULL, '2026-09-03 06:30:26', '2026-10-22 01:26:45'),
+(3, 'Zentralia Colima', 'P.º Miguel de la Madrid Hurtado 301, 28018 Colima, Col.', '3123236006', 'rimuru@gmail.com', 0, NULL, '2026-09-14 02:50:40', '2026-10-22 00:52:10'),
+(5, 'Sucursal Centro', 'Av. Principal #123', '3121234567', 'centro@sispuntodeventa.com', 1, NULL, '2026-10-23 17:16:55', '2026-10-23 17:16:55');
 
 -- --------------------------------------------------------
 
@@ -729,37 +664,60 @@ INSERT INTO `sucursales` (`id`, `nombre`, `direccion`, `telefono`, `contacto`, `
 -- Estructura de tabla para la tabla `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `id` bigint UNSIGNED NOT NULL,
   `role_id` bigint UNSIGNED DEFAULT NULL,
   `sucursal_id` bigint UNSIGNED DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `terminos_aceptados_at` timestamp NULL DEFAULT NULL,
+  `desactivado_at` timestamp NULL DEFAULT NULL,
+  `reactivado_at` timestamp NULL DEFAULT NULL,
+  `credenciales_pendientes` text COLLATE utf8mb3_unicode_ci,
   `name` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `email` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `remember_token` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`),
-  KEY `users_role_id_foreign` (`role_id`),
-  KEY `users_sucursal_id_foreign` (`sucursal_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `role_id`, `sucursal_id`, `activo`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, 1, 'Johiel', 'joshuagabrieldm@gmail.com', NULL, '$2y$12$Twc5Vg6UixhrtcUr7mXK/.h.LiGOwy6sTNaW53SljPiOyFvPTe.5.', 'd4QJoxbOxviIsqIhsqgeNbPU8Afx0Zf9ZMhhBQef8CG9br9aH8lpmaTB6q0N', '2026-08-29 03:59:41', '2026-08-29 03:59:41'),
-(9, 3, 2, 1, 'Rock', 'mega@gmail.com', NULL, '$2y$12$2AhDBPAWN3M0A9nT/h.J2Ok1ggdTrvxre2ZR4Ffbz4/jo.dF/8ycy', NULL, '2026-09-16 06:52:37', '2026-09-16 06:52:37'),
-(26, 1, NULL, 1, 'Inuyasha', 'inuyashajuenime@gmail.com', NULL, '$2y$12$rvitYRyDQGoQMPMLaPuJceve6jl.aT2yrvOudWk7cFOR2aOVxe6Xy', NULL, '2026-09-22 08:50:09', '2026-09-22 08:50:09'),
-(10, 1, NULL, 1, 'Shalomon', 'salmon@gmail.com', NULL, '$2y$12$DPBqfl2l9pgQcP2/jEruS.VQNzsp5VGhMHzFDS3EQ8Wzm/3f4cYgq', NULL, '2026-09-16 10:11:33', '2026-09-16 10:11:33'),
-(8, 2, 2, 1, 'Aria', 'aria@gmail.com', NULL, '$2y$12$e.x2uHYa8SjXftT.SBfQF.Aiy0nNWc/P2G3seUA7FjOtUS50ZQTWG', NULL, '2026-09-16 06:52:05', '2026-09-16 06:52:05'),
-(27, 1, NULL, 1, 'Isis', 'segurapaulinoisis@gmail.com', NULL, '$2y$12$LtJZNXa/mAhu5lTiX5yeIe6Zvc8JS.CUxnqyYQKi41herDj7zJ0W2', NULL, '2026-09-29 07:32:15', '2026-09-29 07:32:15'),
-(28, 3, 1, 1, 'caja1', 'isegura@ucol.mx', NULL, '$2y$12$ggzspSVoi2uzdXljAAqEJOSylXUAsKv5sbdTXEEjUkk0PnNJPpj/S', NULL, '2026-09-29 07:33:29', '2026-09-29 07:37:08');
+INSERT INTO `users` (`id`, `role_id`, `sucursal_id`, `activo`, `terminos_aceptados_at`, `desactivado_at`, `reactivado_at`, `credenciales_pendientes`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, 1, '2026-08-29 03:59:41', NULL, NULL, NULL, 'Johiel', 'joshuagabrieldm@gmail.com', NULL, '$2y$12$Twc5Vg6UixhrtcUr7mXK/.h.LiGOwy6sTNaW53SljPiOyFvPTe.5.', 'WVcV73JEU0O0YlslmHJKqkDwsIW6qwlrLLpb4eyxvHV52CPMBUNb4b0d2zPC', '2026-08-29 03:59:41', '2026-08-29 03:59:41'),
+(9, 3, 2, 1, '2026-09-16 06:52:37', NULL, NULL, NULL, 'Rock', 'mega@gmail.com', NULL, '$2y$12$2AhDBPAWN3M0A9nT/h.J2Ok1ggdTrvxre2ZR4Ffbz4/jo.dF/8ycy', NULL, '2026-09-16 06:52:37', '2026-09-16 06:52:37'),
+(40, 1, NULL, 1, '2026-10-22 01:27:50', NULL, NULL, NULL, 'Tokitada', 'tokimashen@gmail.com', NULL, '$2y$12$6/sHONiSqLXIPeT.veXJnOFaOStM8XluuXJIuzQIXa76YDncGqHS6', NULL, '2026-10-22 01:27:50', '2026-10-22 01:27:50'),
+(10, 1, NULL, 1, '2026-09-16 10:11:33', NULL, NULL, NULL, 'Shalomon', 'salmon@gmail.com', NULL, '$2y$12$DPBqfl2l9pgQcP2/jEruS.VQNzsp5VGhMHzFDS3EQ8Wzm/3f4cYgq', NULL, '2026-09-16 10:11:33', '2026-09-16 10:11:33'),
+(8, 2, 2, 1, '2026-09-16 06:52:05', NULL, NULL, NULL, 'Aria', 'aria@gmail.com', NULL, '$2y$12$e.x2uHYa8SjXftT.SBfQF.Aiy0nNWc/P2G3seUA7FjOtUS50ZQTWG', NULL, '2026-09-16 06:52:05', '2026-09-16 06:52:05'),
+(27, 1, NULL, 1, '2026-09-29 07:32:15', NULL, NULL, NULL, 'Isis', 'segurapaulinoisis@gmail.com', NULL, '$2y$12$LtJZNXa/mAhu5lTiX5yeIe6Zvc8JS.CUxnqyYQKi41herDj7zJ0W2', NULL, '2026-09-29 07:32:15', '2026-09-29 07:32:15'),
+(28, 3, 1, 1, '2026-09-29 07:33:29', NULL, NULL, NULL, 'caja1', 'isegura@ucol.mx', NULL, '$2y$12$ggzspSVoi2uzdXljAAqEJOSylXUAsKv5sbdTXEEjUkk0PnNJPpj/S', NULL, '2026-09-29 07:33:29', '2026-09-29 07:37:08'),
+(31, 1, NULL, 1, '2026-10-21 22:51:38', NULL, NULL, NULL, 'Administrador General', 'admin@pi.com', '2026-10-21 22:51:38', '$2y$12$sg5WBNQsCXKUSOUyzaI4c.WB7dGULEWKUA.cjiAxIIktJktxu8yYu', NULL, '2026-10-21 22:51:38', '2026-10-27 00:18:55'),
+(50, 1, NULL, 1, '2026-10-26 15:53:48', '2026-10-27 00:41:16', '2026-10-27 00:41:24', 'eyJpdiI6IitvQkhGcEFnK2VDb2NoeGZzQWl1eFE9PSIsInZhbHVlIjoiOTJmNlVxQmxvYzMyU3V6UkNPblNvZz09IiwibWFjIjoiNDgzN2IwOWJhNmJhNDNhNWEwM2E1ZTczMDhjNzJiM2VmNjU3YmU1Y2Q1ZTA2NjQ1NTgzNTE4ZjJiNTU5Y2FkMSIsInRhZyI6IiJ9', 'Inuyasha', 'inuyashajuenime@gmail.com', NULL, '$2y$12$S6AUUGdJUXdn0GUb3u4DSusxYq7/fHWodvppXmh/gqCDXCFVL/1SC', NULL, '2026-10-26 15:53:04', '2026-10-27 00:41:24');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios_bajas`
+--
+
+CREATE TABLE `usuarios_bajas` (
+  `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `name` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `rol_slug` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `rol_nombre` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `sucursal_id` bigint UNSIGNED DEFAULT NULL,
+  `sucursal_nombre` varchar(150) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `ingreso_at` timestamp NULL DEFAULT NULL,
+  `desactivado_at` timestamp NULL DEFAULT NULL,
+  `reactivado_at` timestamp NULL DEFAULT NULL,
+  `eliminado_at` timestamp NULL DEFAULT NULL,
+  `eliminado_por` varchar(150) COLLATE utf8mb3_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -767,9 +725,8 @@ INSERT INTO `users` (`id`, `role_id`, `sucursal_id`, `activo`, `name`, `email`, 
 -- Estructura de tabla para la tabla `ventas`
 --
 
-DROP TABLE IF EXISTS `ventas`;
-CREATE TABLE IF NOT EXISTS `ventas` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ventas` (
+  `id` bigint UNSIGNED NOT NULL,
   `sucursal_id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `caja_id` bigint UNSIGNED DEFAULT NULL,
@@ -782,14 +739,8 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `monto_recibido` decimal(10,2) DEFAULT NULL,
   `cambio` decimal(10,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ventas_folio_unique` (`folio`),
-  KEY `ventas_sucursal_id_foreign` (`sucursal_id`),
-  KEY `ventas_user_id_foreign` (`user_id`),
-  KEY `ventas_metodo_pago_id_foreign` (`metodo_pago_id`),
-  KEY `ventas_caja_id_foreign` (`caja_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
@@ -800,6 +751,362 @@ INSERT INTO `ventas` (`id`, `sucursal_id`, `user_id`, `caja_id`, `metodo_pago_id
 (25, 1, 28, 3, 1, 'V-000002', 283.00, 45.28, 16.00, 328.28, 200000.00, 199671.72, '2026-09-30 00:10:26', '2026-09-30 00:10:26'),
 (26, 2, 27, 1, 1, 'V-000003', 796.00, 127.36, 16.00, 923.36, 1000.00, 76.64, '2026-10-02 05:25:15', '2026-10-02 05:25:15'),
 (27, 2, 27, 1, 1, 'V-000004', 398.00, 63.68, 16.00, 461.68, 500.00, 38.32, '2026-10-14 02:21:58', '2026-10-14 02:21:58');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_expiration_index` (`expiration`);
+
+--
+-- Indices de la tabla `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indices de la tabla `cajas`
+--
+ALTER TABLE `cajas`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `cajas_sucursal_id_nombre_unique` (`sucursal_id`,`nombre`);
+
+--
+-- Indices de la tabla `categorias`
+--
+ALTER TABLE `categorias`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `categoria_producto`
+--
+ALTER TABLE `categoria_producto`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `categoria_producto_producto_id_categoria_id_unique` (`producto_id`,`categoria_id`),
+  ADD KEY `categoria_producto_categoria_id_foreign` (`categoria_id`);
+
+--
+-- Indices de la tabla `detalle_ventas`
+--
+ALTER TABLE `detalle_ventas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `detalle_ventas_venta_id_foreign` (`venta_id`),
+  ADD KEY `detalle_ventas_producto_id_foreign` (`producto_id`);
+
+--
+-- Indices de la tabla `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
+  ADD KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`);
+
+--
+-- Indices de la tabla `generos`
+--
+ALTER TABLE `generos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `generos_nombre_unique` (`nombre`);
+
+--
+-- Indices de la tabla `genero_producto`
+--
+ALTER TABLE `genero_producto`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `genero_producto_producto_id_genero_id_unique` (`producto_id`,`genero_id`),
+  ADD KEY `genero_producto_genero_id_foreign` (`genero_id`);
+
+--
+-- Indices de la tabla `inventarios`
+--
+ALTER TABLE `inventarios`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `inventarios_producto_id_unique` (`producto_id`);
+
+--
+-- Indices de la tabla `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indices de la tabla `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `metodos_pago`
+--
+ALTER TABLE `metodos_pago`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `password_reset_requests`
+--
+ALTER TABLE `password_reset_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `password_reset_requests_user_id_foreign` (`user_id`),
+  ADD KEY `password_reset_requests_attended_by_foreign` (`attended_by`);
+
+--
+-- Indices de la tabla `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indices de la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `productos_sucursal_id_foreign` (`sucursal_id`),
+  ADD KEY `productos_categoria_id_foreign` (`categoria_id`);
+
+--
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `roles_slug_unique` (`slug`);
+
+--
+-- Indices de la tabla `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sessions_user_id_index` (`user_id`),
+  ADD KEY `sessions_last_activity_index` (`last_activity`);
+
+--
+-- Indices de la tabla `sucursales`
+--
+ALTER TABLE `sucursales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sucursales_gerente_id_foreign` (`gerente_id`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD KEY `users_role_id_foreign` (`role_id`),
+  ADD KEY `users_sucursal_id_foreign` (`sucursal_id`);
+
+--
+-- Indices de la tabla `usuarios_bajas`
+--
+ALTER TABLE `usuarios_bajas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ventas_folio_unique` (`folio`),
+  ADD KEY `ventas_sucursal_id_foreign` (`sucursal_id`),
+  ADD KEY `ventas_user_id_foreign` (`user_id`),
+  ADD KEY `ventas_metodo_pago_id_foreign` (`metodo_pago_id`),
+  ADD KEY `ventas_caja_id_foreign` (`caja_id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `cajas`
+--
+ALTER TABLE `cajas`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `categorias`
+--
+ALTER TABLE `categorias`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=310;
+
+--
+-- AUTO_INCREMENT de la tabla `categoria_producto`
+--
+ALTER TABLE `categoria_producto`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_ventas`
+--
+ALTER TABLE `detalle_ventas`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT de la tabla `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `generos`
+--
+ALTER TABLE `generos`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `genero_producto`
+--
+ALTER TABLE `genero_producto`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
+
+--
+-- AUTO_INCREMENT de la tabla `inventarios`
+--
+ALTER TABLE `inventarios`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT de la tabla `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `metodos_pago`
+--
+ALTER TABLE `metodos_pago`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT de la tabla `password_reset_requests`
+--
+ALTER TABLE `password_reset_requests`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `productos`
+--
+ALTER TABLE `productos`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `sucursales`
+--
+ALTER TABLE `sucursales`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios_bajas`
+--
+ALTER TABLE `usuarios_bajas`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+-- =====================================================
+-- FOREIGN KEYS
+-- =====================================================
+
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_users_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `sucursales`
+  ADD CONSTRAINT `fk_sucursales_gerente` FOREIGN KEY (`gerente_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `cajas`
+  ADD CONSTRAINT `fk_cajas_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `productos`
+  ADD CONSTRAINT `fk_productos_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `productos`
+  ADD CONSTRAINT `fk_productos_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `inventarios`
+  ADD CONSTRAINT `fk_inventarios_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `categoria_producto`
+  ADD CONSTRAINT `fk_catprod_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `categoria_producto`
+  ADD CONSTRAINT `fk_catprod_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `genero_producto`
+  ADD CONSTRAINT `fk_genprod_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `genero_producto`
+  ADD CONSTRAINT `fk_genprod_genero` FOREIGN KEY (`genero_id`) REFERENCES `generos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `fk_ventas_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `fk_ventas_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `fk_ventas_caja` FOREIGN KEY (`caja_id`) REFERENCES `cajas` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `fk_ventas_metodo_pago` FOREIGN KEY (`metodo_pago_id`) REFERENCES `metodos_pago` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE `detalle_ventas`
+  ADD CONSTRAINT `fk_detventas_venta` FOREIGN KEY (`venta_id`) REFERENCES `ventas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `detalle_ventas`
+  ADD CONSTRAINT `fk_detventas_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE `password_reset_requests`
+  ADD CONSTRAINT `fk_pwr_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `password_reset_requests`
+  ADD CONSTRAINT `fk_pwr_attended` FOREIGN KEY (`attended_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `usuarios_bajas`
+  ADD CONSTRAINT `fk_bajas_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `usuarios_bajas`
+  ADD CONSTRAINT `fk_bajas_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `sessions`
+  ADD CONSTRAINT `fk_sessions_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

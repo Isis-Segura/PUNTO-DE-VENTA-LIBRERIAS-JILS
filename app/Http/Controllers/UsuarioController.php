@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Sucursal;
 use App\Models\User;
+use App\Models\UsuarioBaja;
+use App\Models\Venta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use App\Mail\TerminosCondicionesMail;
 
 use Illuminate\Validation\Rule;
@@ -33,9 +37,21 @@ class UsuarioController extends Controller
 
         if ($request->filled('q') || $request->filled('adminlteSearch')) {
             $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
-            $query->where(function ($sub) use ($q) {
+            $estado = $this->estadoDesdeBusqueda($q);
+
+            $query->where(function ($sub) use ($q, $estado) {
                 $sub->where('name', 'like', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%");
+
+                // También se puede buscar por estado: activo / inactivo / pendiente
+                // (en español o inglés), igual que las etiquetas de la columna Estado.
+                if ($estado === 'pendiente') {
+                    $sub->orWhere(fn ($w) => $w->where('activo', true)->whereNull('terminos_aceptados_at'));
+                } elseif ($estado === 'activo') {
+                    $sub->orWhere(fn ($w) => $w->where('activo', true)->whereNotNull('terminos_aceptados_at'));
+                } elseif ($estado === 'inactivo') {
+                    $sub->orWhere('activo', false);
+                }
             });
         }
 
@@ -198,7 +214,13 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Elimina un usuario. El Administrador General no puede eliminarse a sí mismo.
+     * "Eliminar" tiene dos pasos:
+     *  1) Usuario dado de alta (aceptó los términos) y activo  -> solo se pone INACTIVO.
+     *  2) Usuario inactivo (o que nunca aceptó) -> eliminación PERMANENTE.
+     *
+     * La eliminación permanente se bloquea si el usuario tiene ventas, porque la base
+     * de datos borraría también esas ventas en cascada (se perdería el historial).
+     * El Administrador General no puede eliminarse a sí mismo.
      */
     public function destroy(User $usuario)
     {
@@ -208,38 +230,139 @@ class UsuarioController extends Controller
             return back()->with('error', __('messages.cannot_delete_self'));
         }
 
-        $mensaje = __('messages.user_deleted');
+        // Paso 1: dado de alta y activo -> solo se desactiva (puede reactivarse).
+        if ($usuario->activo && $usuario->haAceptadoTerminos()) {
+            $usuario->activo = false; // User::booted guarda "desactivado_at"
+            $usuario->save();
 
-        // Si era Gerente: desactivar su(s) sucursal(es) y quitar el enlace de gerente
-        if ($usuario->isGerente()) {
-            $sucursales = \App\Models\Sucursal::query()
-                ->where(function ($q) use ($usuario) {
-                    $q->where('gerente_id', $usuario->id);
-                    if ($usuario->sucursal_id) {
-                        $q->orWhere('id', $usuario->sucursal_id);
-                    }
-                })
-                ->get();
-
-            foreach ($sucursales as $sucursal) {
-                $sucursal->activa = false;
-                if ((int) $sucursal->gerente_id === (int) $usuario->id) {
-                    $sucursal->gerente_id = null;
-                }
-                $sucursal->save();
-            }
-
-            if ($sucursales->isNotEmpty()) {
-                $nombres = $sucursales->pluck('nombre')->implode(', ');
-                $mensaje .= __('messages.branch_deactivated_without_manager', ['branches' => $nombres]);
-            }
+            return redirect()
+                ->route('admin.usuarios.index')
+                ->with('success', __('messages.user_deactivated'));
         }
 
-        $usuario->delete();
+        // Paso 2: eliminación permanente.
+        if (Venta::where('user_id', $usuario->id)->exists()) {
+            return back()->with('error', __('messages.user_has_sales'));
+        }
+
+        $mensaje = __('messages.user_deleted');
+
+        DB::transaction(function () use ($usuario, &$mensaje) {
+            // Si era Gerente: desactivar su(s) sucursal(es) y quitar el enlace de gerente
+            if ($usuario->isGerente()) {
+                $sucursales = \App\Models\Sucursal::query()
+                    ->where(function ($q) use ($usuario) {
+                        $q->where('gerente_id', $usuario->id);
+                        if ($usuario->sucursal_id) {
+                            $q->orWhere('id', $usuario->sucursal_id);
+                        }
+                    })
+                    ->get();
+
+                foreach ($sucursales as $sucursal) {
+                    $sucursal->activa = false;
+                    if ((int) $sucursal->gerente_id === (int) $usuario->id) {
+                        $sucursal->gerente_id = null;
+                    }
+                    $sucursal->save();
+                }
+
+                if ($sucursales->isNotEmpty()) {
+                    $nombres = $sucursales->pluck('nombre')->implode(', ');
+                    $mensaje .= __('messages.branch_deactivated_without_manager', ['branches' => $nombres]);
+                }
+            }
+
+            // Se conserva la "salida definitiva" (y sus demás fechas) en el historial de
+            // bajas. Quien nunca llegó a entrar (no aceptó los términos) no se registra.
+            if ($usuario->haAceptadoTerminos()) {
+                UsuarioBaja::create([
+                    'user_id' => $usuario->id,
+                    'name' => $usuario->name,
+                    'email' => $usuario->email,
+                    'rol_slug' => $usuario->role?->slug,
+                    'rol_nombre' => $usuario->role?->nombre,
+                    'sucursal_id' => $usuario->sucursal_id,
+                    'sucursal_nombre' => $usuario->sucursal?->nombre,
+                    'ingreso_at' => $usuario->terminos_aceptados_at,
+                    'desactivado_at' => $usuario->desactivado_at,
+                    'reactivado_at' => $usuario->reactivado_at,
+                    'eliminado_at' => now(),
+                    'eliminado_por' => auth()->user()->name,
+                ]);
+            }
+
+            $usuario->delete();
+        });
 
         return redirect()
             ->route('admin.usuarios.index')
             ->with('success', $mensaje);
+    }
+
+    /**
+     * Regresa a "Activo" a un usuario que estaba inactivo.
+     */
+    public function reactivar(User $usuario)
+    {
+        $this->verificarAccesoAUsuario($usuario);
+
+        if ($usuario->activo) {
+            return back()->with('error', __('messages.user_already_active'));
+        }
+
+        $usuario->activo = true; // User::booted guarda "reactivado_at"
+        $usuario->save();
+
+        return back()->with('success', __('messages.user_reactivated'));
+    }
+
+    /**
+     * Historial de usuarios eliminados de forma permanente, con sus fechas.
+     * - Administrador General: ve todas las bajas.
+     * - Gerente: solo las bajas de cajeros de su sucursal.
+     */
+    public function bajas(Request $request)
+    {
+        $query = UsuarioBaja::query()->orderByDesc('eliminado_at');
+
+        if (! auth()->user()->isAdmin()) {
+            $query->where('sucursal_id', auth()->user()->sucursal_id)
+                ->where('rol_slug', Role::CAJERO);
+        }
+
+        $bajas = $query->paginate(10)->withQueryString();
+
+        return view('admin.usuarios.bajas', compact('bajas'));
+    }
+
+    /**
+     * Si lo escrito en el buscador es (el comienzo de) un estado, devuelve cuál:
+     * 'pendiente' | 'activo' | 'inactivo' (español o inglés); si no, null.
+     */
+    private function estadoDesdeBusqueda(string $q): ?string
+    {
+        $q = Str::of($q)->lower()->ascii()->trim()->toString();
+
+        if (mb_strlen($q) < 3) {
+            return null;
+        }
+
+        $palabras = [
+            'pendiente' => ['pendiente', 'pending'],
+            'activo' => ['activo', 'active'],
+            'inactivo' => ['inactivo', 'inactive'],
+        ];
+
+        foreach ($palabras as $estado => $lista) {
+            foreach ($lista as $palabra) {
+                if (str_starts_with($palabra, $q)) {
+                    return $estado;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -14,25 +14,13 @@
 
 @section('css')
     <style>
-        .sucursal-card {
-            border: none;
-            border-radius: .75rem;
-            border-top: 4px solid var(--suc-accent, #6f5cf0);
-            box-shadow: 0 2px 10px rgba(0,0,0,.06);
-            transition: transform .15s ease, box-shadow .15s ease;
-            height: 100%;
-        }
-        .sucursal-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,.10);
-        }
-        .sucursal-card.is-inactiva { border-top-color: #adb5bd; opacity: .85; }
+        .sucursal-card.is-inactiva { border-top-color: #a9a39c; opacity: .85; }
 
         .sucursal-avatar {
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--suc-accent, #6f5cf0), var(--suc-accent-2, #8f7bff));
+            background: linear-gradient(135deg, var(--suc-accent, #2a6d6c), var(--suc-accent-2, #3a8a88));
             color: #fff;
             display: flex;
             align-items: center;
@@ -41,38 +29,16 @@
             flex-shrink: 0;
         }
         .sucursal-card.is-inactiva .sucursal-avatar {
-            background: linear-gradient(135deg, #adb5bd, #ced4da);
+            background: linear-gradient(135deg, #a9a39c, #c9c1b9);
         }
 
         .sucursal-meta {
             font-size: .85rem;
-            color: #6c757d;
+            color: var(--ui-muted);
         }
         .sucursal-meta i {
             width: 18px;
-            color: var(--suc-accent, #6f5cf0);
-        }
-
-        .summary-box {
-            border-radius: .75rem;
-            padding: 1.1rem 1.25rem;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,.08);
-        }
-        .summary-box i { font-size: 1.8rem; opacity: .85; }
-        .summary-box h3 { margin: 0; font-weight: 700; }
-        .summary-box small { opacity: .9; }
-        .summary-total { background: linear-gradient(135deg, #6f5cf0, #8f7bff); }
-        .summary-activas { background: linear-gradient(135deg, #21b573, #3ed58c); }
-        .summary-inactivas { background: linear-gradient(135deg, #a0a6ad, #c2c7cc); }
-
-        .badge-bajo-stock {
-            background-color: #fff3f3;
-            color: #dc3545;
-            border: 1px solid #f5c2c7;
+            color: var(--suc-accent, #2a6d6c);
         }
     </style>
 @stop
@@ -133,7 +99,7 @@
     <div class="row">
         @forelse ($sucursales as $sucursal)
             @php
-                $colores = ['#6f5cf0', '#0d9488', '#e0762a', '#2563eb', '#c0247a', '#059669'];
+                $colores = ['#2a6d6c', '#3a4c5d', '#8a5a12', '#2f6b4f', '#9b3b3b', '#3b5c59'];
                 $accent = $colores[$sucursal->id % count($colores)];
             @endphp
             <div class="col-lg-4 col-md-6 mb-4 js-search-item"

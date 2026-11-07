@@ -35,6 +35,7 @@ class AdminUserSeeder extends Seeder
             $admin->forceFill([
                 'role_id' => $adminRole?->id,
                 'activo' => true,
+                'terminos_aceptados_at' => $admin->terminos_aceptados_at ?? now(),
             ])->save();
 
             return;
@@ -47,6 +48,8 @@ class AdminUserSeeder extends Seeder
             'role_id' => $adminRole?->id,
             'email_verified_at' => now(),
             'activo' => true,
+            // Se crea desde el seeder (no pasa por el correo de bienvenida): ya cuenta como aceptado.
+            'terminos_aceptados_at' => now(),
         ]);
 
         if (app()->runningInConsole()) {

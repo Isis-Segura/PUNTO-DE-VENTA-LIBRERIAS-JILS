@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 
-#[Fillable(['name', 'email', 'password', 'role_id', 'sucursal_id', 'activo', 'terminos_aceptados_at', 'credenciales_pendientes'])]
+#[Fillable(['name', 'email', 'password', 'role_id', 'sucursal_id', 'activo', 'terminos_aceptados_at', 'desactivado_at', 'reactivado_at', 'credenciales_pendientes'])]
 #[Hidden(['password', 'remember_token', 'credenciales_pendientes'])]
 class User extends Authenticatable
 {
@@ -26,24 +27,43 @@ class User extends Authenticatable
      */
     public const DIAS_VIGENCIA_TERMINOS = 30;
 
+    /** Zona horaria en la que se muestran las fechas al administrador (la app guarda en UTC). */
+    public const ZONA_HORARIA_VISTA = 'America/Mexico_City';
+
     /**
-     * Si cambia la contraseña (el propio usuario, el flujo de "olvidé mi contraseña"
-     * o el administrador sin reasignar la inicial), la contraseña inicial guardada
-     * ya no es válida: se borra para no mostrarla ni conservarla de más.
+     * Reglas que se aplican siempre que se guarda un usuario ya existente:
+     *
+     *  1) Fechas: al ponerlo inactivo se guarda "desactivado_at" (y se limpia
+     *     "reactivado_at"); al reactivarlo se guarda "reactivado_at". Así vale igual si
+     *     se hace con el botón de la lista o desde el formulario de edición.
+     *  2) Contraseña inicial: si cambia la contraseña (el propio usuario, el flujo de
+     *     "olvidé mi contraseña" o el administrador sin reasignar la inicial), la
+     *     contraseña inicial guardada ya no es válida y se borra.
      */
     protected static function booted(): void
     {
         static::saving(function (User $user) {
-            if (! $user->exists || ! $user->isDirty('password')) {
+            if (! $user->exists) {
                 return;
             }
 
-            // Comparación en crudo (sin descifrar): si en este mismo guardado no se
-            // reasignó la contraseña inicial, se limpia.
-            $actual = $user->getAttributes()['credenciales_pendientes'] ?? null;
+            if ((bool) $user->getOriginal('activo') !== (bool) $user->activo) {
+                if ($user->activo) {
+                    $user->reactivado_at = now();
+                } else {
+                    $user->desactivado_at = now();
+                    $user->reactivado_at = null;
+                }
+            }
 
-            if ($actual === $user->getRawOriginal('credenciales_pendientes')) {
-                $user->setAttribute('credenciales_pendientes', null);
+            if ($user->isDirty('password')) {
+                // Comparación en crudo (sin descifrar): si en este mismo guardado no se
+                // reasignó la contraseña inicial, se limpia.
+                $actual = $user->getAttributes()['credenciales_pendientes'] ?? null;
+
+                if ($actual === $user->getRawOriginal('credenciales_pendientes')) {
+                    $user->setAttribute('credenciales_pendientes', null);
+                }
             }
         });
     }
@@ -126,6 +146,47 @@ class User extends Authenticatable
     }
 
     /**
+     * Fecha con formato para el administrador (hora de México), o null si no hay.
+     */
+    public static function formatearFecha($fecha): ?string
+    {
+        return $fecha
+            ? Carbon::parse($fecha)->timezone(self::ZONA_HORARIA_VISTA)->format('d/m/Y H:i')
+            : null;
+    }
+
+    /**
+     * Fechas del usuario que SÍ tienen información, listas para mostrarse
+     * (las que no existen simplemente no aparecen):
+     *  - Ingreso: cuando aceptó los términos y quedó activo.
+     *  - Se puso inactivo: la última vez que se desactivó.
+     *  - Regresó: la última vez que se reactivó.
+     */
+    public function fechasParaMostrar(): array
+    {
+        $campos = [
+            ['terminos_aceptados_at', __('Ingreso'), 'fa-sign-in-alt', 'success'],
+            ['desactivado_at', __('Se puso inactivo'), 'fa-user-slash', 'secondary'],
+            ['reactivado_at', __('Regresó'), 'fa-undo', 'primary'],
+        ];
+
+        $fechas = [];
+
+        foreach ($campos as [$campo, $etiqueta, $icono, $color]) {
+            if ($this->{$campo}) {
+                $fechas[] = [
+                    'etiqueta' => $etiqueta,
+                    'fecha' => self::formatearFecha($this->{$campo}),
+                    'icono' => $icono,
+                    'color' => $color,
+                ];
+            }
+        }
+
+        return $fechas;
+    }
+
+    /**
      * Nombre del rol para mostrarlo en los correos.
      */
     public function nombreDeRol(): string
@@ -179,6 +240,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'terminos_aceptados_at' => 'datetime',
+            'desactivado_at' => 'datetime',
+            'reactivado_at' => 'datetime',
             // Contraseña inicial: se guarda cifrada con APP_KEY y se muestra solo después
             // de aceptar los términos. Se borra cuando el usuario cambia su contraseña.
             'credenciales_pendientes' => 'encrypted',

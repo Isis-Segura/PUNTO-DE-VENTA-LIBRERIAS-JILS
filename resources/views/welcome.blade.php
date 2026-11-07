@@ -18,22 +18,23 @@
 
     <!-- Modo oscuro -->
     <link rel="stylesheet" href="{{ asset('css/dark-mode-home.css') }}?v={{ @filemtime(public_path('css/dark-mode-home.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}?v={{ @filemtime(public_path('css/pos-theme.css')) }}">
 
     <!-- Vite Styles & Scripts (Bootstrap 5) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 <style>
     :root {
-        --pos-dark: #2A0C10;
-        --pos-blue: #561C24;
-        --pos-blue-hover: #6D2932;
-        --pos-blue-light: #E8D8C4;
-        --pos-green: #3E5C46;
-        --pos-green-light: #E2EFE0;
-        --pos-bg: #FAF7F2;
-        --pos-card-border: #C7B7A3;
-        --pos-text-main: #2A0C10;
-        --pos-text-muted: #6D2932;
+        --pos-dark: var(--pos-text);
+        --pos-blue: var(--pos-primary);
+        --pos-blue-hover: var(--pos-primary-hover);
+        --pos-blue-light: var(--pos-cream);
+        --pos-green: var(--pos-dashboard-success);
+        --pos-green-light: var(--pos-cream);
+        --pos-bg: var(--pos-paper);
+        --pos-card-border: var(--pos-border);
+        --pos-text-main: var(--pos-text);
+        --pos-text-muted: var(--pos-primary-hover);
     }
 
     body {
@@ -54,7 +55,7 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        box-shadow: 0 1px 3px rgba(86, 28, 36, 0.05);
+        box-shadow: 0 1px 3px rgba(42, 109, 108, 0.05);
     }
 
     .brand-logo {
@@ -111,7 +112,7 @@
     /* Hero Section */
     .pos-hero {
         padding: 4.5rem 0 3.75rem;
-        background: linear-gradient(180deg, #F5EFE6 0%, #FAF7F2 100%);
+        background: linear-gradient(180deg, #f5f3ef 0%, #f3f0ec 100%);
         border-bottom: 1px solid var(--pos-card-border);
     }
 
@@ -145,7 +146,7 @@
         padding: 0.85rem 1.85rem;
         border-radius: 10px;
         border: none;
-        box-shadow: 0 4px 14px rgba(86, 28, 36, 0.25);
+        box-shadow: 0 4px 14px rgba(42, 109, 108, 0.25);
         display: inline-flex;
         align-items: center;
         gap: 0.65rem;
@@ -157,7 +158,7 @@
         background-color: var(--pos-blue-hover);
         color: #ffffff;
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(86, 28, 36, 0.35);
+        box-shadow: 0 6px 18px rgba(42, 109, 108, 0.35);
     }
 
     .btn-pos-outline {
@@ -190,17 +191,17 @@
         padding: 1.85rem;
         height: 100%;
         transition: all 0.25s ease;
-        box-shadow: 0 2px 8px rgba(86, 28, 36, 0.04);
+        box-shadow: 0 2px 8px rgba(42, 109, 108, 0.04);
     }
 
     .feature-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 24px -8px rgba(86, 28, 36, 0.15);
+        box-shadow: 0 12px 24px -8px rgba(42, 109, 108, 0.15);
         border-color: var(--pos-blue-hover);
     }
 
     .feature-card.card-green { border-top-color: var(--pos-green); }
-    .feature-card.card-amber { border-top-color: #C7B7A3; }
+    .feature-card.card-amber { border-top-color: var(--pos-border); }
     .feature-card.card-purple { border-top-color: var(--pos-blue-hover); }
 
     .feature-icon-wrapper {
@@ -216,7 +217,7 @@
 
     .icon-blue { background: var(--pos-blue-light); color: var(--pos-blue); }
     .icon-green { background: var(--pos-green-light); color: var(--pos-green); }
-    .icon-amber { background: #F5EFE6; color: #6D2932; }
+    .icon-amber { background: #f5f3ef; color: #2a6d6c; }
     .icon-purple { background: var(--pos-blue-light); color: var(--pos-blue-hover); }
 
     .feature-title {
@@ -236,12 +237,12 @@
 
     /* Banner de Acceso */
     .pos-info-banner {
-        background: #2A0C10;
+        background: #1d2d2c;
         border-radius: 16px;
         padding: 2.25rem;
-        color: #E8D8C4;
-        border: 1px solid #561C24;
-        box-shadow: 0 10px 25px -5px rgba(42, 12, 16, 0.3);
+        color: #f5f3ef;
+        border: 1px solid #314c4a;
+        box-shadow: 0 10px 25px -5px rgba(29, 45, 44, 0.3);
     }
 
     /* Footer */
