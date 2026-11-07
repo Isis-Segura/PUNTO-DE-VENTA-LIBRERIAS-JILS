@@ -73,6 +73,9 @@
     {{-- Custom Stylesheets (post AdminLTE) --}}
     {{-- Tema visual "POS JILS" (misma identidad que el login) --}}
     <link rel="stylesheet" href="{{ asset('css/pos-theme.css') }}?v={{ @filemtime(public_path('css/pos-theme.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/jils-ui.css') }}?v={{ @filemtime(public_path('css/jils-ui.css')) }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @yield('adminlte_css')
 
     {{-- Favicon --}}

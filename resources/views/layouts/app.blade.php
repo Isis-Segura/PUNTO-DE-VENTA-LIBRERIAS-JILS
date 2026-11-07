@@ -21,16 +21,16 @@
            LAYOUT PRINCIPAL & SIDEBAR — MODO COFFEE VINO TINTO
            ===================================================================== */
         :root {
-            --pos-dark: #1A0608;
-            --pos-sidebar-bg: #2A0C10;
-            --pos-primary: #561C24;
-            --pos-primary-hover: #6D2932;
-            --pos-light-bg: #FAF7F2;
-            --pos-accent-light: #F5EFE6;
-            --pos-border: #C7B7A3;
-            --pos-text-main: #2A0C10;
-            --pos-text-muted: #6D2932;
-            --pos-text-light: #E8D8C4;
+            --pos-dark: #314c4a;
+            --pos-sidebar-bg: #3b5c59;
+            --pos-primary: #2a6d6c;
+            --pos-primary-hover: #1d2d2c;
+            --pos-light-bg: #f3f0ec;
+            --pos-accent-light: #f5f3ef;
+            --pos-border: #c9c1b9;
+            --pos-text-main: #1f1f1f;
+            --pos-text-muted: #5b6b6a;
+            --pos-text-light: #f5f3ef;
         }
 
         body {
@@ -56,13 +56,13 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
-            border-right: 1px solid #3D1217;
+            border-right: 1px solid #314c4a;
         }
 
         .sidebar-brand {
             padding: 1.25rem 1.5rem;
             background-color: var(--pos-dark);
-            border-bottom: 1px solid #3D1217;
+            border-bottom: 1px solid #314c4a;
             font-size: 1.15rem;
             font-weight: 800;
             color: #ffffff;
@@ -141,7 +141,7 @@
             background-color: #ffffff !important;
             border: 1px solid var(--pos-border) !important;
             border-radius: 12px !important;
-            box-shadow: 0 4px 12px rgba(42, 12, 16, 0.04) !important;
+            box-shadow: 0 4px 12px rgba(29, 45, 44, 0.04) !important;
         }
 
         .alert-info, .bg-info, [class*="bg-info"] {
@@ -160,7 +160,7 @@
 
         .form-control:focus, .form-select:focus, select:focus, input:focus {
             border-color: var(--pos-primary) !important;
-            box-shadow: 0 0 0 3px rgba(86, 28, 36, 0.15) !important;
+            box-shadow: 0 0 0 3px rgba(42, 109, 108, 0.15) !important;
         }
 
         .btn-primary {

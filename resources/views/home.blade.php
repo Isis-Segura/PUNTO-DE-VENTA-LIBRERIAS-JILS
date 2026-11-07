@@ -9,42 +9,6 @@
     @endif
 @stop
 
-@section('css')
-    <style>
-        .stat-box {
-            border-radius: .75rem;
-            padding: 1.1rem 1.25rem;
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,.08);
-            height: 100%;
-        }
-        .stat-box .stat-icon { font-size: 1.7rem; opacity: .85; }
-        .stat-box h3 { margin: .15rem 0 0; font-weight: 700; }
-        .stat-box small { opacity: .9; }
-        .stat-ventashoy { background: linear-gradient(135deg, #21b573, #3ed58c); }
-        .stat-ventasmes { background: linear-gradient(135deg, #e0762a, #f0975a); }
-        .stat-productos { background: linear-gradient(135deg, #0d9488, #14b8a6); }
-        .stat-alertas { background: linear-gradient(135deg, #dc3545, #f0656f); }
-
-        .panel-card {
-            border: none;
-            border-radius: .75rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,.06);
-        }
-        .panel-card .card-header {
-            background: transparent;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-        }
-        .rank-badge {
-            width: 26px; height: 26px; border-radius: 50%;
-            background: #6f5cf0; color: #fff; font-size: .75rem;
-            display: inline-flex; align-items: center; justify-content: center;
-            font-weight: 700;
-        }
-    </style>
-@stop
-
 @section('content')
 
     @if (! ($sucursal ?? null))
@@ -114,7 +78,7 @@
             <div class="col-lg-6 mb-4">
                 <div class="card panel-card h-100">
                     <div class="card-header">
-                        <i class="fas fa-trophy mr-1 text-warning"></i> {{ __('Más vendidos este mes') }}
+                        <i class="fas fa-trophy mr-1 icon-warn"></i> {{ __('Más vendidos este mes') }}
                     </div>
                     <div class="card-body p-0">
                         <table class="table table-striped mb-0">
@@ -144,7 +108,7 @@
             <div class="col-lg-6 mb-4">
                 <div class="card panel-card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span><i class="fas fa-exclamation-triangle mr-1 text-danger"></i> {{ __('Alertas de bajo stock') }}</span>
+                        <span><i class="fas fa-exclamation-triangle mr-1 icon-danger"></i> {{ __('Alertas de bajo stock') }}</span>
                         @can('es-admin-o-gerente')
                             <a href="{{ route('sucursales.show', $sucursal) }}" class="small">{{ __('Ver inventario') }}</a>
                         @endcan

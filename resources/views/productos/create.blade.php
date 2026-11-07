@@ -8,29 +8,29 @@
 
 @section('css')
 <style>
-    .prod-form-card { border: none; border-radius: 12px; box-shadow: 0 2px 14px rgba(15,23,42,.07); }
+    .prod-form-card { border: none; border-radius: 12px; box-shadow: 0 2px 14px rgba(29, 45, 44,.07); }
     .prod-form-card .card-body { padding: 1.5rem 1.6rem; }
     .cat-grid {
         display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 0.5rem; max-height: 220px; overflow-y: auto; padding: 0.75rem;
-        border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc;
+        border: 1px solid var(--ui-border); border-radius: 10px; background: var(--ui-surface-2);
     }
     .cat-chip {
         display: flex; align-items: center; gap: 0.45rem; margin: 0; padding: 0.45rem 0.65rem;
-        background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer;
-        font-size: 0.88rem; font-weight: 500; color: #334155; user-select: none;
+        background: var(--ui-inset); border: 1px solid var(--ui-border); border-radius: 8px; cursor: pointer;
+        font-size: 0.88rem; font-weight: 500; color: var(--ui-body); user-select: none;
     }
-    .cat-chip.is-on { border-color: #4f46e5; background: #eef2ff; color: #3730a3; box-shadow: 0 0 0 1px #4f46e5 inset; }
+    .cat-chip.is-on { border-color: #2a6d6c; background: var(--ui-chip-on); color: var(--ui-title); box-shadow: 0 0 0 1px #2a6d6c inset; }
     .cat-chip input { margin: 0; }
-    .cat-counter { font-size: 0.8rem; color: #64748b; }
-    .cat-counter.warn { color: #dc2626; font-weight: 600; }
+    .cat-counter { font-size: 0.8rem; color: var(--ui-muted); }
+    .cat-counter.warn { color: var(--ui-danger); font-weight: 600; }
     .cover-upload {
         display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
-        padding: 1rem; border: 1px dashed #cbd5e1; border-radius: 12px; background: #f8fafc;
+        padding: 1rem; border: 1px dashed var(--ui-border); border-radius: 12px; background: var(--ui-surface-2);
     }
     .cover-preview {
         width: 110px; height: 160px; border-radius: 8px; overflow: hidden;
-        background: linear-gradient(145deg, #1e293b, #475569);
+        background: linear-gradient(145deg, #1d2d2c, #4a5a59);
         display: flex; align-items: center; justify-content: center;
         color: rgba(255,255,255,.4); font-size: 1.8rem; flex-shrink: 0;
     }

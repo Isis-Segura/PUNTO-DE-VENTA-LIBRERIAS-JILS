@@ -61,14 +61,14 @@ body.sidebar-mini.sidebar-collapse.layout-fixed .main-header {
 }
 
 ::-webkit-scrollbar-track {
-    background: #140608;
+    background: #ebe7e1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #561C24;
+    background: #c9c1b9;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #6D2932;
+    background: #a9a39c;
 }

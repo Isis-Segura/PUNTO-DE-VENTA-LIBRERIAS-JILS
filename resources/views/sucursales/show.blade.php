@@ -12,14 +12,14 @@
     .libro-grid > [class*="col-"] { padding-left: 8px; padding-right: 8px; }
     .libro-card {
         border: none; border-radius: 12px; overflow: hidden;
-        box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+        box-shadow: 0 2px 12px rgba(29, 45, 44, 0.08);
         transition: transform .15s ease, box-shadow .15s ease;
-        height: 100%; background: #fff; display: flex; flex-direction: column; cursor: pointer;
+        height: 100%; background: var(--ui-inset); display: flex; flex-direction: column; cursor: pointer;
     }
-    .libro-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14); }
+    .libro-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(29, 45, 44, 0.14); }
     .libro-portada {
         position: relative; width: 100%; aspect-ratio: 2 / 3;
-        background: linear-gradient(145deg, #1e293b, #475569); overflow: hidden;
+        background: linear-gradient(145deg, #1d2d2c, #4a5a59); overflow: hidden;
     }
     .libro-portada img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
     .libro-portada .placeholder {
@@ -28,11 +28,11 @@
     }
     .libro-body { padding: 0.75rem 0.85rem 0.9rem; flex: 1; display: flex; flex-direction: column; }
     .libro-titulo {
-        font-weight: 700; font-size: 0.88rem; line-height: 1.3; margin: 0 0 0.3rem; color: #0f172a;
+        font-weight: 700; font-size: 0.88rem; line-height: 1.3; margin: 0 0 0.3rem; color: var(--ui-title);
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.3em;
     }
-    .libro-meta { font-size: 0.72rem; color: #64748b; margin-bottom: 0.35rem; }
-    .libro-precio { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-top: auto; }
+    .libro-meta { font-size: 0.72rem; color: var(--ui-muted); margin-bottom: 0.35rem; }
+    .libro-precio { font-size: 1.1rem; font-weight: 800; color: var(--ui-title); margin-top: auto; }
     .libro-badges { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between; z-index: 1; }
     .libro-actions { margin-top: 0.6rem; display: flex; gap: 0.4rem; }
     .libro-actions form { flex: 1; margin: 0; }
@@ -41,7 +41,7 @@
     .prod-detail-modal .modal-dialog { max-width: 720px; }
     .prod-detail-layout { display: flex; flex-wrap: wrap; min-height: 320px; }
     .prod-detail-cover {
-        flex: 0 0 42%; max-width: 42%; background: #0f172a; position: relative; min-height: 360px;
+        flex: 0 0 42%; max-width: 42%; background: #1d2d2c; position: relative; min-height: 360px;
     }
     .prod-detail-cover img {
         width: 100%; height: 100%; object-fit: cover; object-position: center top;
@@ -50,7 +50,7 @@
     .prod-detail-cover .cover-ph {
         position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
         color: rgba(255,255,255,0.35); font-size: 3.5rem;
-        background: linear-gradient(160deg, #1e293b, #334155);
+        background: linear-gradient(160deg, #1d2d2c, #3a4c5d);
     }
     .prod-detail-cover .cover-fade {
         position: absolute; inset: 0;
@@ -66,17 +66,17 @@
         color: #fff;
         letter-spacing: 0.01em;
     }
-    .prod-detail-info { flex: 1; min-width: 260px; padding: 1.25rem 1.4rem 0.75rem; background: #fff; }
+    .prod-detail-info { flex: 1; min-width: 260px; padding: 1.25rem 1.4rem 0.75rem; background: var(--ui-inset); }
     .prod-detail-row {
         display: flex; justify-content: space-between; align-items: flex-start;
-        padding: 0.7rem 0; border-bottom: 1px solid #eef2f7; gap: 1rem;
+        padding: 0.7rem 0; border-bottom: 1px solid var(--ui-divider); gap: 1rem;
     }
     .prod-detail-label {
         font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 0.05em; color: #94a3b8; min-width: 100px; padding-top: 2px;
+        letter-spacing: 0.05em; color: var(--ui-muted); min-width: 100px; padding-top: 2px;
     }
-    .prod-detail-value { text-align: right; color: #0f172a; font-weight: 600; font-size: 0.95rem; flex: 1; }
-    .prod-detail-value.desc { text-align: left; font-weight: 500; color: #334155; margin-top: 0.2rem; white-space: pre-wrap; }
+    .prod-detail-value { text-align: right; color: var(--ui-title); font-weight: 600; font-size: 0.95rem; flex: 1; }
+    .prod-detail-value.desc { text-align: left; font-weight: 500; color: var(--ui-body); margin-top: 0.2rem; white-space: pre-wrap; }
     @media (max-width: 575.98px) {
         .prod-detail-cover { flex: 0 0 100%; max-width: 100%; min-height: 220px; }
     }

@@ -11,27 +11,27 @@
     gap: 12px;
     padding: 14px 16px;
     border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(15,23,42,.18);
-    border-left: 4px solid #64748b;
+    background: var(--ui-inset);
+    box-shadow: 0 10px 30px rgba(29, 45, 44,.18);
+    border-left: 4px solid #5b6b6a;
     animation: appToastIn .25s ease;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 .app-toast.is-out { animation: appToastOut .2s ease forwards; }
-.app-toast-success { border-left-color: #16a34a; }
-.app-toast-error { border-left-color: #dc2626; }
-.app-toast-warning { border-left-color: #d97706; }
-.app-toast-info { border-left-color: #2563eb; }
+.app-toast-success { border-left-color: #2f6b4f; }
+.app-toast-error { border-left-color: #9b3b3b; }
+.app-toast-warning { border-left-color: #8a5a12; }
+.app-toast-info { border-left-color: #3a4c5d; }
 .app-toast-icon { font-size: 1.25rem; line-height: 1; margin-top: 2px; }
-.app-toast-success .app-toast-icon { color: #16a34a; }
-.app-toast-error .app-toast-icon { color: #dc2626; }
-.app-toast-warning .app-toast-icon { color: #d97706; }
-.app-toast-info .app-toast-icon { color: #2563eb; }
+.app-toast-success .app-toast-icon { color: #2f6b4f; }
+.app-toast-error .app-toast-icon { color: #9b3b3b; }
+.app-toast-warning .app-toast-icon { color: #8a5a12; }
+.app-toast-info .app-toast-icon { color: var(--ui-body); }
 .app-toast-body { flex: 1; min-width: 0; }
-.app-toast-title { font-weight: 700; font-size: .9rem; color: #0f172a; margin: 0 0 2px; }
-.app-toast-msg { font-size: .88rem; color: #475569; margin: 0; line-height: 1.4; }
+.app-toast-title { font-weight: 700; font-size: .9rem; color: var(--ui-title); margin: 0 0 2px; }
+.app-toast-msg { font-size: .88rem; color: var(--ui-body); margin: 0; line-height: 1.4; }
 .app-toast-close {
-    border: 0; background: transparent; color: #94a3b8; cursor: pointer;
+    border: 0; background: transparent; color: var(--ui-muted); cursor: pointer;
     font-size: 1.1rem; line-height: 1; padding: 0 0 0 6px;
 }
 @keyframes appToastIn {

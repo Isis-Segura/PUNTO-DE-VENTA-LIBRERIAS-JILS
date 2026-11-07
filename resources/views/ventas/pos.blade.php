@@ -216,92 +216,24 @@
 @section('css')
 <style>
 /* =====================================================================
-   CORRECCIÓN DEL SIDEBAR Y TEMA COFFEE / VINO TINTO
-   ===================================================================== */
-
-/* Fondo del Sidebar completo */
-aside, .main-sidebar, .sidebar, [class*="sidebar-"] {
-    background-color: #1A0608 !important;
-    border-right: 1px solid #3D1217 !important;
-}
-
-/* Reset de fondos blancos en listas del Sidebar */
-.sidebar ul, .sidebar li, aside ul, aside li {
-    background-color: transparent !important;
-    list-style: none !important;
-}
-
-/* Corrección de enlaces/botones del Sidebar (quita los cuadros azules) */
-aside a, aside .nav-link, .sidebar a, .sidebar .nav-link {
-    background-color: transparent !important;
-    color: #E8D8C4 !important;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0.65rem 1rem !important;
-    margin-bottom: 0.35rem !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    text-decoration: none !important;
-    border: none !important;
-    transition: all 0.2s ease !important;
-    box-shadow: none !important;
-}
-
-/* Estado Hover del Menú */
-aside a:hover, aside .nav-link:hover, .sidebar a:hover, .sidebar .nav-link:hover {
-    background-color: #561C24 !important;
-    color: #ffffff !important;
-}
-
-/* Opción Activa (Punto de Venta) */
-aside a.active, aside .nav-link.active, .sidebar a.active, .sidebar .nav-link.active,
-aside .active > a, .sidebar .active > a {
-    background-color: #561C24 !important;
-    color: #ffffff !important;
-    font-weight: 700 !important;
-}
-
-/* Banner de Información (Cambia el Cian feo por Crema/Vino) */
-.alert-info, .bg-info, [class*="bg-info"] {
-    background-color: #F5EFE6 !important;
-    color: #561C24 !important;
-    border: 1px solid #C7B7A3 !important;
-    font-weight: 600 !important;
-    border-radius: 10px !important;
-}
-
-/* Botones Principales */
-.btn-primary, button.btn-primary {
-    background-color: #561C24 !important;
-    border-color: #561C24 !important;
-    color: #ffffff !important;
-}
-
-.btn-primary:hover {
-    background-color: #6D2932 !important;
-    border-color: #6D2932 !important;
-}
-
-
-/* =====================================================================
    ESTILOS EXISTENTES DEL POS Y MODAL DE PAGO
    ===================================================================== */
 .card-pago-tarjeta {
     border: none;
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 12px 40px rgba(29, 45, 44, 0.18);
 }
 .pago-tarjeta-head {
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
+    background: var(--ui-surface-2);
+    border-bottom: 1px solid var(--ui-border);
     padding: 1.15rem 1.35rem 1rem;
 }
 .pago-tarjeta-kicker {
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #64748b;
+    color: var(--ui-muted);
     font-weight: 600;
     margin-bottom: 0.15rem;
 }
@@ -309,35 +241,35 @@ aside .active > a, .sidebar .active > a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    background: var(--ui-inset);
+    border: 1px solid var(--ui-border);
     border-radius: 10px;
     padding: 0.65rem 0.9rem;
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--ui-body);
 }
 .pago-tarjeta-monto strong {
     font-size: 1.25rem;
-    color: #0f172a;
+    color: var(--ui-title);
 }
 .pago-tarjeta-body {
     padding: 1.25rem 1.35rem 1.35rem;
-    background: #fff;
+    background: var(--ui-inset);
 }
 .pago-label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #475569;
+    color: var(--ui-body);
     margin-bottom: 0.3rem;
 }
 .pago-tarjeta-body .form-control,
 .pago-tarjeta-body .input-group-text {
     border-radius: 8px;
-    border-color: #e2e8f0;
+    border-color: var(--ui-border);
 }
 .pago-tarjeta-body .input-group-text {
-    background: #f8fafc;
-    color: #64748b;
+    background: var(--ui-surface-2);
+    color: var(--ui-muted);
 }
 .pago-tarjeta-body .input-group .form-control {
     border-top-left-radius: 0;
@@ -354,22 +286,24 @@ aside .active > a, .sidebar .active > a {
     font-size: 0.85rem;
 }
 .pago-msg.text-success {
-    background: #ecfdf5;
-    color: #047857 !important;
+    background: #e3efe8;
+    color: var(--ui-success-text, #047857) !important;
 }
 .pago-msg.text-danger {
-    background: #fef2f2;
-    color: #b91c1c !important;
+    background: #f8e7e7;
+    color: var(--ui-danger-text, #b91c1c) !important;
 }
 .pago-msg.text-muted {
-    background: #f1f5f9;
+    background: var(--ui-surface-2);
 }
 
 .pos-prod-card {
-    background: #fff;
+    background: var(--ui-surface);
+    border: 1px solid var(--ui-border);
+    color: var(--ui-text);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(15,23,42,.08);
+    box-shadow: 0 2px 10px rgba(29, 45, 44,.08);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -377,7 +311,7 @@ aside .active > a, .sidebar .active > a {
 .pos-prod-card.is-sin-stock { opacity: .55; }
 .pos-prod-img {
     aspect-ratio: 2/3;
-    background: linear-gradient(145deg,#1e293b,#475569);
+    background: linear-gradient(145deg,#1d2d2c,#4a5a59);
     overflow: hidden;
 }
 .pos-prod-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
@@ -393,7 +327,7 @@ aside .active > a, .sidebar .active > a {
     min-height: 2.1em; margin-bottom: 4px;
 }
 .pos-prod-price { font-weight: 800; font-size: 1.05rem; }
-.pos-prod-stock { font-size: .72rem; color: #64748b; margin-bottom: 4px; }
+.pos-prod-stock { font-size: .72rem; color: var(--ui-muted); margin-bottom: 4px; }
 .pos-btn-add {
     border-radius: 8px; font-weight: 600; margin-top: auto;
 }
