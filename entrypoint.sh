@@ -28,7 +28,7 @@ done
 
 # Ejecutar migraciones de Laravel para crear automáticamente todas las tablas
 echo "Ejecutando migraciones de base de datos..."
-php artisan migrate --force || php artisan migrate:fresh --force || true
+php artisan migrate --force
 
 # Ejecutar seeders esenciales (roles, sucursales, métodos de pago y usuarios)
 echo "Ejecutando seeders de datos iniciales..."
