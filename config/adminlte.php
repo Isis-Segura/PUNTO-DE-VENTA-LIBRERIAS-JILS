@@ -66,7 +66,7 @@ return [
     #Johiel puntos
     #Aqui podemos cambiar el logo de la aplicacion y el nombre
     'logo' => '<b>PDV</b> JILS',
-    'logo_img' => 'vendor/adminlte/dist/img/J_logo.jpeg',
+    'logo_img' => 'vendor/adminlte/dist/img/logoooo.jpeg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -88,7 +88,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/J_logo.jpeg',
+            'path' => 'vendor/adminlte/dist/img/logoooo.jpeg',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -117,7 +117,7 @@ return [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/J_logo.jpeg',
+            'path' => 'vendor/adminlte/dist/img/logoooo.jpeg',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,

@@ -6,7 +6,7 @@
     <title>{{ config('app.name', 'Librería JILS') }} - {{ __('Acceso a Terminal POS') }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/logoooo.jpeg') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -418,7 +418,7 @@
 
             <!-- Encabezado con Logo Oficial de Mostrador -->
             <div class="login-header">
-                <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo Librería JILS" class="login-logo">
+                <img src="{{ asset('vendor/adminlte/dist/img/logoooo.jpeg') }}" alt="Logo Librería JILS" class="login-logo">
                 <h1 class="login-title">{{ __('Librería JILS') }}</h1>
                 <p class="text-muted small mb-0">{{ __('Punto de Venta') }}</p>
             </div>

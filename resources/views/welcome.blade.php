@@ -6,7 +6,7 @@
     <title>{{ config('app.name', 'Librería JILS') }} - Punto de Venta e Inventario</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/logoooo.jpeg') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -264,7 +264,7 @@
     <header class="pos-navbar">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ url('/') }}" class="d-flex align-items-center gap-2 text-decoration-none">
-                <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo JILS" class="brand-logo">
+                <img src="{{ asset('vendor/adminlte/dist/img/logoooo.jpeg') }}" alt="Logo JILS" class="brand-logo">
                 <div>
                     <div class="brand-title">{{ __('Librería JILS') }}</div>
                     <div class="brand-subtitle">{{ __('Punto de Venta') }} &bull; {{ __('Inventario') }}</div>
