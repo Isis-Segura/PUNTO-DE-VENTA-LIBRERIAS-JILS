@@ -26,8 +26,8 @@
 <style>
     :root {
         --pos-dark: var(--pos-text);
-        --pos-blue: var(--pos-primary);
-        --pos-blue-hover: var(--pos-primary-hover);
+        --pos-blue: var(--pos-primary-action);
+        --pos-blue-hover: var(--pos-primary-action-hover);
         --pos-blue-light: var(--pos-cream);
         --pos-green: var(--pos-dashboard-success);
         --pos-green-light: var(--pos-cream);

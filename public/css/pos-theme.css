@@ -129,6 +129,17 @@ header small,
     font-weight: 700 !important;
 }
 
+/* Botones dentro de la cabecera: el texto debe seguir siendo blanco (la regla anterior pintaba
+   de verde azulado los <span> y el texto quedaba igual que el fondo del botón) */
+header .btn-pos-primary,
+header .btn-pos-primary span,
+header .btn-pos-primary i,
+header a.btn span, header a.btn i {
+    color: var(--pos-white) !important;
+}
+
+.text-muted { color: var(--ui-muted) !important; }
+
 /* 3. BOTONES DE IDIOMA Y MODO OSCURO (ES / EN / 🌙) */
 .lang-btn, 
 .theme-toggle-btn,

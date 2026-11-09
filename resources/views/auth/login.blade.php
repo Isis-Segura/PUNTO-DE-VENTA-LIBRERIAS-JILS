@@ -385,6 +385,37 @@
         .dark-mode .form-control-pos.is-invalid { background-color: #43303a; border-color: #e58a8a; }
         .dark-mode .form-check-label { color: var(--pos-text-muted); }
         .dark-mode .terminal-status-footer { border-top-color: var(--pos-border); color: var(--pos-text-muted); }
+
+        /* Autocompletado del navegador: sin esto el campo se pone azul pálido y el texto del tema (crema en oscuro) no se lee */
+        .form-control-pos:-webkit-autofill,
+        .form-control-pos:-webkit-autofill:hover,
+        .form-control-pos:-webkit-autofill:focus,
+        .form-control-pos:-webkit-autofill:active {
+            -webkit-text-fill-color: var(--pos-text-main) !important;
+            caret-color: var(--pos-text-main) !important;
+            -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+            box-shadow: 0 0 0 1000px #ffffff inset !important;
+            transition: background-color 9999s ease-out 0s;
+        }
+        .dark-mode .form-control-pos:-webkit-autofill,
+        .dark-mode .form-control-pos:-webkit-autofill:hover,
+        .dark-mode .form-control-pos:-webkit-autofill:focus,
+        .dark-mode .form-control-pos:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #1f2a33 inset !important;
+            box-shadow: 0 0 0 1000px #1f2a33 inset !important;
+        }
+        .form-control-pos:autofill { background-color: #ffffff; color: var(--pos-text-main); }
+        .dark-mode .form-control-pos:autofill { background-color: #1f2a33; color: var(--pos-text-main); }
+        html { color-scheme: light; }
+        html.dark-mode { color-scheme: dark; }
+
+        /* Alertas del login (errores): legibles en claro y oscuro */
+        .alert-danger { background-color: #f8e7e7; border: 1px solid #e3b9b9; color: #7a2b2b; }
+        .alert-danger .text-danger { color: #9b3b3b !important; }
+        .alert-success { background-color: #e3efe8; border: 1px solid #b9d4c4; color: #1f4d38; }
+        .dark-mode .alert-danger { background-color: rgba(229,138,138,.14); border-color: rgba(229,138,138,.45); color: #f7bcbc; }
+        .dark-mode .alert-danger .text-danger { color: #f7bcbc !important; }
+        .dark-mode .alert-success { background-color: rgba(127,196,160,.14); border-color: rgba(127,196,160,.45); color: #a6dcc0; }
 </style>
 </head>
 <body>
