@@ -140,7 +140,7 @@
 
     .btn-pos-primary {
         background-color: var(--pos-blue);
-        color: #ffffff;
+        color: #ffffff !important;
         font-weight: 800;
         font-size: 1.02rem;
         padding: 0.85rem 1.85rem;
@@ -156,9 +156,14 @@
 
     .btn-pos-primary:hover {
         background-color: var(--pos-blue-hover);
-        color: #ffffff;
+        color: #ffffff !important;
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(42, 109, 108, 0.35);
+    }
+
+    .pos-navbar .btn-pos-primary,
+    .pos-navbar .btn-pos-primary span {
+        color: #ffffff !important;
     }
 
     .btn-pos-outline {
@@ -291,8 +296,8 @@
 
                 <!-- Botón de Acceso -->
                 @auth
-                    <a href="{{ auth()->user()->isAdmin() ? url('/admin') : url('/home') }}" class="btn-pos-primary py-2 px-3 fs-6">
-                        <i class="fas fa-chart-line"></i>
+                    <a href="{{ auth()->user()->isAdmin() ? url('/admin') : url('/home') }}" class=
+                    <i class="fas fa-chart-line"></i>
                         <span>{{ __('Ir al Panel') }}</span>
                     </a>
                 @else
