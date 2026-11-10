@@ -66,7 +66,3 @@
 /* Footer */
 .dark-mode .pos-footer { background-color: var(--pos-dark-page); border-top-color: var(--pos-card-border); color: var(--pos-text-muted); }
 .dark-mode .pos-footer .text-muted { color: var(--pos-text-muted) !important; }
-
-/* Botón claro del banner: texto oscuro en ambos modos */
-.pos-info-banner .btn-light { background-color: #ffffff; border-color: #ffffff; color: #1d2d2c !important; }
-.pos-info-banner .btn-light:hover { background-color: #ebe7e1; color: #1d2d2c !important; }

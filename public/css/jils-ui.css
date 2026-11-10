@@ -26,7 +26,7 @@ body { font-family: var(--pos-font); }
 .stat-ventasmes, .stat-productos,  .summary-total   { background: linear-gradient(135deg, #3a4c5d, #2b3a48); }
 .stat-usuarios                                       { background: linear-gradient(135deg, #3b5c59, #2e4947); }
 .stat-alertas                                        { background: linear-gradient(135deg, #9b3b3b, #7a2b2b); }
-.summary-inactivas { background: linear-gradient(135deg, #6f6962, #57524d); }
+.summary-inactivas { background: linear-gradient(135deg, #7d766f, #625c56); }
 /* En oscuro, la tarjeta pizarra se confundiría con el fondo: se aclara y se perfila */
 body.dark-mode .stat-ventasmes, body.dark-mode .stat-productos, body.dark-mode .summary-total { background: linear-gradient(135deg, #4a6076, #3a4c5d); border-color: rgba(255,255,255,.18); }
 
@@ -208,28 +208,10 @@ body.dark-mode .fecha-icono.bg-info      { background-color: #4a6076 !important;
 body.dark-mode .fecha-icono.bg-secondary { background-color: #5a7087 !important; }
 body.dark-mode .fecha-icono.bg-dark      { background-color: #24313b !important; }
 
-/* =====================================================================
-   CAMPOS DE FORMULARIO: texto escrito, autocompletado y controles nativos
-   ===================================================================== */
 
-/* Controles nativos del navegador (calendario, flecha del select, scrollbars, casillas) */
-html { color-scheme: light; }
-html.dark-mode, body.dark-mode { color-scheme: dark; }
-
-/* Cualquier campo de texto/fecha/hora/número, no solo los de la lista anterior */
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="image"]):not([type="hidden"]) {
-    color: var(--ui-text);
-}
-input[type="tel"], input[type="url"], input[type="time"], input[type="datetime-local"], input[type="month"], input[type="week"] {
-    background-color: var(--ui-inset) !important;
-    border: 1px solid var(--ui-border) !important;
-    border-radius: var(--pos-radius-sm) !important;
-}
-input[type="file"] { color: var(--ui-body); }
-input[type="file"]::file-selector-button { background: var(--ui-surface-2); color: var(--ui-title); border: 1px solid var(--ui-border); border-radius: 6px; padding: .3rem .7rem; margin-right: .6rem; }
-
-/* AUTOCOMPLETADO (Chrome/Edge/Safari): el navegador pinta el campo de azul pálido y deja el texto
-   del tema; en oscuro quedaba crema sobre azul claro. Se fuerza fondo y texto del tema. */
+/* ===== Autocompletar / sugerencias del navegador (tema claro y oscuro) =====
+   Al elegir una sugerencia guardada, Chrome pinta el campo de blanco/azul claro con
+   letras blancas. Se fuerza el fondo y el texto con los colores del tema. */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -237,41 +219,12 @@ input:-webkit-autofill:active,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-    -webkit-text-fill-color: var(--ui-text) !important;
-    caret-color: var(--ui-text) !important;
+select:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px var(--ui-inset) inset !important;
     box-shadow: 0 0 0 1000px var(--ui-inset) inset !important;
-    transition: background-color 9999s ease-out 0s;
+    -webkit-text-fill-color: var(--ui-body) !important;
+    caret-color: var(--ui-body) !important;
+    border-color: var(--ui-border) !important;
+    transition: background-color 99999s ease-in-out 0s;
 }
-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px var(--ui-inset) inset, 0 0 0 3px var(--ui-focus) !important;
-    box-shadow: 0 0 0 1000px var(--ui-inset) inset, 0 0 0 3px var(--ui-focus) !important;
-}
-/* Firefox */
-input:autofill, textarea:autofill, select:autofill {
-    background-color: var(--ui-inset) !important;
-    color: var(--ui-text) !important;
-}
-
-/* Flecha de los <select> de AdminLTE (custom-select) legible en oscuro */
-body.dark-mode .custom-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23d0d8df' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") !important;
-}
-/* Casillas y radios: borde visible sobre fondos oscuros */
-body.dark-mode .custom-control-label::before { background-color: var(--ui-inset); border-color: var(--ui-border); }
-.custom-control-input:checked ~ .custom-control-label::before { background-color: var(--pos-primary-action); border-color: var(--pos-primary-action); }
-/* Campo con error: borde rojo legible en ambos modos */
-.form-control.is-invalid, input.is-invalid, select.is-invalid { border-color: var(--ui-danger-icon, var(--pos-danger)) !important; }
-/* Texto seleccionado dentro de campos */
-input::selection, textarea::selection { background: var(--pos-primary-action); color: var(--pos-white); }
-
-/* Alertas neutras (estados vacíos, avisos suaves) */
-.alert-light, .alert-secondary { background-color: var(--ui-surface-2); border-color: var(--ui-border); color: var(--ui-body); }
-.alert-light .text-muted, .alert-secondary .text-muted { color: var(--ui-muted) !important; }
-.alert-light a, .alert-secondary a { color: var(--ui-link); font-weight: 600; }
-body.dark-mode .alert-light, .dark-mode .alert-light, body.dark-mode .alert-secondary, .dark-mode .alert-secondary {
-    background-color: var(--ui-surface-2) !important; border-color: var(--ui-border) !important; color: var(--ui-body) !important;
-}
+.dark-mode input, .dark-mode textarea, .dark-mode select { color-scheme: dark; }

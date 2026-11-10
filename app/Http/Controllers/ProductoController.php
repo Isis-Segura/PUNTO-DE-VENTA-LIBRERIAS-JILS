@@ -10,6 +10,7 @@ use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProductoController extends Controller
 {
@@ -57,8 +58,8 @@ class ProductoController extends Controller
             'genero_ids' => ['required', 'array', 'min:1', 'max:5'],
             'genero_ids.*' => ['integer', 'exists:generos,id'],
             'nombre' => ['required', 'string', 'max:120'],
-            'descripcion' => ['nullable', 'string', 'max:2000'],
-            'codigo' => ['nullable', 'string', 'max:40'],
+            'descripcion' => ['nullable', 'string', 'max:30'],
+            'codigo' => ['nullable', 'string', 'max:40', Rule::unique('productos', 'codigo')->where('sucursal_id', $request->input('sucursal_id'))],
             'autor' => ['nullable', 'string', 'max:120'],
             'editorial' => ['nullable', 'string', 'max:120'],
             'precio' => ['required', 'numeric', 'min:0', 'max:999999.99'],
@@ -70,6 +71,7 @@ class ProductoController extends Controller
             'genero_ids.required' => 'Selecciona al menos 1 género.',
             'genero_ids.min' => 'Selecciona al menos 1 género.',
             'genero_ids.max' => 'Solo puedes seleccionar hasta 5 géneros.',
+            'codigo.unique' => 'Ese código / SKU ya lo tiene otro libro en esta sucursal.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);
@@ -125,8 +127,8 @@ class ProductoController extends Controller
             'genero_ids' => ['required', 'array', 'min:1', 'max:5'],
             'genero_ids.*' => ['integer', 'exists:generos,id'],
             'nombre' => ['required', 'string', 'max:120'],
-            'descripcion' => ['nullable', 'string', 'max:2000'],
-            'codigo' => ['nullable', 'string', 'max:40'],
+            'descripcion' => ['nullable', 'string', 'max:30'],
+            'codigo' => ['nullable', 'string', 'max:40', Rule::unique('productos', 'codigo')->where('sucursal_id', $request->input('sucursal_id'))->ignore($producto->id)],
             'autor' => ['nullable', 'string', 'max:120'],
             'editorial' => ['nullable', 'string', 'max:120'],
             'precio' => ['required', 'numeric', 'min:0', 'max:999999.99'],
@@ -144,6 +146,7 @@ class ProductoController extends Controller
         $data = $request->validate($rules, [
             'genero_ids.required' => 'Selecciona al menos 1 género.',
             'genero_ids.max' => 'Solo puedes seleccionar hasta 5 géneros.',
+            'codigo.unique' => 'Ese código / SKU ya lo tiene otro libro en esta sucursal.',
         ]);
 
         $this->verificarAccesoSucursal((int) $data['sucursal_id']);

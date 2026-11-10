@@ -80,7 +80,7 @@
 
             <div class="form-group">
                 <label>{{ __('Descripción') }}</label>
-                <textarea name="descripcion" rows="3" maxlength="2000" class="form-control">{{ old('descripcion') }}</textarea>
+                <textarea name="descripcion" rows="2" maxlength="30" class="form-control">{{ old('descripcion') }}</textarea>
             </div>
 
             <div class="form-row">

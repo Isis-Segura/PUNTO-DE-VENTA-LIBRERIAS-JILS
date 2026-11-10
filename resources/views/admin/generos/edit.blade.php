@@ -24,7 +24,7 @@
 
                 <div class="form-group">
                     <label>{{ __('Descripción') }}</label>
-                    <textarea name="descripcion" rows="3" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion', $genero->descripcion) }}</textarea>
+                    <textarea name="descripcion" rows="2" maxlength="30" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion', $genero->descripcion) }}</textarea>
                     @error('descripcion')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -38,7 +38,7 @@
 
                 <div class="form-group">
                     <label>{{ __('Descripción') }} (English)</label>
-                    <textarea name="descripcion_en" rows="3" class="form-control @error('descripcion_en') is-invalid @enderror">{{ old('descripcion_en', $genero->descripcion_en) }}</textarea>
+                    <textarea name="descripcion_en" rows="2" maxlength="30" class="form-control @error('descripcion_en') is-invalid @enderror">{{ old('descripcion_en', $genero->descripcion_en) }}</textarea>
                     @error('descripcion_en')<span class="invalid-feedback">{{ $message }}</span>@enderror
                 </div>
 

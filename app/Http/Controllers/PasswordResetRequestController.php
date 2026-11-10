@@ -13,11 +13,7 @@ class PasswordResetRequestController extends Controller
 
     public function index()
     {
-        $solicitudes = PasswordResetRequest::with(['user.role', 'attendant'])
-            ->latest()
-            ->paginate(20);
-
-        return view('admin.password_requests.index', compact('solicitudes'));
+        return redirect()->route('admin.solicitudes.index', ['tipo' => 'contrasena']);
     }
 
     public function attend(PasswordResetRequest $passwordResetRequest)

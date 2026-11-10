@@ -29,7 +29,7 @@
             flex-shrink: 0;
         }
         .sucursal-card.is-inactiva .sucursal-avatar {
-            background: linear-gradient(135deg, #7d766f, #6f6962);
+            background: linear-gradient(135deg, #a9a39c, #c9c1b9);
         }
 
         .sucursal-meta {

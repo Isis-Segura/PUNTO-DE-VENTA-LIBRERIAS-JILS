@@ -6,7 +6,7 @@
     <title>{{ config('app.name', 'Librería JILS') }} - Punto de Venta e Inventario</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('vendor/adminlte/dist/img/logoooo.jpeg') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,8 +26,8 @@
 <style>
     :root {
         --pos-dark: var(--pos-text);
-        --pos-blue: var(--pos-primary-action);
-        --pos-blue-hover: var(--pos-primary-action-hover);
+        --pos-blue: var(--pos-primary);
+        --pos-blue-hover: var(--pos-primary-hover);
         --pos-blue-light: var(--pos-cream);
         --pos-green: var(--pos-dashboard-success);
         --pos-green-light: var(--pos-cream);
@@ -140,7 +140,7 @@
 
     .btn-pos-primary {
         background-color: var(--pos-blue);
-        color: #ffffff;
+        color: #ffffff !important;
         font-weight: 800;
         font-size: 1.02rem;
         padding: 0.85rem 1.85rem;
@@ -156,9 +156,14 @@
 
     .btn-pos-primary:hover {
         background-color: var(--pos-blue-hover);
-        color: #ffffff;
+        color: #ffffff !important;
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(42, 109, 108, 0.35);
+    }
+
+    .pos-navbar .btn-pos-primary,
+    .pos-navbar .btn-pos-primary span {
+        color: #ffffff !important;
     }
 
     .btn-pos-outline {
@@ -264,7 +269,7 @@
     <header class="pos-navbar">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ url('/') }}" class="d-flex align-items-center gap-2 text-decoration-none">
-                <img src="{{ asset('vendor/adminlte/dist/img/J_logo.jpeg') }}" alt="Logo JILS" class="brand-logo">
+                <img src="{{ asset('vendor/adminlte/dist/img/logoooo.jpeg') }}" alt="Logo JILS" class="brand-logo">
                 <div>
                     <div class="brand-title">{{ __('Librería JILS') }}</div>
                     <div class="brand-subtitle">{{ __('Punto de Venta') }} &bull; {{ __('Inventario') }}</div>
