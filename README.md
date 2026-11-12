@@ -115,35 +115,49 @@ Ventas ──► Detalles_Venta ──► Métodos_Pago
 
 ### Requisitos previos
 
-- PHP 8.2 o superior
-- Composer 2.0 o superior
-- MySQL 8.0 o superior
-- Node.js y NPM
+- Windows
+- Docker Desktop instalado y en ejecución (con Docker Compose)
 - Git
 
-### 1. Clonar el repositorio
+### 1. Descargar el proyecto
 
-```bash
-git clone https://github.com/tu-usuario/libreria-jils.git
-cd libreria-jils
+Clona el repositorio y abre su carpeta:
+
+```powershell
+git clone https://github.com/Isis-Segura/PUNTO-DE-VENTA-LIBRERIAS-JILS.git
+cd PUNTO-DE-VENTA-LIBRERIAS-JILS
 ```
 
-### 2. Instalar dependencias
+### 2. Iniciar el sistema
 
-```bash
-composer install
-npm install
-npm run build
+Con Docker Desktop en ejecución, abre `iniciar.bat` con doble clic o ejecútalo desde PowerShell:
+
+```powershell
+.\iniciar.bat
 ```
 
-### 3. Configurar el entorno
+El script construye la imagen si hace falta, inicia los contenedores y abre estas direcciones:
 
-```bash
-cp .env.example .env
-php artisan key:generate
+- Aplicación: [http://localhost:8000](http://localhost:8000)
+- Administración de la base de datos (phpMyAdmin): [http://localhost:8081](http://localhost:8081)
+
+La primera vez puede tardar unos minutos mientras Docker descarga y construye los servicios. Al iniciar, el contenedor de la aplicación prepara la base de datos y ejecuta las migraciones y los datos iniciales automáticamente. No es necesario instalar PHP, Composer, MySQL ni Node.js en Windows.
+
+### 3. Detener el sistema
+
+Cuando termines, abre `detener.bat` o ejecútalo desde PowerShell:
+
+```powershell
+.\detener.bat
 ```
 
-> En Windows, si el comando `cp` no funciona, copia manualmente `.env.example` y renómbralo como `.env`.
+Esto detiene y elimina los contenedores, pero conserva los datos de la base de datos para el siguiente inicio. Para volver a usar el sistema, ejecuta `iniciar.bat` de nuevo.
+
+> En este repositorio el archivo para detener el proyecto se llama `detener.bat` (no `apagar.bat`).
+
+### Correo electrónico (opcional)
+
+Por defecto, los correos no se envían: Laravel los registra en sus logs. Para habilitar el envío, crea un archivo `.env` en la raíz del proyecto con la configuración SMTP de tu proveedor. No compartas ni subas ese archivo o sus credenciales al repositorio. Después de cambiar la configuración, detén e inicia el proyecto para aplicar los cambios.
 
 ### Imágenes de las portadas
 
