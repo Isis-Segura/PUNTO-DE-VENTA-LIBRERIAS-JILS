@@ -134,6 +134,24 @@
 @stop
 
 @section('adminlte_js')
+    {{-- Resumen de errores de validación / error general: si un formulario no se guarda, aquí se ve por qué. --}}
+    @if ($errors->any() || session('error'))
+        <script>
+            (function () {
+                var msgs = @json(array_values(array_unique(array_merge($errors->all(), session('error') ? [session('error')] : []))));
+                var host = document.querySelector('.content-wrapper .content') || document.querySelector('.content-wrapper');
+                if (!host || !msgs.length) return;
+                var box = document.createElement('div');
+                box.className = 'alert alert-danger';
+                box.setAttribute('role', 'alert');
+                var ul = document.createElement('ul');
+                ul.className = 'mb-0 pl-3';
+                msgs.forEach(function (m) { var li = document.createElement('li'); li.textContent = m; ul.appendChild(li); });
+                box.appendChild(ul);
+                host.insertBefore(box, host.firstChild);
+            })();
+        </script>
+    @endif
     @stack('js')
     @yield('js')
 @stop

@@ -50,9 +50,9 @@ class GeneroController extends Controller
     {
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', 'unique:generos,nombre'],
-            'descripcion' => ['nullable', 'string', 'max:500'],
+            'descripcion' => ['nullable', 'string', 'max:50'],
             'nombre_en' => ['nullable', 'string', 'max:80'],
-            'descripcion_en' => ['nullable', 'string', 'max:500'],
+            'descripcion_en' => ['nullable', 'string', 'max:50'],
         ]);
 
         Genero::create($data);
@@ -85,9 +85,9 @@ class GeneroController extends Controller
     {
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', Rule::unique('generos', 'nombre')->ignore($genero->id)],
-            'descripcion' => ['nullable', 'string', 'max:500'],
+            'descripcion' => ['nullable', 'string', 'max:50'],
             'nombre_en' => ['nullable', 'string', 'max:80'],
-            'descripcion_en' => ['nullable', 'string', 'max:500'],
+            'descripcion_en' => ['nullable', 'string', 'max:50'],
         ]);
 
         $genero->update($data);

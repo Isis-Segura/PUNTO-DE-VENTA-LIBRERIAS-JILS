@@ -207,3 +207,24 @@ body.dark-mode .badge-bajo-stock { background-color: rgba(229, 138, 138, .08); c
 body.dark-mode .fecha-icono.bg-info      { background-color: #4a6076 !important; }
 body.dark-mode .fecha-icono.bg-secondary { background-color: #5a7087 !important; }
 body.dark-mode .fecha-icono.bg-dark      { background-color: #24313b !important; }
+
+
+/* ===== Autocompletar / sugerencias del navegador (tema claro y oscuro) =====
+   Al elegir una sugerencia guardada, Chrome pinta el campo de blanco/azul claro con
+   letras blancas. Se fuerza el fondo y el texto con los colores del tema. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--ui-inset) inset !important;
+    box-shadow: 0 0 0 1000px var(--ui-inset) inset !important;
+    -webkit-text-fill-color: var(--ui-body) !important;
+    caret-color: var(--ui-body) !important;
+    border-color: var(--ui-border) !important;
+    transition: background-color 99999s ease-in-out 0s;
+}
+.dark-mode input, .dark-mode textarea, .dark-mode select { color-scheme: dark; }

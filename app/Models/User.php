@@ -12,8 +12,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
-#[Fillable(['name', 'email', 'password', 'role_id', 'sucursal_id', 'activo', 'terminos_aceptados_at', 'desactivado_at', 'reactivado_at', 'credenciales_pendientes'])]
+#[Fillable(['name', 'email', 'password', 'role_id', 'sucursal_id', 'activo', 'terminos_aceptados_at', 'terminos_token', 'terminos_enlace_usado_at', 'desactivado_at', 'reactivado_at', 'credenciales_pendientes'])]
 #[Hidden(['password', 'remember_token', 'credenciales_pendientes'])]
 class User extends Authenticatable
 {
@@ -138,11 +139,44 @@ class User extends Authenticatable
      */
     public function urlAceptarTerminos(): string
     {
+        // Cada enlace nuevo trae su propio "t" (token) y deja inservibles los anteriores.
+        // El enlace es de UN SOLO USO: se gasta cuando el usuario decide (ver
+        // TerminosController) y después hay que pedir que se lo vuelvan a enviar.
+        $token = Str::random(40);
+
+        $this->forceFill(['terminos_token' => $token, 'terminos_enlace_usado_at' => null])->saveQuietly();
+
         return URL::temporarySignedRoute(
             'terminos.show',
             now()->addDays(self::DIAS_VIGENCIA_TERMINOS),
-            ['usuario' => $this->getKey()]
+            ['usuario' => $this->getKey(), 't' => $token]
         );
+    }
+
+    /**
+     * ¿Este token corresponde al enlace vigente y todavía sin usar?
+     * (Enlaces anteriores a esta función no traen token: valen una vez si el usuario
+     * nunca tuvo un enlace nuevo.)
+     */
+    public function enlaceTerminosDisponible(?string $token): bool
+    {
+        if ($this->terminos_enlace_usado_at !== null) {
+            return false;
+        }
+
+        return $this->terminos_token === null
+            ? $token === null
+            : hash_equals($this->terminos_token, (string) $token);
+    }
+
+    public function gastarEnlaceTerminos(): void
+    {
+        $this->forceFill(['terminos_enlace_usado_at' => now()])->saveQuietly();
+    }
+
+    public function solicitudesTerminos(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TermsRequest::class);
     }
 
     /**
@@ -240,6 +274,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'terminos_aceptados_at' => 'datetime',
+            'terminos_enlace_usado_at' => 'datetime',
             'desactivado_at' => 'datetime',
             'reactivado_at' => 'datetime',
             // Contraseña inicial: se guarda cifrada con APP_KEY y se muestra solo después

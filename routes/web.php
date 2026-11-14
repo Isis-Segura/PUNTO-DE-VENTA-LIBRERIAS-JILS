@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\TerminosController;
+use App\Http\Controllers\SolicitudesController;
+use App\Http\Controllers\TermsRequestController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -30,6 +32,10 @@ Route::get('terminos/{usuario}', [TerminosController::class, 'show'])
     ->middleware('signed')->name('terminos.show');
 Route::post('terminos/{usuario}', [TerminosController::class, 'accept'])
     ->middleware(['signed', 'throttle:10,1'])->name('terminos.accept');
+// Enlace de un solo uso: con el enlace gastado se muestra "no disponible" y desde ahí
+// el usuario pide a los administradores volver a verlo.
+Route::post('terminos/{usuario}/solicitar', [TerminosController::class, 'solicitar'])
+    ->middleware(['signed', 'throttle:5,1'])->name('terminos.solicitar');
 
 // Cambiar el idioma de la interfaz (ej. /lang/en, /lang/es)
 Route::get('/lang/{locale}', [App\Http\Controllers\LocaleController::class, 'switch'])->name('lang.switch');
@@ -110,6 +116,9 @@ Route::middleware('auth')->group(function () {
 
 // Solicitudes de cambio de contraseña: solo el Administrador puede verlas, atenderlas y eliminarlas
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('solicitudes', [SolicitudesController::class, 'index'])->name('solicitudes.index');
+    Route::post('solicitudes-terminos/{termsRequest}/aprobar', [TermsRequestController::class, 'approve'])->name('terms-requests.approve');
+    Route::delete('solicitudes-terminos/{termsRequest}', [TermsRequestController::class, 'destroy'])->name('terms-requests.destroy');
     Route::get('solicitudes-contrasena', [PasswordResetRequestController::class, 'index'])->name('password-requests.index');
     Route::post('solicitudes-contrasena/{passwordResetRequest}/atender', [PasswordResetRequestController::class, 'attend'])->name('password-requests.attend');
     Route::delete('solicitudes-contrasena/{passwordResetRequest}', [PasswordResetRequestController::class, 'destroy'])->name('password-requests.destroy');

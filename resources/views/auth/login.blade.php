@@ -333,6 +333,21 @@
             --pos-text-muted: #c3cdd6;
         }
 
+        .pos-login-card .text-muted,
+        .login-header .text-muted { color: var(--pos-text-muted) !important; }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px var(--pos-card-bg) inset !important;
+            box-shadow: 0 0 0 1000px var(--pos-card-bg) inset !important;
+            -webkit-text-fill-color: var(--pos-text-main) !important;
+            caret-color: var(--pos-text-main) !important;
+            transition: background-color 99999s ease-in-out 0s;
+        }
+        .dark-mode input { color-scheme: dark; }
+
         .dark-mode body {
             background-image:
                 radial-gradient(#34444f 1px, transparent 1px),
