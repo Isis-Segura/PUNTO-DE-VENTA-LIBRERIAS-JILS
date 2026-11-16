@@ -87,6 +87,7 @@
 (function () {
     var roleSelect = document.getElementById('role_id');
     var grupoSucursal = document.getElementById('grupo-sucursal');
+    var sucursalSelect = document.getElementById('sucursal_id');
 
     function actualizar() {
         var opcion = roleSelect.options[roleSelect.selectedIndex];
@@ -95,6 +96,7 @@
         // El Administrador General normalmente no necesita sucursal; se
         // oculta el campo (queda vacío) solo cuando el rol elegido es admin.
         grupoSucursal.style.display = (slug === 'admin') ? 'none' : '';
+        sucursalSelect.required = slug === 'gerente' || slug === 'cajero';
     }
 
     roleSelect.addEventListener('change', actualizar);

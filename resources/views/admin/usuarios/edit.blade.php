@@ -96,12 +96,14 @@
 (function () {
     var roleSelect = document.getElementById('role_id');
     var grupoSucursal = document.getElementById('grupo-sucursal');
+    var sucursalSelect = document.getElementById('sucursal_id');
 
     function actualizar() {
         var opcion = roleSelect.options[roleSelect.selectedIndex];
         var slug = opcion ? opcion.dataset.slug : null;
 
         grupoSucursal.style.display = (slug === 'admin') ? 'none' : '';
+        sucursalSelect.required = slug === 'gerente' || slug === 'cajero';
     }
 
     roleSelect.addEventListener('change', actualizar);

@@ -76,15 +76,22 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
+        $sucursalRequerida = Role::whereKey($request->input('role_id'))
+            ->whereIn('slug', [Role::GERENTE, Role::CAJERO])
+            ->exists();
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:80'],
             'email' => ['required', 'string', 'email', 'max:120', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'max:64', 'confirmed'],
             'role_id' => ['required', Rule::exists('roles', 'id')],
-            // Un Gerente o un Cajero necesitan sucursal para poder trabajar
-            // (buscar/vender productos, ver su inventario, etc.). El
-            // Administrador General normalmente no la necesita.
-            'sucursal_id' => ['nullable', Rule::exists('sucursales', 'id')],
+            'sucursal_id' => [
+                'nullable',
+                Rule::requiredIf($sucursalRequerida),
+                Rule::exists('sucursales', 'id'),
+            ],
+        ], [
+            'sucursal_id.required' => __('messages.branch_required_for_user'),
         ]);
 
         $this->autorizarRolYSucursal($data['role_id'], $data['sucursal_id'] ?? null);
@@ -146,13 +153,23 @@ class UsuarioController extends Controller
     {
         $this->verificarAccesoAUsuario($usuario);
 
+        $sucursalRequerida = Role::whereKey($request->input('role_id'))
+            ->whereIn('slug', [Role::GERENTE, Role::CAJERO])
+            ->exists();
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:80'],
             'email' => ['required', 'string', 'email', 'max:120', Rule::unique('users', 'email')->ignore($usuario->id)],
             'password' => ['nullable', 'string', 'min:8', 'max:64', 'confirmed'],
             'role_id' => ['required', Rule::exists('roles', 'id')],
-            'sucursal_id' => ['nullable', Rule::exists('sucursales', 'id')],
+            'sucursal_id' => [
+                'nullable',
+                Rule::requiredIf($sucursalRequerida),
+                Rule::exists('sucursales', 'id'),
+            ],
             'activo' => ['required', 'boolean'],
+        ], [
+            'sucursal_id.required' => __('messages.branch_required_for_user'),
         ]);
 
         $this->autorizarRolYSucursal($data['role_id'], $data['sucursal_id'] ?? null);

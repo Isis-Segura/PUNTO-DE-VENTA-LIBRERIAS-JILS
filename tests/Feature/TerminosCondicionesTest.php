@@ -72,6 +72,27 @@ class TerminosCondicionesTest extends TestCase
         $this->assertStringNotContainsString('ClaveTemporal123', (string) $crudo);
     }
 
+    public function test_creating_a_cashier_without_a_branch_returns_a_validation_error(): void
+    {
+        $adminRole = $this->rolAdmin();
+        $admin = User::factory()->create(['role_id' => $adminRole->id]);
+        $cashierRole = Role::create(['slug' => Role::CAJERO, 'nombre' => 'Cajero']);
+
+        $this->actingAs($admin)
+            ->from(route('admin.usuarios.create'))
+            ->post(route('admin.usuarios.store'), [
+                'name' => 'Cajero sin sucursal',
+                'email' => 'cajero@example.com',
+                'password' => 'ClaveTemporal123',
+                'password_confirmation' => 'ClaveTemporal123',
+                'role_id' => $cashierRole->id,
+            ])
+            ->assertRedirect(route('admin.usuarios.create'))
+            ->assertSessionHasErrors('sucursal_id');
+
+        $this->assertDatabaseMissing('users', ['email' => 'cajero@example.com']);
+    }
+
     public function test_page_requires_a_valid_signature(): void
     {
         $usuario = $this->usuarioPendiente($this->rolAdmin());
