@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneTraduccion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,13 +11,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Categoria extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoriaFactory> */
-    use HasFactory;
+    use HasFactory, TieneTraduccion;
 
     protected $table = 'categorias';
 
     protected $fillable = [
         'nombre',
+        'nombre_en',
         'descripcion',
+        'descripcion_en',
     ];
 
     public function productos(): HasMany

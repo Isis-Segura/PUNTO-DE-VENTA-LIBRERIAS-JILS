@@ -12,22 +12,7 @@
             <form action="{{ route('categorias.store') }}" method="POST">
                 @csrf
 
-                <div class="form-group">
-                    <label>{{ __('Nombre') }}</label>
-                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror"
-                           value="{{ old('nombre') }}">
-                    @error('nombre')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label>{{ __('Descripción') }}</label>
-                    <textarea name="descripcion" rows="3" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion') }}</textarea>
-                    @error('descripcion')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
+                @include('partials.campos-bilingues', ['item' => null, 'maxNombre' => 80, 'maxDescripcion' => 500])
 
                 <button type="submit" class="btn btn-primary">{{ __('Guardar') }}</button>
                 <a href="{{ route('categorias.index') }}" class="btn btn-secondary">{{ __('Cancelar') }}</a>

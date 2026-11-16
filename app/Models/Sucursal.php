@@ -21,6 +21,7 @@ class Sucursal extends Model
 
     protected $casts = [
         'activa' => 'boolean',
+        'sku_sequence' => 'integer',
     ];
 
     public function getNombreTraducidoAttribute(): string

@@ -12,7 +12,9 @@ class Caja extends Model
     protected $fillable = [
         'sucursal_id',
         'nombre',
+        'nombre_en',
         'descripcion',
+        'descripcion_en',
         'activa',
     ];
 
@@ -22,7 +24,25 @@ class Caja extends Model
 
     public function getNombreTraducidoAttribute(): string
     {
-        return __($this->nombre);
+        return app()->getLocale() === 'en' && filled($this->nombre_en)
+            ? $this->nombre_en
+            : __($this->nombre);
+    }
+
+    public function getDescripcionTraducidaAttribute(): ?string
+    {
+        return app()->getLocale() === 'en' && filled($this->descripcion_en)
+            ? $this->descripcion_en
+            : $this->descripcion;
+    }
+
+    public function scopeBuscarBilingue($query, string $texto, array $extra = [])
+    {
+        return $query->where(function ($sub) use ($texto, $extra) {
+            foreach (array_merge(['nombre', 'nombre_en', 'descripcion', 'descripcion_en'], $extra) as $indice => $columna) {
+                $sub->{$indice === 0 ? 'where' : 'orWhere'}($columna, 'like', "%{$texto}%");
+            }
+        });
     }
 
     public function sucursal(): BelongsTo

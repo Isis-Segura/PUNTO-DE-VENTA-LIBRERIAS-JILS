@@ -51,9 +51,9 @@
                 <tbody>
                     @forelse ($inventarios as $inv)
                         <tr class="{{ $inv->bajo_inventario ? 'table-danger' : '' }}">
-                            <td>{{ $inv->producto->nombre ?? '-' }}</td>
+                            <td>{{ $inv->producto->nombre_traducido ?? '-' }}</td>
                             <td>{{ $inv->producto->sucursal->nombre ?? '-' }}</td>
-                            <td>{{ $inv->producto->categoria->nombre ?? '-' }}</td>
+                            <td>{{ $inv->producto->categoria->nombre_traducido ?? '-' }}</td>
                             <td>{{ $inv->cantidad }}</td>
                             <td>{{ $inv->stock_minimo }}</td>
                             <td>
@@ -79,7 +79,7 @@
                                         @csrf
                                         @method('PUT')
                                         <div class="modal-header">
-                                            <h5 class="modal-title">{{ __('Ajustar inventario') }}: {{ $inv->producto->nombre ?? '' }}</h5>
+                                            <h5 class="modal-title">{{ __('Ajustar inventario') }}: {{ $inv->producto->nombre_traducido ?? '' }}</h5>
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">

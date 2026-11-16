@@ -152,10 +152,10 @@
                         if (! $p) continue;
                         $existencia = $inv->cantidad;
                         $bajo = $existencia <= $inv->stock_minimo;
-                        $img = $p->imagen ? asset('portadas/'.$p->imagen) : null;
+                        $img = $p->imagen_url;
                         $payload = [
-                            'nombre' => $p->nombre,
-                            'descripcion' => $p->descripcion ?? '',
+                            'nombre' => $p->nombre_traducido,
+                            'descripcion' => $p->descripcion_traducida ?? '',
                             'codigo' => $p->codigo ?? '',
                             'precio' => number_format($p->precio, 2),
                             'categorias' => $p->generos_lista,
@@ -177,13 +177,13 @@
                                     @endif
                                 </div>
                                 @if ($img)
-                                    <img src="{{ $img }}" alt="{{ $p->nombre }}">
+                                    <img src="{{ $img }}" alt="{{ $p->nombre_traducido }}">
                                 @else
                                     <div class="placeholder"><i class="fas fa-book"></i></div>
                                 @endif
                             </div>
                             <div class="libro-body">
-                                <h3 class="libro-titulo">{{ $p->nombre }}</h3>
+                                <h3 class="libro-titulo">{{ $p->nombre_traducido }}</h3>
                                 <div class="libro-meta">
                                     {{ $p->generos_lista }}
                                     <br>{{ __('Stock') }}: {{ $existencia }} / mín. {{ $inv->stock_minimo }}

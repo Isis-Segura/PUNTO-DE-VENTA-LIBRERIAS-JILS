@@ -296,8 +296,8 @@
 
                 <!-- Botón de Acceso -->
                 @auth
-                    <a href="{{ auth()->user()->isAdmin() ? url('/admin') : url('/home') }}" class=
-                    <i class="fas fa-chart-line"></i>
+                    <a href="{{ auth()->user()->isAdmin() ? url('/admin') : url('/home') }}" class="btn-pos-primary py-2 px-3 fs-6">
+                        <i class="fas fa-chart-line"></i>
                         <span>{{ __('Ir al Panel') }}</span>
                     </a>
                 @else

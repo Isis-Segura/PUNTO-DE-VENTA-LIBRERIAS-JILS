@@ -29,6 +29,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# El formulario permite imágenes de hasta 4 MB.
+RUN printf 'upload_max_filesize=5M\npost_max_size=8M\n' > /usr/local/etc/php/conf.d/uploads.ini
+
 # Obtener Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -50,8 +53,9 @@ COPY --from=frontend /app/public/build ./public/build
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Configurar permisos para storage y bootstrap/cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN mkdir -p /var/www/html/public/portadas \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/portadas \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/portadas
 
 # Copiar y asegurar formato Unix en el script de arranque
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

@@ -29,25 +29,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="nombre">{{ __('Nombre') }} <span class="text-danger">*</span></label>
-                    <input type="text" name="nombre" id="nombre" value="{{ old('nombre') }}"
-                           class="form-control @error('nombre') is-invalid @enderror"
-                           maxlength="80" required placeholder="{{ __('Ej. Caja 1, Caja Principal') }}">
-                    @error('nombre')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="descripcion">{{ __('Descripción') }}</label>
-                    <textarea name="descripcion" id="descripcion" rows="2"
-                              class="form-control @error('descripcion') is-invalid @enderror"
-                              maxlength="255">{{ old('descripcion') }}</textarea>
-                    @error('descripcion')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
+                @include('partials.campos-bilingues', ['item' => null, 'maxNombre' => 80, 'maxDescripcion' => 255])
 
                 <div class="form-group">
                     <label for="activa">{{ __('Estado') }}</label>

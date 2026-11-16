@@ -29,8 +29,7 @@ class CajaController extends Controller
         if ($request->filled('q') || $request->filled('adminlteSearch')) {
             $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
             $query->where(function ($sub) use ($q) {
-                $sub->where('nombre', 'like', "%{$q}%")
-                    ->orWhere('descripcion', 'like', "%{$q}%")
+                $sub->buscarBilingue($q)
                     ->orWhereHas('sucursal', function ($s) use ($q) {
                         $s->where('nombre', 'like', "%{$q}%");
                     });
@@ -60,7 +59,9 @@ class CajaController extends Controller
         $data = $request->validate([
             'sucursal_id'  => ['required', 'exists:sucursales,id'],
             'nombre'       => ['required', 'string', 'max:80'],
+            'nombre_en'    => ['required', 'string', 'max:80'],
             'descripcion'  => ['nullable', 'string', 'max:255'],
+            'descripcion_en' => ['nullable', 'string', 'max:255'],
             'activa'       => ['required', 'boolean'],
         ]);
 
@@ -98,7 +99,9 @@ class CajaController extends Controller
         $data = $request->validate([
             'sucursal_id'  => ['required', 'exists:sucursales,id'],
             'nombre'       => ['required', 'string', 'max:80'],
+            'nombre_en'    => ['required', 'string', 'max:80'],
             'descripcion'  => ['nullable', 'string', 'max:255'],
+            'descripcion_en' => ['nullable', 'string', 'max:255'],
             'activa'       => ['required', 'boolean'],
         ]);
 

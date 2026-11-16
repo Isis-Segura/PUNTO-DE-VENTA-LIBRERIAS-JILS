@@ -121,7 +121,7 @@
                             @forelse ($bajoStockList as $inv)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $inv->producto->nombre ?? '-' }}
+                                        {{ $inv->producto->nombre_traducido ?? '-' }}
                                         <br><small class="text-muted">{{ $inv->producto->sucursal->nombre ?? '-' }}</small>
                                     </td>
                                     <td class="align-middle text-right">

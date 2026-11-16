@@ -130,7 +130,7 @@
                     <select name="sucursal_id" class="form-control form-control-sm" onchange="this.form.submit()">
                         <option value="">{{ __('Todas') }}</option>
                         @foreach ($sucursales as $s)
-                            <option value="{{ $s->id }}" {{ request('sucursal_id') == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                            <option value="{{ $s->id }}" {{ request('sucursal_id') == $s->id ? 'selected' : '' }}>{{ $s->nombre_traducido }}</option>
                         @endforeach
                     </select>
                 </form>
@@ -141,23 +141,24 @@
         </a>
     </div>
 
+    <div id="js-resultados">
     <div class="row libro-grid">
         @forelse ($productos as $producto)
             @php
                 $existencia = $producto->inventario->cantidad ?? 0;
                 $stockMin = $producto->inventario->stock_minimo ?? 0;
                 $bajo = $producto->inventario && $existencia <= $stockMin;
-                $img = $producto->imagen ? asset('portadas/'.$producto->imagen) : null;
-                                $payload = [
-                    'nombre' => $producto->nombre,
-                    'descripcion' => $producto->descripcion ?? '',
+                $img = $producto->imagen_url;
+                $payload = [
+                    'nombre' => $producto->nombre_traducido,
+                    'descripcion' => $producto->descripcion_traducida ?? '',
                     'codigo' => $producto->codigo ?? '',
                     'autor' => $producto->autor ?? '',
                     'editorial' => $producto->editorial ?? '',
                     'precio' => number_format($producto->precio, 2),
-                    'categoria' => $producto->categoria->nombre ?? '—',
+                    'categoria' => $producto->categoria->nombre_traducido ?? '—',
                     'generos' => $producto->generos_lista,
-                    'sucursal' => $producto->sucursal->nombre ?? '—',
+                    'sucursal' => $producto->sucursal->nombre_traducido ?? '—',
                     'existencia' => $existencia,
                     'stockMin' => $stockMin,
                     'activo' => $producto->activo ? 1 : 0,
@@ -165,7 +166,7 @@
                 ];
             @endphp
             <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3 js-prod-item"
-                 data-search="{{ strtolower($producto->nombre.' '.$producto->codigo.' '.$producto->descripcion.' '.$producto->autor.' '.$producto->editorial.' '.$producto->generos_lista.' '.($producto->categoria->nombre??'')) }}">
+                 data-search="{{ strtolower($producto->nombre.' '.$producto->nombre_en.' '.$producto->codigo.' '.$producto->descripcion.' '.$producto->descripcion_en.' '.$producto->autor.' '.$producto->editorial.' '.$producto->generos_lista.' '.($producto->categoria->nombre??'').' '.($producto->categoria->nombre_en??'')) }}">
                 <div class="libro-card js-prod-detail" data-prod='@json($payload)'>
                     <div class="libro-portada">
                         <div class="libro-badges">
@@ -179,16 +180,16 @@
                             @endif
                         </div>
                         @if ($img)
-                            <img src="{{ $img }}" alt="{{ $producto->nombre }}">
+                            <img src="{{ $img }}" alt="{{ $producto->nombre_traducido }}">
                         @else
                             <div class="placeholder"><i class="fas fa-book"></i></div>
                         @endif
                     </div>
                     <div class="libro-body">
-                        <h3 class="libro-titulo" title="{{ $producto->nombre }}">{{ $producto->nombre }}</h3>
+                        <h3 class="libro-titulo" title="{{ $producto->nombre_traducido }}">{{ $producto->nombre_traducido }}</h3>
                         <div class="libro-meta">
                             {{ $producto->sucursal->nombre_traducido ?? '—' }}
-                            @if($producto->categoria)· {{ $producto->categoria->nombre }}@endif
+                            @if($producto->categoria)· {{ $producto->categoria->nombre_traducido }}@endif
                             @if($producto->autor)· {{ $producto->autor }}@endif
                             <br>{{ __('Stock') }}: {{ $existencia }}
                         </div>
@@ -212,15 +213,10 @@
             <div class="col-12">
                 <div class="alert alert-light border text-center py-5 mb-0">
                     <i class="fas fa-book-open fa-2x text-muted mb-2 d-block"></i>
-                    <span class="text-muted">{{ __('No hay productos registrados.') }}</span>
+                    <span class="text-muted">{{ request()->filled('q') || request()->filled('adminlteSearch') ? __('No existe ningún producto con esa búsqueda.') : __('No hay productos registrados.') }}</span>
                 </div>
             </div>
         @endforelse
-    </div>
-
-    <div class="col-12 js-prod-empty text-center text-muted py-5" style="display:none;">
-        <i class="fas fa-search fa-2x mb-2 d-block"></i>
-        {{ __('No existe ningún producto con esa búsqueda.') }}
     </div>
 
     @if ($productos->hasPages())
@@ -228,6 +224,7 @@
             {{ $productos->links() }}
         </div>
     @endif
+    </div>
 
     <div class="modal fade prod-detail-modal" id="prodDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -300,49 +297,7 @@
 
 @section('js')
 
-<script>
-(function () {
-    function filtrarProductos(texto) {
-        var q = (texto || '').toString().trim().toLowerCase();
-        var items = document.querySelectorAll('.js-prod-item');
-        var visibles = 0;
-        items.forEach(function (el) {
-            var hay = !q || (el.getAttribute('data-search') || '').indexOf(q) !== -1;
-            el.style.display = hay ? '' : 'none';
-            if (hay) visibles++;
-        });
-        var empty = document.querySelector('.js-prod-empty');
-        if (empty) empty.style.display = (items.length && visibles === 0) ? '' : 'none';
-    }
-
-    // Campo de la página + navbar/sidebar (q o adminlteSearch)
-    document.addEventListener('input', function (e) {
-        var t = e.target;
-        if (!t || !t.name) return;
-        if (t.name === 'q' || t.name === 'adminlteSearch') {
-            filtrarProductos(t.value);
-        }
-    });
-
-    // Si la URL ya trae búsqueda al cargar
-    var params = new URLSearchParams(window.location.search);
-    var inicial = params.get('q') || params.get('adminlteSearch') || '';
-    if (inicial) filtrarProductos(inicial);
-
-    // Evitar que el form de AdminLTE recargue con token; filtrar en vivo y opcionalmente no enviar
-    document.addEventListener('submit', function (e) {
-        var form = e.target;
-        if (!form || !form.querySelector) return;
-        var input = form.querySelector('input[name="adminlteSearch"], input[name="q"]');
-        if (!input) return;
-        // Si estamos en productos, filtrar en cliente y no recargar
-        if (document.querySelector('.js-prod-item')) {
-            e.preventDefault();
-            filtrarProductos(input.value);
-        }
-    });
-})();
-</script>
+@include('partials.busqueda-servidor')
 
 <script>
 (function () {

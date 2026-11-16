@@ -49,7 +49,7 @@
                     <label>{{ __('Sucursal') }}</label>
                     <select name="sucursal_id" class="form-control" required>
                         @foreach ($sucursales as $s)
-                            <option value="{{ $s->id }}" {{ old('sucursal_id', $producto->sucursal_id) == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                            <option value="{{ $s->id }}" {{ old('sucursal_id', $producto->sucursal_id) == $s->id ? 'selected' : '' }}>{{ $s->nombre_traducido }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -62,10 +62,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>{{ __('Nombre del libro') }}</label>
-                <input type="text" name="nombre" maxlength="120" class="form-control" value="{{ old('nombre', $producto->nombre) }}" required>
-            </div>
+            @include('partials.campos-bilingues', ['item' => $producto, 'inglesObligatorio' => false, 'maxNombre' => 120, 'maxDescripcion' => 50])
 
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -78,22 +75,18 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>{{ __('Descripción') }}</label>
-                <textarea name="descripcion" rows="2" maxlength="50" class="form-control">{{ old('descripcion', $producto->descripcion) }}</textarea>
-            </div>
-
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label>{{ __('Código / SKU') }}</label>
-                    <input type="text" name="codigo" maxlength="40" class="form-control" value="{{ old('codigo', $producto->codigo) }}">
+                    <input type="text" class="form-control" value="{{ $producto->codigo }}" readonly>
+                    <small class="form-text text-muted">{{ __('El SKU no se puede editar.') }}</small>
                 </div>
                 <div class="form-group col-md-4">
                     <label>{{ __('Categoría') }}</label>
                     <select name="categoria_id" class="form-control">
                         <option value="">{{ __('— Sin categoría —') }}</option>
                         @foreach ($categorias as $cat)
-                            <option value="{{ $cat->id }}" {{ old('categoria_id', $producto->categoria_id) == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
+                            <option value="{{ $cat->id }}" {{ old('categoria_id', $producto->categoria_id) == $cat->id ? 'selected' : '' }}>{{ $cat->nombre_traducido }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -142,7 +135,7 @@
                 <div class="cover-upload">
                     <div class="cover-preview">
                         @if ($producto->imagen)
-                            <img src="{{ asset('portadas/'.$producto->imagen) }}" alt="" id="cover-img">
+                            <img src="{{ $producto->imagen_url }}" alt="" id="cover-img">
                             <i class="fas fa-book" id="cover-icon" style="display:none;"></i>
                         @else
                             <i class="fas fa-book" id="cover-icon"></i>
@@ -154,6 +147,7 @@
                         <button type="button" class="btn btn-outline-primary btn-sm" id="btn-pick-cover">
                             <i class="fas fa-image"></i> {{ __('Cambiar imagen') }}
                         </button>
+                        @error('imagen')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                         @if ($producto->imagen)
                             <div class="custom-control custom-checkbox d-inline-block ml-2">
                                 <input type="checkbox" class="custom-control-input" id="quitar_imagen" name="quitar_imagen" value="1">

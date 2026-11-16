@@ -48,7 +48,7 @@
                     <label>{{ __('Sucursal') }}</label>
                     <select name="sucursal_id" class="form-control" required>
                         @foreach ($sucursales as $s)
-                            <option value="{{ $s->id }}" {{ old('sucursal_id') == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                            <option value="{{ $s->id }}" {{ old('sucursal_id') == $s->id ? 'selected' : '' }}>{{ $s->nombre_traducido }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -61,11 +61,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>{{ __('Nombre del libro') }}</label>
-                <input type="text" name="nombre" maxlength="120" class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required>
-                @error('nombre')<span class="invalid-feedback">{{ $message }}</span>@enderror
-            </div>
+            @include('partials.campos-bilingues', ['item' => null, 'inglesObligatorio' => false, 'maxNombre' => 120, 'maxDescripcion' => 50])
 
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -78,22 +74,17 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>{{ __('Descripción') }}</label>
-                <textarea name="descripcion" rows="2" maxlength="50" class="form-control">{{ old('descripcion') }}</textarea>
-            </div>
-
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label>{{ __('Código / SKU') }}</label>
-                    <input type="text" name="codigo" maxlength="40" class="form-control" value="{{ old('codigo') }}">
+                    <input type="text" class="form-control" value="{{ __('Se asignará automáticamente al guardar (ej. 0101)') }}" readonly>
                 </div>
                 <div class="form-group col-md-4">
                     <label>{{ __('Categoría') }}</label>
                     <select name="categoria_id" class="form-control">
                         <option value="">{{ __('— Sin categoría —') }}</option>
                         @foreach ($categorias as $cat)
-                            <option value="{{ $cat->id }}" {{ old('categoria_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
+                            <option value="{{ $cat->id }}" {{ old('categoria_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nombre_traducido }}</option>
                         @endforeach
                     </select>
                     <small class="form-text text-muted">{{ __('Una sola categoría (como manga, novela, etc.).') }}</small>
@@ -147,6 +138,7 @@
                             <i class="fas fa-image"></i> {{ __('Elegir imagen') }}
                         </button>
                         <div class="small text-muted mt-2">{{ __('JPG, PNG o WEBP. Máx. 4 MB.') }}</div>
+                        @error('imagen')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                     </div>
                 </div>
             </div>

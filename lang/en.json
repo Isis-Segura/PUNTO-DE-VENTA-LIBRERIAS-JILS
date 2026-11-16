@@ -377,5 +377,15 @@
     "Cambio de contraseña": "Password change",
     "Términos y condiciones": "Terms and conditions",
     "Aprobar y reenviar correo": "Approve and resend email",
-    "¿Eliminar esta solicitud de términos y condiciones?": "Delete this terms and conditions request?"
+    "¿Eliminar esta solicitud de términos y condiciones?": "Delete this terms and conditions request?",
+    "Nombre (Español)": "Name (Spanish)",
+    "Nombre (Inglés)": "Name (English)",
+    "Descripción (Español)": "Description (Spanish)",
+    "Descripción (Inglés)": "Description (English)",
+    "Se asignará automáticamente al guardar (ej. 0101)": "Assigned automatically when saved (e.g. 0101)",
+    "El SKU no se puede editar.": "The SKU cannot be edited.",
+    "No existe ninguna caja con esa búsqueda.": "No cash register matches that search.",
+    "No existe ninguna género con esa búsqueda.": "No genre matches that search.",
+    "No se pudo guardar:": "Could not save:",
+    "No se pudo guardar la imagen. Revisa los permisos de la carpeta public/portadas.": "Could not save the image. Check permissions on the public/portadas folder."
 }

@@ -132,7 +132,7 @@
             <tbody>
                 @foreach ($venta->detalles as $detalle)
                     <tr>
-                        <td>{{ $detalle->producto->nombre ?? __('Producto eliminado') }}</td>
+                        <td>{{ $detalle->producto->nombre_traducido ?? __('Producto eliminado') }}</td>
                         <td class="num">{{ $detalle->cantidad }}</td>
                         <td class="num">${{ number_format($detalle->subtotal, 2) }}</td>
                     </tr>

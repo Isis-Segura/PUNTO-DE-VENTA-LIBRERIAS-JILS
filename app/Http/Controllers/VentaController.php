@@ -121,6 +121,7 @@ class VentaController extends Controller
             ->when($texto !== '', function ($q) use ($texto) {
                 $q->where(function ($sub) use ($texto) {
                     $sub->where('nombre', 'like', "%{$texto}%")
+                        ->orWhere('nombre_en', 'like', "%{$texto}%")
                         ->orWhere('codigo', 'like', "%{$texto}%");
                 });
             })
@@ -129,10 +130,10 @@ class VentaController extends Controller
             ->get()
             ->map(fn ($p) => [
                 'id' => $p->id,
-                'nombre' => $p->nombre,
+                'nombre' => $p->nombre_traducido,
                 'precio' => (float) $p->precio,
                 'existencia' => $p->inventario?->cantidad ?? 0,
-                'imagen' => $p->imagen ? asset('portadas/'.$p->imagen) : null,
+                'imagen' => $p->imagen_url,
             ]);
 
         return response()->json($productos);
@@ -189,7 +190,7 @@ class VentaController extends Controller
 
                     if ($inventario->cantidad < $item['cantidad']) {
                         throw new \RuntimeException(__('messages.insufficient_inventory', [
-                            'product' => $producto->nombre,
+                            'product' => $producto->nombre_traducido,
                             'available' => $inventario->cantidad,
                         ]));
                     }

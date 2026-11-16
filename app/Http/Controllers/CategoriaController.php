@@ -24,10 +24,7 @@ class CategoriaController extends Controller
 
         if ($request->filled('q') || $request->filled('adminlteSearch')) {
             $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
-            $query->where(function ($sub) use ($q) {
-                $sub->where('nombre', 'like', "%{$q}%")
-                    ->orWhere('descripcion', 'like', "%{$q}%");
-            });
+            $query->buscarBilingue($q);
         }
 
         $categorias = $query->paginate(15)->withQueryString();
@@ -50,7 +47,9 @@ class CategoriaController extends Controller
     {
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', 'unique:categorias,nombre'],
+            'nombre_en' => ['required', 'string', 'max:80'],
             'descripcion' => ['nullable', 'string', 'max:500'],
+            'descripcion_en' => ['nullable', 'string', 'max:500'],
         ]);
 
         Categoria::create($data);
@@ -83,7 +82,9 @@ class CategoriaController extends Controller
     {
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', Rule::unique('categorias', 'nombre')->ignore($categoria->id)],
+            'nombre_en' => ['required', 'string', 'max:80'],
             'descripcion' => ['nullable', 'string', 'max:500'],
+            'descripcion_en' => ['nullable', 'string', 'max:500'],
         ]);
 
         $categoria->update($data);

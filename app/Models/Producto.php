@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneTraduccion;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,13 +11,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Producto extends Model
 {
+    use TieneTraduccion;
+
     protected $table = 'productos';
 
     protected $fillable = [
         'sucursal_id',
         'categoria_id',
         'nombre',
+        'nombre_en',
         'descripcion',
+        'descripcion_en',
         'codigo',
         'autor',
         'editorial',
@@ -72,7 +77,10 @@ class Producto extends Model
             return null;
         }
 
-        return asset('portadas/'.$this->imagen);
+        $ruta = public_path('portadas/'.$this->imagen);
+        $version = is_file($ruta) ? filemtime($ruta) : null;
+
+        return asset('portadas/'.$this->imagen).($version ? '?v='.$version : '');
     }
 
     public function getGenerosListaAttribute(): string

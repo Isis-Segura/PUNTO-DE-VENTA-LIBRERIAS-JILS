@@ -88,7 +88,7 @@
                                         <td class="align-middle" style="width: 40px;">
                                             <span class="rank-badge">{{ $i + 1 }}</span>
                                         </td>
-                                        <td class="align-middle">{{ $dv->producto->nombre ?? '-' }}</td>
+                                        <td class="align-middle">{{ $dv->producto->nombre_traducido ?? '-' }}</td>
                                         <td class="align-middle text-right font-weight-bold">
                                             {{ $dv->total_vendido }} {{ __('vendidos') }}
                                         </td>
@@ -118,7 +118,7 @@
                             <tbody>
                                 @forelse ($bajoStock as $inv)
                                     <tr>
-                                        <td class="align-middle">{{ $inv->producto->nombre ?? '-' }}</td>
+                                        <td class="align-middle">{{ $inv->producto->nombre_traducido ?? '-' }}</td>
                                         <td class="align-middle text-right">
                                             <span class="badge badge-danger">{{ $inv->cantidad }} / {{ $inv->stock_minimo }}</span>
                                         </td>

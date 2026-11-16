@@ -37,6 +37,8 @@ services:
     restart: unless-stopped
     ports:
       - "8000:10000"
+    volumes:
+      - covers_data:/var/www/html/public/portadas
     environment:
       PORT: 10000
       APP_NAME: "Libreria JILS"
@@ -71,3 +73,4 @@ services:
 
 volumes:
   db_data:
+  covers_data:

@@ -24,10 +24,7 @@ class GeneroController extends Controller
 
         if ($request->filled('q') || $request->filled('adminlteSearch')) {
             $q = trim((string) ($request->get('q') ?: $request->get('adminlteSearch')));
-            $query->where(function ($sub) use ($q) {
-                $sub->where('nombre', 'like', "%{$q}%")
-                    ->orWhere('descripcion', 'like', "%{$q}%");
-            });
+            $query->buscarBilingue($q);
         }
 
         $generos = $query->paginate(15)->withQueryString();
@@ -50,8 +47,8 @@ class GeneroController extends Controller
     {
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', 'unique:generos,nombre'],
+            'nombre_en' => ['required', 'string', 'max:80'],
             'descripcion' => ['nullable', 'string', 'max:50'],
-            'nombre_en' => ['nullable', 'string', 'max:80'],
             'descripcion_en' => ['nullable', 'string', 'max:50'],
         ]);
 
@@ -85,8 +82,8 @@ class GeneroController extends Controller
     {
         $data = $request->validate([
             'nombre' => ['required', 'string', 'max:80', Rule::unique('generos', 'nombre')->ignore($genero->id)],
+            'nombre_en' => ['required', 'string', 'max:80'],
             'descripcion' => ['nullable', 'string', 'max:50'],
-            'nombre_en' => ['nullable', 'string', 'max:80'],
             'descripcion_en' => ['nullable', 'string', 'max:50'],
         ]);
 
