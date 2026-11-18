@@ -140,10 +140,13 @@ npm run build
 
 ```bash
 cp .env.example .env
-php artisan key:generate
 ```
 
 > En Windows, si el comando `cp` no funciona, copia manualmente `.env.example` y renómbralo como `.env`.
+
+Antes de iniciar Docker, completa los valores vacíos de `.env` con secretos propios. Genera una clave Laravel con `php artisan key:generate --show` (si tienes PHP y dependencias instalados) o con `openssl rand -base64 32`, anteponiendo `base64:` al resultado. Establece contraseñas fuertes para `DB_PASSWORD` y `ADMIN_SEED_PASSWORD`. `DB_PASSWORD` se usa para la cuenta MySQL `root`; en una base existente debe coincidir con la contraseña real ya configurada. Configura las credenciales SMTP solo si vas a enviar correo. Nunca subas `.env` al repositorio.
+
+En un servidor con una base de datos existente, conserva su `.env` y no cambies `APP_KEY` ni contraseñas durante una actualización normal. La clave APP_KEY cifra datos guardados por Laravel; rotarla requiere una migración planeada de los datos cifrados.
 
 ### Imágenes de las portadas
 
